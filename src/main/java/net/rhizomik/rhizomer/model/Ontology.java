@@ -1,5 +1,6 @@
 package net.rhizomik.rhizomer.model;
 
+import net.rhizomik.rhizomer.service.PrefixCCMap;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
@@ -8,6 +9,7 @@ import org.semanticweb.owlapi.io.StringDocumentTarget;
 import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 
@@ -22,6 +24,9 @@ public class Ontology {
     OWLOntology ontology;
     IRI ontologyIRI;
     OWLDataFactory df;
+
+    @Autowired
+    static PrefixCCMap prefix;
 
     public Ontology(Pond pond) throws OWLOntologyCreationException {
         this.pond = pond;
@@ -42,7 +47,7 @@ public class Ontology {
                 documentFormat = new RDFXMLDocumentFormat();
                 break;
         }
-        documentFormat.copyPrefixesFrom(CURIE.getPrefixes());
+        documentFormat.copyPrefixesFrom(prefix.getMappingCopyStr());
         StringDocumentTarget output = new StringDocumentTarget();
         manager.saveOntology(ontology, documentFormat, output);
         return output.toString();
@@ -54,10 +59,10 @@ public class Ontology {
         int index = 0;
         for(Class pClass: pondClasses) {
             index++;
-            logger.info("\n{}/{} Processing class: {}", index, pondClasses.size(), pClass.getUri());
+            logger.info("\n{}/{} Processing class: {}", index, pondClasses.size(), pClass.getUriStr());
             if (isOmittedClass(pClass))
                 continue;
-            OWLClass oClass = df.getOWLClass(IRI.create(pClass.getUri()));
+            OWLClass oClass = df.getOWLClass(IRI.create(pClass.getUriStr()));
             OWLAxiom declare = df.getOWLDeclarationAxiom(oClass);
             manager.addAxiom(ontology, declare);
             OWLLiteral label = df.getOWLLiteral(pClass.getLabel());
@@ -76,9 +81,9 @@ public class Ontology {
         if (facet.getRanges().length > 0) {
             OWLProperty property;
             if (facet.isRelation())
-                property = df.getOWLObjectProperty(IRI.create(facet.getUri()));
+                property = df.getOWLObjectProperty(IRI.create(facet.getUriStr()));
             else
-                property = df.getOWLDataProperty(IRI.create(facet.getUri()));
+                property = df.getOWLDataProperty(IRI.create(facet.getUriStr()));
             OWLAxiom declare = df.getOWLDeclarationAxiom(property);
             manager.addAxiom(ontology, declare);
             OWLLiteral label = df.getOWLLiteral(facet.getLabel());
@@ -102,7 +107,7 @@ public class Ontology {
 
     private boolean isOmittedClass(Class pClass) {
         for(String omitted: Queries.omitClasses) {
-            if (pClass.getUri().toString().contains(omitted))
+            if (pClass.getUriStr().contains(omitted))
                 return true;
         }
         return false;
@@ -110,7 +115,7 @@ public class Ontology {
 
     private boolean isOmittedProperty(Facet facet) {
         for(String omitted: Queries.omitProperties) {
-            if (facet.getUri().toString().contains(omitted))
+            if (facet.getUriStr().contains(omitted))
                 return true;
         }
         return false;

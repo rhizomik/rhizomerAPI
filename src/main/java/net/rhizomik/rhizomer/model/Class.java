@@ -18,41 +18,41 @@ import java.util.Map;
  * Created by http://rhizomik.net/~roberto/
  */
 @Entity
-public class Class {
+public class Class extends CurieEntity {
     private static final Logger logger = LoggerFactory.getLogger(Class.class);
 
-    @Id
-    private URI uri;
     private String label;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "domain")
     private Map<String, Facet> facets;
-    private int count;
+    private int instanceCount;
     @ManyToOne
     @JsonBackReference
     private Pond pond;
 
-    public Class(Pond pond, String curie, String label, int count) throws URISyntaxException {
-        this(pond, CURIE.toURI(curie), label, count);
+    public Class() {}
+
+    public Class(Pond pond, String curie, String label, int instanceCount) throws URISyntaxException {
+        this(pond, CurieEntity.curieToUri(curie), label, instanceCount);
     }
 
-    public Class(Pond pond, String namespace, String localName, String label, int count) throws URISyntaxException {
-        this(pond, new URI(namespace+localName), label, count);
+    public Class(Pond pond, String namespace, String localName, String label, int instanceCount) throws URISyntaxException {
+        this(pond, new URI(namespace+localName), label, instanceCount);
     }
 
-    public Class(Pond pond, URI uri, String label, int count) {
-        this.pond = pond;
-        this.uri = uri;
+    public Class(Pond pond, URI uri, String label, int instanceCount) {
+        super(uri);
         this.label = label;
-        this.count = count;
-        logger.debug("Created class: {}", uri);
+        this.instanceCount = instanceCount;
+        this.pond = pond;
+        logger.debug("Created class: {}", super.toString());
     }
 
     public Map<String, Facet> getFacets() {
         if (facets == null) {
             facets = new HashMap<String, Facet>();
             ResultSet result = getPond().querySelect(
-                    Queries.getQueryClassFacets(getUri().toString(), getPond().getQueryType(),
-                                                getPond().getSampleSize(), this.getCount(), getPond().getCoverage()));
+                    Queries.getQueryClassFacets(getUriStr(), getPond().getQueryType(),
+                                                getPond().getSampleSize(), this.getInstanceCount(), getPond().getCoverage()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 if (soln.contains("?property")) {
@@ -85,24 +85,22 @@ public class Class {
         facets.put(propertyUri, facet);
     }
 
-    public URI getUri() { return uri; }
-
     public String getLabel() { return label; }
 
     public void setLabel(String label) { this.label = label; }
 
-    public int getCount() { return count; }
+    public int getInstanceCount() { return instanceCount; }
 
-    public void setCount(int count) { this.count = count; }
+    public void setInstanceCount(int instanceCount) { this.instanceCount = instanceCount; }
 
     public Pond getPond() { return pond; }
 
     @Override
     public String toString() {
         return "Class{" +
-                "uri='" + uri + '\'' +
+                "curie=" + super.toString() +
                 ", label='" + label + '\'' +
-                ", count=" + count +
+                ", instanceCount=" + instanceCount +
                 ", facets=" + facets + '}';
     }
 }

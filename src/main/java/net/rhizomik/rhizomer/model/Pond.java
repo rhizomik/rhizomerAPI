@@ -46,6 +46,8 @@ public class Pond {
     private int sampleSize = 0;
     private double coverage = 0.0;
 
+    public Pond() {}
+
     public Pond(String id) {
         this.id = id;
     }
