@@ -13,9 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -23,14 +21,15 @@ import java.util.List;
  * Created by http://rhizomik.net/~roberto/
  */
 @Entity
-public class Server {
+public class Server extends CurieEntity {
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
-    @Id
-    private URL endpoint;
+    public Server() {
+        super();
+    }
 
     public Server(URL endpoint) {
-        this.endpoint = endpoint;
+        super(endpoint.toString());
     }
 
     public ResultSet querySelect(Query query) {
@@ -39,8 +38,8 @@ public class Server {
 
     public ResultSet querySelect(Query query, List<String> graphs, List<String> ontologies) {
         graphs.forEach(query::addGraphURI);
-        logger.debug("Sending to {} query: \n{}", endpoint, query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(endpoint.toString(), query, graphs, ontologies);
+        logger.debug("Sending to {} query: \n{}", getUriStr(), query);
+        QueryExecution q = QueryExecutionFactory.sparqlService(getUriStr(), query, graphs, ontologies);
         return ResultSetFactory.copyResults(q.execSelect());
     }
 
@@ -54,8 +53,8 @@ public class Server {
         RDFDataMgr.write(out, model, Lang.NTRIPLES);
         String insertString = "INSERT DATA { GRAPH <" + graph + "> { " + out.toString() + " } } ";
         UpdateRequest update = UpdateFactory.create(insertString);
-        logger.debug("Sending to {} query: \n{}", endpoint, update.toString());
-        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, endpoint.toString());
+        logger.debug("Sending to {} query: \n{}", getUriStr(), update.toString());
+        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, getUriStr());
         try {
             processor.execute();
         } catch (HttpException e) {
@@ -65,22 +64,18 @@ public class Server {
 
     public Model queryConstruct(Query query, List<String> graphs) {
         graphs.forEach(query::addGraphURI);
-        logger.debug("Sending to {} query: \n{}", endpoint, query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(endpoint.toString(), query, graphs, null);
+        logger.debug("Sending to {} query: \n{}", getUriStr(), query);
+        QueryExecution q = QueryExecutionFactory.sparqlService(getUriStr(), query, graphs, null);
         return q.execConstruct();
     }
 
     public void queryUpdate(UpdateRequest update) {
-        logger.debug("Sending to {} query: \n{}", endpoint, update.toString());
-        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, endpoint.toString());
+        logger.debug("Sending to {} query: \n{}", getUriStr(), update.toString());
+        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, getUriStr());
         try {
             processor.execute();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
-
-    public URL getEndpoint() { return endpoint; }
-
-    public void setEndpoint(URL enpoint) throws MalformedURLException { this.endpoint = enpoint; }
 }
