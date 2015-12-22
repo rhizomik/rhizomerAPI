@@ -8,8 +8,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.update.UpdateRequest;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,11 +60,6 @@ public class Pond {
         this.pondGraphs = graphs;
         if (ontologies != null)
             ontologies.forEach(this::addPondOntology);
-    }
-
-    public String getOntology(String format) throws OWLOntologyCreationException, OWLOntologyStorageException {
-        Ontology ontology = new Ontology(this);
-        return ontology.getOWL(format);
     }
 
     public Map<String, Class> getOntologyClasses() {
