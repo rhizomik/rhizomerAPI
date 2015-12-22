@@ -1,9 +1,9 @@
 package net.rhizomik.rhizomer.service;
 
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import org.apache.jena.atlas.lib.Pair;
 import org.apache.jena.riot.system.PrefixMapStd;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,12 +37,12 @@ public class PrefixCCMap extends PrefixMapStd {
     public Pair<String, String> abbrev(String uriStr) {
         Pair<String, String> curiePair = super.abbrev(uriStr);
         if (curiePair == null) {
-            URI uri = new URIImpl(uriStr);
-            String prefixcc = prefixCCReverseLookup(uri.getNamespace());
+            Resource uri = ResourceFactory.createResource(uriStr);
+            String prefixcc = prefixCCReverseLookup(uri.getNameSpace());
             if (prefixcc != null)
-                this.add(prefixcc, uri.getNamespace());
+                this.add(prefixcc, uri.getNameSpace());
             else
-                try { this.add(generatePrefix(uriStr), uri.getNamespace()); }
+                try { this.add(generatePrefix(uriStr), uri.getNameSpace()); }
                 catch (URISyntaxException e) { return null; }
             curiePair = super.abbrev(uriStr);
         }
