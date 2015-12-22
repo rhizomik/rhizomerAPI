@@ -1,7 +1,7 @@
 package net.rhizomik.rhizomer.model;
 
 import net.rhizomik.rhizomer.service.PrefixCCMap;
-import org.springframework.data.domain.Persistable;
+import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -12,7 +12,7 @@ import java.net.URISyntaxException;
  * Created by http://rhizomik.net/~roberto/
  */
 @MappedSuperclass
-public class CurieEntity implements Persistable<String>{
+public class CurieEntity implements Identifiable<String> {
 
     @Id
     private String curie;
@@ -24,12 +24,12 @@ public class CurieEntity implements Persistable<String>{
 
     public CurieEntity(String uriStr) {
         this.uriStr = uriStr;
-        this.curie = prefix.abbreviate(uriStr).replace(':', '_');
+        this.curie = prefix.abbreviate(uriStr).replace(':', ';');
     }
 
     public CurieEntity(URI uri) {
         this.uriStr = uri.toString();
-        this.curie = prefix.abbreviate(uriStr).replace(':', '_');
+        this.curie = prefix.abbreviate(uriStr).replace(':', ';');
     }
 
     public String getUriStr() {
@@ -38,7 +38,7 @@ public class CurieEntity implements Persistable<String>{
 
     public void setUriStr(String uriStr) {
         this.uriStr = uriStr;
-        this.curie = prefix.abbreviate(uriStr).replace(':', '_');
+        this.curie = prefix.abbreviate(uriStr).replace(':', ';');
     }
 
     public URI toURI() throws URISyntaxException {
@@ -54,19 +54,10 @@ public class CurieEntity implements Persistable<String>{
     }
 
     @Override
-    public String getId() {
-        return curie;
-    }
+    public String getId() { return curie.replace(';', ':'); }
 
     @Override
-    public boolean isNew() {
-        return curie == null;
-    }
-
-    @Override
-    public String toString() {
-        return curie;
-    }
+    public String toString() { return curie.replace(';', ':'); }
 
     @Override
     public boolean equals(Object o) {
