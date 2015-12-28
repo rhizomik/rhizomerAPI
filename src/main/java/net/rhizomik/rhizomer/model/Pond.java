@@ -20,9 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -38,7 +36,7 @@ public class Pond {
     @ManyToOne
     private Server server;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pond")
-    private Map<String, Class> ontologyClasses;
+    private List<Class> classes;
     private Queries.QueryType queryType = Queries.QueryType.SIMPLE;
     private boolean inferenceEnabled = true;
     private int sampleSize = 0;
@@ -62,11 +60,11 @@ public class Pond {
             ontologies.forEach(this::addPondOntology);
     }
 
-    public Map<String, Class> getOntologyClasses() {
-        if (ontologyClasses == null) {
+    public List<Class> getClasses() {
+        if (classes == null) {
             if (isInferenceEnabled())
                 inferTypes();
-            ontologyClasses = new HashMap<>();
+            classes = new ArrayList<>();
             ResultSet result = querySelect(Queries.getQueryClasses(queryType));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
@@ -76,7 +74,7 @@ public class Pond {
                 } catch (URISyntaxException e) { logger.error("URI syntax error: {}", r.getURI()); }
             }
         }
-        return ontologyClasses;
+        return classes;
     }
 
     public void addPondOntology(String url) {
@@ -107,11 +105,7 @@ public class Pond {
         //getServer().loadModel(getPondInferenceGraph().toString(), inferredModel);
     }
 
-    private void addClass(String classUri, Class aClass) { ontologyClasses.put(classUri, aClass); }
-
-    public Class getOntologyClass(String classUri) {
-        return getOntologyClasses().get(classUri);
-    }
+    private void addClass(String classUri, Class aClass) { classes.add(aClass); }
 
     public ResultSet querySelect(Query query) {
         return getServer().querySelect(query, getPondGraphsStrings(), null);
@@ -124,6 +118,8 @@ public class Pond {
     public void addPondGraph(String graph) { this.pondGraphs.add(graph); }
 
     public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public List<String> getPondGraphsStrings() {
         return pondGraphs;
