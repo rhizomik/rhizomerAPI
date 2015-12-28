@@ -36,7 +36,7 @@ public class Pond {
     @ManyToOne
     private Server server;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pond")
-    private List<Class> classes;
+    private List<Class> classes = new ArrayList<>();
     private Queries.QueryType queryType = Queries.QueryType.SIMPLE;
     private boolean inferenceEnabled = true;
     private int sampleSize = 0;
@@ -61,7 +61,7 @@ public class Pond {
     }
 
     public List<Class> getClasses() {
-        if (classes == null) {
+        if (classes.isEmpty() && getServer()!=null ) {
             if (isInferenceEnabled())
                 inferTypes();
             classes = new ArrayList<>();
@@ -76,6 +76,8 @@ public class Pond {
         }
         return classes;
     }
+
+    public void setClasses(List<Class> classes) { this.classes = classes; }
 
     public void addPondOntology(String url) {
         getServer().loadOntology(getPondOntologiesGraph().toString(), url);
