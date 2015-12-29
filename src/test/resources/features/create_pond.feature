@@ -6,9 +6,9 @@ Feature: Create server pond
   I want to create a pond of graphs from the associated server
 
   Scenario: create pond with no server or graphs and default values
-    When a manager creates a pond with id "vegetables"
+    When I create a pond with id "vegetables"
     Then the response status is 201
-    And there is pond with URI "http://localhost/ponds/vegetables"
+    And created pond with href "http://localhost/ponds/vegetables"
 
 
 

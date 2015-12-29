@@ -1,5 +1,7 @@
 package net.rhizomik.rhizomer.model;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.net.URI;
@@ -9,8 +11,8 @@ import java.net.URI;
  */
 @Embeddable
 public class PondClassId implements Serializable {
-    String pondId;
-    String classCurie;
+    private String pondId;
+    private String classCurie;
 
     public PondClassId() {}
 
@@ -45,6 +47,7 @@ public class PondClassId implements Serializable {
     }
 
     @Override
+    @JsonValue
     public String toString() {
         return classCurie.replace(':', '_') + '@' + pondId;
     }

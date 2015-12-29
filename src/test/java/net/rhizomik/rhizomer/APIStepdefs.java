@@ -1,12 +1,15 @@
 package net.rhizomik.rhizomer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.Pond;
+import net.rhizomik.rhizomer.repository.PondRepository;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.net.URI;
+import java.text.MessageFormat;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,8 +48,9 @@ public class APIStepdefs {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired
-    private WebApplicationContext wac;
+    @Autowired private WebApplicationContext wac;
+    @Autowired private PondRepository pondRepository;
+    private Pond currentPond;
 
     @Before
     public void setup() {
@@ -53,11 +60,29 @@ public class APIStepdefs {
                 .build();
     }
 
-    @When("^a manager creates a pond with id \"([^\"]*)\"$")
+    @Given("^a pond with id \"([^\"]*)\"$")
+    public void aPondWithId(String pondId) throws Throwable {
+        currentPond = pondRepository.save(new Pond(pondId));
+    }
+
+    @When("^I create a pond with id \"([^\"]*)\"$")
     public void aManagerCreatesAPondWithId(String pondId) throws Throwable {
         Pond pond = new Pond(pondId);
         String json = mapper.writeValueAsString(pond);
         this.result = mockMvc.perform(post("/ponds")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON));
+    }
+
+    @When("^I create a class in pond \"([^\"]*)\" with URI \"([^\"]*)\", label \"([^\"]*)\" and instance count (\\d+)$")
+    public void iCreateAClassWithURILabelAndInstanceCount(String pondId, String classUriStr, String classLabel, int instanceCount) throws Throwable {
+        String json = MessageFormat.format("'{' " +
+                "\"uri\": \"{0}\", " +
+                "\"label\": \"{1}\", " +
+                "\"instanceCount\": {2,number,integer}, " +
+                "\"pond\": \"ponds/{3}\" '}'", classUriStr, classLabel, instanceCount, pondId);
+        this.result = mockMvc.perform(post("/classes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON));
@@ -68,14 +93,13 @@ public class APIStepdefs {
         this.result.andExpect(status().is(status));
     }
 
-    @And("^there is pond with the following attributes$")
-    public void thereIsPondWithTheFollowingAttributes(DataTable pondsTable) throws Throwable {
-        Pond pond = pondsTable.asList(Pond.class).get(0);
-        this.result.andExpect(jsonPath("$._links.self.href", is("http://localhost/ponds/"+pond.getId())));
+    @And("^created pond with href \"([^\"]*)\"$")
+    public void thereIsPondWithURI(String uriStr) throws Throwable {
+        this.result.andExpect(jsonPath("$._links.self.href", is(uriStr)));
     }
 
-    @And("^there is pond with URI \"([^\"]*)\"$")
-    public void thereIsPondWithURI(String uriStr) throws Throwable {
-        this.result.andExpect(jsonPath("$._links.self.href", is(uriStr)));;
+    @And("^created class with href \"([^\"]*)\"$")
+    public void createdClassWithURI(String classUriStr) throws Throwable {
+        this.result.andExpect(jsonPath("$._links.self.href", is(classUriStr)));
     }
 }

@@ -26,7 +26,7 @@ public class Class {
     private String uri;
     private String label;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "domain")
-    private Map<String, Facet> facets;
+    private Map<String, Facet> facets = new HashMap<>();
     private int instanceCount;
     @ManyToOne
     @MapsId("pondId")
@@ -54,7 +54,7 @@ public class Class {
     }
 
     public Map<String, Facet> getFacets() {
-        if (facets == null) {
+        if (facets.isEmpty() && getPond().getServer()!=null) {
             facets = new HashMap<String, Facet>();
             ResultSet result = getPond().querySelect(
                     Queries.getQueryClassFacets(getUri(), getPond().getQueryType(),
@@ -92,6 +92,10 @@ public class Class {
     }
 
     public PondClassId getId() { return id; }
+
+    public void setId(PondClassId id) {
+        this.id = id;
+    }
 
     public String getUri() { return uri; }
 
