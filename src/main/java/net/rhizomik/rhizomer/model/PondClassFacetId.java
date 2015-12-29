@@ -20,12 +20,8 @@ public class PondClassFacetId implements Serializable {
     }
 
     public PondClassFacetId(Pond pond, URI classUri, URI facetUri) {
-        this(pond, classUri.toString(), facetUri.toString());
-    }
-
-    public PondClassFacetId(Pond pond, String classUriStr, String facetUriStr) {
-        this.pondClassId = new PondClassId(pond, classUriStr);
-        this.facetCurie = new Curie(facetUriStr).toString();
+        this.pondClassId = new PondClassId(pond, classUri);
+        this.facetCurie = new Curie(facetUri).toString();
     }
 
     public void setPondClassId(PondClassId pondClassId) {

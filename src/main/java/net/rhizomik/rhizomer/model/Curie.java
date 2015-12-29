@@ -17,9 +17,9 @@ public class Curie {
 
     public Curie() {}
 
-    public Curie(String uriStr) {
-        this.uriStr = uriStr;
-        this.curie = prefix.abbreviate(uriStr);
+    public Curie(String curie) {
+        this.uriStr = prefix.expand(curie);
+        this.curie = curie;
     }
 
     public Curie(URI uri) {
@@ -49,5 +49,5 @@ public class Curie {
     }
 
     @Override
-    public String toString() { return curie.replace(':', '_'); }
+    public String toString() { return curie; }
 }

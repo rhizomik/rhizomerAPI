@@ -1,5 +1,6 @@
 package net.rhizomik.rhizomer.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -36,6 +37,7 @@ public class Pond {
     @ManyToOne
     private Server server;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pond")
+    @JsonManagedReference
     private List<Class> classes = new ArrayList<>();
     private Queries.QueryType queryType = Queries.QueryType.SIMPLE;
     private boolean inferenceEnabled = true;

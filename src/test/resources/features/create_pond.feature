@@ -8,9 +8,4 @@ Feature: Create server pond
   Scenario: create pond with no server or graphs and default values
     When I create a pond with id "vegetables"
     Then the response status is 201
-    And created pond with href "http://localhost/ponds/vegetables"
-
-
-
-   # | id          | pondGraphs | server | classes | queryType | inferenceEnabled | sampleSize | coverage |
-   # | vegetables  | null       | null   | null    | SIMPLE    | true             | 0          | 0        |
+    And exists a pond with id "vegetables"

@@ -46,7 +46,7 @@ public class Facet {
     }
 
     public Facet(Class domain, URI uri, String label, int uses, int differentValues, String[] ranges, boolean allLiteral) {
-        this.id = new PondClassFacetId(domain.getPond(), domain.getUri(), uri.toString());
+        this.id = new PondClassFacetId(domain.getPond(), domain.getUri(), uri);
         this.uri = uri.toString();
         this.label = label;
         this.domain = domain;

@@ -1,5 +1,6 @@
 package net.rhizomik.rhizomer.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Literal;
@@ -30,6 +31,7 @@ public class Class {
     private int instanceCount;
     @ManyToOne
     @MapsId("pondId")
+    @JsonBackReference
     private Pond pond;
 
     public Class() {
@@ -57,7 +59,7 @@ public class Class {
         if (facets.isEmpty() && getPond().getServer()!=null) {
             facets = new HashMap<String, Facet>();
             ResultSet result = getPond().querySelect(
-                    Queries.getQueryClassFacets(getUri(), getPond().getQueryType(),
+                    Queries.getQueryClassFacets(getUri().toString(), getPond().getQueryType(),
                                                 getPond().getSampleSize(), this.getInstanceCount(), getPond().getCoverage()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
@@ -97,10 +99,14 @@ public class Class {
         this.id = id;
     }
 
-    public String getUri() { return uri; }
+    public URI getUri() {
+        try { return new URI(uri); }
+        catch (URISyntaxException e) { e.printStackTrace(); }
+        return null;
+    }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public void setUri(URI uri) {
+        this.uri = uri.toString();
         this.id.setClassCurie(uri);
     }
 

@@ -16,18 +16,20 @@ public class PondClassId implements Serializable {
 
     public PondClassId() {}
 
-    public PondClassId(String uriStr) {
-        this.classCurie = uriStr.split("@")[0];
-        this.pondId = uriStr.split("@")[1];
+    public PondClassId(String idStr) {
+        String[] idComponents = idStr.split("/");
+        this.pondId = idComponents[1];
+        this.classCurie = idComponents[3];
     }
 
     public PondClassId(Pond pond, URI uri) {
-        this(pond, uri.toString());
+        this.pondId = pond.getId();
+        this.classCurie = new Curie(uri).toString();
     }
 
-    public PondClassId(Pond pond, String uriStr) {
+    public PondClassId(Pond pond, Curie classCurie) {
         this.pondId = pond.getId();
-        this.classCurie = new Curie(uriStr).toString();
+        this.classCurie = classCurie.toString();
     }
 
     public String getPondId() {
@@ -42,14 +44,14 @@ public class PondClassId implements Serializable {
         return classCurie;
     }
 
-    public void setClassCurie(String classUriStr) {
-        this.classCurie = new Curie(classUriStr).toString();
+    public void setClassCurie(URI classUri) {
+        this.classCurie = new Curie(classUri).toString();
     }
 
     @Override
     @JsonValue
     public String toString() {
-        return classCurie.replace(':', '_') + '@' + pondId;
+        return "/ponds/"+pondId+"/classes/"+classCurie;
     }
 
     @Override
