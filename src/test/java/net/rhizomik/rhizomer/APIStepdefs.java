@@ -1,9 +1,6 @@
 package net.rhizomik.rhizomer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -17,11 +14,9 @@ import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.PondRepository;
 import net.rhizomik.rhizomer.repository.ServerRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
-import org.apache.jena.riot.RDFDataMgr;
+import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +58,6 @@ public class APIStepdefs {
 
     private MockMvc mockMvc;
     private ResultActions result;
-    private Dataset dataset;
-    private Pond pond;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -79,15 +72,13 @@ public class APIStepdefs {
     static class SPARQLServiceMockConfig {
         @Bean
         public SPARQLService sparqlService() {
-            return Mockito.mock(SPARQLService.class);
+            return SPARQLServiceMockFactory.build();
         }
     }
 
     @Before
     public void setup() {
-        this.mockMvc = //MockMvcBuilders.standaloneSetup(pondClassController).build();
-                MockMvcBuilders
-                .webAppContextSetup(this.wac)
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                 //.apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
     }
@@ -158,29 +149,23 @@ public class APIStepdefs {
 
     @Given("^There is a pond \"([^\"]*)\" on a local server storing \"([^\"]*)\" in graph \"([^\"]*)\"$")
     public void There_is_a_pond_on_a_local_server(String pondId, String dataFile, URI graph) throws Throwable {
-        dataset = DatasetFactory.createMem();
-        Server server = new Server(new URL("http://test/sparql"));
-        pond = new Pond(pondId);
+        Server server = new Server(new URL("http://test/sparqlmock"));
+        Pond pond = new Pond(pondId);
         pond.setServer(serverRepository.save(server));
         pond.addPondGraph(graph.toString());
-        pond = pondRepository.save(pond);
-        Model model = RDFDataMgr.loadModel(dataFile);
-        dataset.addNamedModel(graph.toString(), model);
+        pondRepository.save(pond);
+        SPARQLServiceMockFactory.addData(graph.toString(), dataFile);
+    }
+
+    @And("^The inference for pond \"([^\"]*)\" is set to \"([^\"]*)\"$")
+    public void theInferenceForPondIsSetTo(String pondId, boolean inference) throws Throwable {
+        Pond pond = pondRepository.findOne(pondId);
+        pond.setInferenceEnabled(inference);
+        pondRepository.save(pond);
     }
 
     @When("^I extract the classes from pond \"([^\"]*)\"$")
     public void I_extract_the_classes_from_pond(String pondId) throws Throwable {
-        Mockito.when(sparqlService.querySelect(Matchers.isA(Server.class), Matchers.isA(Query.class), Matchers.anyList(), Matchers.anyList()))
-                .thenAnswer(invocationOnMock -> {
-                    Query query = (Query) invocationOnMock.getArguments()[1];
-                    List<String> graphs = (List<String>) invocationOnMock.getArguments()[2];
-                    Model queryDataset = ModelFactory.createDefaultModel();
-                    graphs.forEach(graph -> queryDataset.add(dataset.getNamedModel(graph)));
-                    graphs.forEach(query::addGraphURI);
-                    logger.info("Sending to {} query: \n{}", "mockServer", query);
-                    QueryExecution qexec = QueryExecutionFactory.create(query, queryDataset);
-                    return qexec.execSelect();
-                });
         this.result = mockMvc.perform(get("/ponds/{pondId}/classes", pondId)
                 .accept(MediaType.APPLICATION_JSON));
     }

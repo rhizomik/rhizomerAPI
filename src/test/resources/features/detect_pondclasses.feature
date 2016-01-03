@@ -7,6 +7,7 @@ Feature: Detect classes in a pond
 
   Background: Existing pond in local server storing file data
     Given There is a pond "apollo13" on a local server storing "data/nasa-apollo13.ttl" in graph "http://ontolake.net/data"
+    And The inference for pond "apollo13" is set to "false"
     #And The query type for pond "apollo13" is "FULL"
     #And The query sample size for pond "apollo13" is 10
     #And The samples coverage pond "apollo13" is 0.3
@@ -19,3 +20,4 @@ Feature: Detect classes in a pond
       | /ponds/apollo13/classes/space:Role        | Role        | 2             |
       | /ponds/apollo13/classes/space:MissionRole | MissionRole | 2             |
       | /ponds/apollo13/classes/space:Mission     | Mission     | 1             |
+    And exists a class with id "/ponds/apollo13/classes/foaf:Person" and label "Person" and instance count 2

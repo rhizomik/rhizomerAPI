@@ -1,21 +1,10 @@
 package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.update.UpdateRequest;
-import net.rhizomik.rhizomer.service.SPARQLService;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,6 +23,8 @@ public class Pond {
     private String id;
     @ElementCollection
     private List<String> pondGraphs = new ArrayList<>();
+    @ElementCollection
+    private List<String> pondOntologies = new ArrayList<>();
     @ManyToOne
     private Server server;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pond")
@@ -58,60 +49,20 @@ public class Pond {
         this.id = id;
         this.server = new Server(serverUrl);
         this.pondGraphs = graphs;
-        if (ontologies != null)
-            ontologies.forEach(this::addPondOntology);
+        this.pondOntologies = ontologies;
     }
 
-    public List<Class> getClasses(SPARQLService sparql) {
-        if (classes.isEmpty() && getServer()!=null ) {
-            if (isInferenceEnabled())
-                inferTypes();
-            classes = new ArrayList<>();
-            ResultSet result = sparql.querySelect(this.getServer(), Queries.getQueryClasses(queryType), getPondGraphsStrings(), null);
-            while (result.hasNext()) {
-                QuerySolution soln = result.nextSolution();
-                Resource r = soln.getResource("?class");
-                int count = soln.getLiteral("?n").getInt();
-                try { addClass(r.getURI(), new Class(this, new URI(r.getURI()), r.getLocalName(), count));
-                } catch (URISyntaxException e) { logger.error("URI syntax error: {}", r.getURI()); }
-            }
-        }
+    public List<Class> getClasses() {
         return classes;
     }
 
     public void setClasses(List<Class> classes) { this.classes = classes; }
 
-    public void addPondOntology(String url) {
-        getServer().loadOntology(getPondOntologiesGraph().toString(), url);
-    }
-
-    public void inferTypes() {
-        List<String> targetGraphs = getPondGraphsStrings();
-        targetGraphs.add(getPondOntologiesGraph().toString());
-        UpdateRequest createGraph = Queries.getCreateGraph(getPondInferenceGraph().toString());
-        getServer().queryUpdate(createGraph);
-        UpdateRequest update = Queries.getUpdateInferTypes(targetGraphs, getPondInferenceGraph().toString());
-        getServer().queryUpdate(update);
-    }
-
-    public void inferTypesConstruct() {
-        UpdateRequest createGraph = Queries.getCreateGraph(getPondInferenceGraph().toString());
-        getServer().queryUpdate(createGraph);
-        List<String> targetGraphs = getPondGraphsStrings();
-        targetGraphs.add(getPondOntologiesGraph().toString());
-        Model inferredModel = getServer().queryConstruct(Queries.getQueryInferTypes(), targetGraphs);
-        File inferenceOut = new File(id + "-inference.ttl");
-        try {
-            RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage());
-        }
-        //getServer().loadModel(getPondInferenceGraph().toString(), inferredModel);
-    }
-
-    private void addClass(String classUri, Class aClass) { classes.add(aClass); }
+    public void addClass(Class aClass) { classes.add(aClass); }
 
     public void addPondGraph(String graph) { this.pondGraphs.add(graph); }
+
+    public void addPondOntology(String ontology) { this.pondGraphs.add(ontology); }
 
     public String getId() { return id; }
 
