@@ -74,8 +74,23 @@ public class Facet {
 
     public List<String> getRanges() { return ranges; }
 
+    public List<URI> getRangeUris() {
+        List<URI> rangesUris = new ArrayList<URI>();
+        for (String rangeUriStr: ranges)
+            try { rangesUris.add(new URI(rangeUriStr)); }
+            catch (URISyntaxException e) {}
+        return rangesUris;
+    }
+
     public String getRange() {
         return ranges.size() > 0 ? ranges.get(0) : null; //TODO: compute supertype if multiple ranges
+    }
+
+    public URI getRangeUri() {
+        URI rangeUri = null;
+        try { rangeUri = new URI(getRange()); }
+        catch (URISyntaxException e) {}
+        return rangeUri;
     }
 
     public Class getDomain() { return domain; }

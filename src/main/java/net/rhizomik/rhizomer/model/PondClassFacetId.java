@@ -24,6 +24,10 @@ public class PondClassFacetId implements Serializable {
         this.facetCurie = new Curie(facetUri).toString();
     }
 
+    public PondClassId getPondClassId() { return pondClassId; }
+
+    public String getFacetCurie() { return facetCurie; }
+
     public void setPondClassId(PondClassId pondClassId) {
         this.pondClassId = pondClassId;
     }

@@ -1,12 +1,12 @@
 package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.update.UpdateRequest;
+import net.rhizomik.rhizomer.service.SPARQLService;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
@@ -62,12 +62,12 @@ public class Pond {
             ontologies.forEach(this::addPondOntology);
     }
 
-    public List<Class> getClasses() {
+    public List<Class> getClasses(SPARQLService sparql) {
         if (classes.isEmpty() && getServer()!=null ) {
             if (isInferenceEnabled())
                 inferTypes();
             classes = new ArrayList<>();
-            ResultSet result = querySelect(Queries.getQueryClasses(queryType));
+            ResultSet result = sparql.querySelect(this.getServer(), Queries.getQueryClasses(queryType), getPondGraphsStrings(), null);
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 Resource r = soln.getResource("?class");
@@ -110,14 +110,6 @@ public class Pond {
     }
 
     private void addClass(String classUri, Class aClass) { classes.add(aClass); }
-
-    public ResultSet querySelect(Query query) {
-        return getServer().querySelect(query, getPondGraphsStrings(), null);
-    }
-
-    public ResultSet querySelect(Query query, List<String> graphs) {
-        return getServer().querySelect(query, graphs, null);
-    }
 
     public void addPondGraph(String graph) { this.pondGraphs.add(graph); }
 

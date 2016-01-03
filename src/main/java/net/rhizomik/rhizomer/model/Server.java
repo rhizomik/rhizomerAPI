@@ -29,9 +29,7 @@ public class Server {
     private String id;
     private String endpoint;
 
-    public Server() {
-        super();
-    }
+    public Server() {}
 
     public Server(URL endpoint) {
         this.id = new Curie(endpoint.toString()).toString();
@@ -46,17 +44,6 @@ public class Server {
     }
 
     public String getId() { return id; }
-
-    public ResultSet querySelect(Query query) {
-        return this.querySelect(query, null, null);
-    }
-
-    public ResultSet querySelect(Query query, List<String> graphs, List<String> ontologies) {
-        graphs.forEach(query::addGraphURI);
-        logger.debug("Sending to {} query: \n{}", getEndpoint(), query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(getEndpoint(), query, graphs, ontologies);
-        return ResultSetFactory.copyResults(q.execSelect());
-    }
 
     public void loadOntology(String graph, String uri) {
         Model model = RDFDataMgr.loadModel(uri);

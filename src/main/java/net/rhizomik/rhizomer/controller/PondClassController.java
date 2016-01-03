@@ -5,11 +5,10 @@ package net.rhizomik.rhizomer.controller;
  */
 import com.google.common.base.Preconditions;
 import net.rhizomik.rhizomer.model.Class;
-import net.rhizomik.rhizomer.model.Curie;
-import net.rhizomik.rhizomer.model.Pond;
-import net.rhizomik.rhizomer.model.PondClassId;
+import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.PondRepository;
+import net.rhizomik.rhizomer.service.SPARQLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RepositoryRestController
 public class PondClassController {
@@ -25,6 +25,15 @@ public class PondClassController {
 
     @Autowired private PondRepository pondRepository;
     @Autowired private ClassRepository classRepository;
+    @Autowired private SPARQLService sparqlService;
+
+    @RequestMapping(value = "/ponds/{pondId}/classes", method = RequestMethod.GET)
+    public @ResponseBody List<Class> listPondClass(@PathVariable String pondId) throws Exception {
+        Pond pond = pondRepository.findOne(pondId);
+        Preconditions.checkNotNull(pond, "Pond with id %s not found", pondId);
+        logger.info("Retrieving classes in Pond %s", pondId);
+        return pond.getClasses(sparqlService);
+    }
 
     @RequestMapping(value = "/ponds/{pondId}/classes/{classId}", method = RequestMethod.GET)
     public @ResponseBody Class retrievePondClass(@PathVariable String pondId, @PathVariable String classId) throws Exception {

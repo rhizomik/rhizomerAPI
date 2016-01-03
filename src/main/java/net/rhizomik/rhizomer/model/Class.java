@@ -5,6 +5,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Resource;
+import net.rhizomik.rhizomer.service.SPARQLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,10 +56,10 @@ public class Class {
         logger.debug("Created class: {}", super.toString());
     }
 
-    public Map<String, Facet> getFacets() {
+    public Map<String, Facet> getFacets(SPARQLService sparql) {
         if (facets.isEmpty() && getPond().getServer()!=null) {
             facets = new HashMap<String, Facet>();
-            ResultSet result = getPond().querySelect(
+            ResultSet result = sparql.querySelect(this.getPond().getServer(),
                     Queries.getQueryClassFacets(getUri().toString(), getPond().getQueryType(),
                                                 getPond().getSampleSize(), this.getInstanceCount(), getPond().getCoverage()));
             while (result.hasNext()) {

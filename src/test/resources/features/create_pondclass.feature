@@ -11,10 +11,10 @@ Feature: Create classes in a pond
   Scenario: manually define a class
     When I create a class in pond "vegetables" with URI "http://examples.org#potato", label "potato" and instance count 1
     Then the response status is 201
-    And exists a class with id "/ponds/vegetables/classes/examples:potato"
+    And exists a class with id "/ponds/vegetables/classes/examples:potato" and label "potato" and instance count 1
 
-  Scenario: define again a class
+  Scenario: manually define repeated class
     Given a class in pond "vegetables" with URI "http://examples.org#tomato", label "tomato" and instance count 2
     When I create a class in pond "vegetables" with URI "http://examples.org#tomato", label "tomato2" and instance count 2
-    Then the response status is 409
-    And exists a class with id "/ponds/vegetables/classes/examples:tomato"
+    Then the response status is 409 and message contains "Class with URI http://examples.org#tomato already exists in Pond vegetables"
+    And exists a class with id "/ponds/vegetables/classes/examples:tomato" and label "tomato" and instance count 2
