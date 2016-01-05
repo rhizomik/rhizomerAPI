@@ -32,17 +32,11 @@ public class PondClassId implements Serializable {
         this.classCurie = classCurie.toString();
     }
 
-    public String getPondId() {
-        return pondId;
-    }
+    public String getPondId() { return pondId; }
 
-    public void setPondId(String pondId) {
-        this.pondId = pondId;
-    }
+    public void setPondId(String pondId) { this.pondId = pondId; }
 
-    public String getClassCurie() {
-        return classCurie;
-    }
+    public String getClassCurie() { return classCurie; }
 
     public void setClassCurie(URI classUri) {
         this.classCurie = new Curie(classUri).toString();

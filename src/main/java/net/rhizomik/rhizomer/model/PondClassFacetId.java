@@ -1,5 +1,7 @@
 package net.rhizomik.rhizomer.model;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.net.URI;
@@ -14,9 +16,10 @@ public class PondClassFacetId implements Serializable {
 
     public PondClassFacetId() {}
 
-    public PondClassFacetId(String uriStr) {
-        this.facetCurie = uriStr.split("-")[0];
-        this.pondClassId = new PondClassId(uriStr.split("-")[1]);
+    public PondClassFacetId(String idStr) {
+        String[] idComponents = idStr.split("/facets/");
+        this.pondClassId = new PondClassId(idComponents[0]);
+        this.facetCurie = idComponents[1];
     }
 
     public PondClassFacetId(Pond pond, URI classUri, URI facetUri) {
@@ -24,21 +27,23 @@ public class PondClassFacetId implements Serializable {
         this.facetCurie = new Curie(facetUri).toString();
     }
 
+    public PondClassFacetId(PondClassId pondClassId, Curie facetCurie) {
+        this.pondClassId = pondClassId;
+        this.facetCurie = facetCurie.toString();
+    }
+
     public PondClassId getPondClassId() { return pondClassId; }
+
+    public void setPondClassId(PondClassId pondClassId) { this.pondClassId = pondClassId; }
 
     public String getFacetCurie() { return facetCurie; }
 
-    public void setPondClassId(PondClassId pondClassId) {
-        this.pondClassId = pondClassId;
-    }
-
-    public void setFacetCurie(String facetUriStr) {
-        this.facetCurie = new Curie(facetUriStr).toString();
-    }
+    public void setFacetCurie(URI facetUri) { this.facetCurie = new Curie(facetUri).toString(); }
 
     @Override
+    @JsonValue
     public String toString() {
-        return facetCurie.replace(':', '_') + '-' + pondClassId.toString();
+        return "/ponds/"+getPondClassId().getPondId()+"/classes/"+getPondClassId().getClassCurie()+"/facets/"+getFacetCurie();
     }
 
     @Override

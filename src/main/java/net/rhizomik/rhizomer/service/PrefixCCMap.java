@@ -103,7 +103,7 @@ public class PrefixCCMap extends PrefixMapStd {
             if (pair.length == 2)
                 return pair[1];
         } catch (RestClientException e) {
-            logger.info("Prefix {} not found in http://prefix.cc", prefix);
+            logger.info("Prefix {} not found in http://prefix.cc \n", prefix);
         }
         return null;
     }

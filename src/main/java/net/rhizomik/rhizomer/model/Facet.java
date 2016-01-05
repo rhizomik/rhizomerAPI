@@ -1,5 +1,6 @@
 package net.rhizomik.rhizomer.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ public class Facet {
     private String label;
     @ManyToOne
     @MapsId("pondClassId")
+    @JsonBackReference
     private Class domain;
     private int uses;
     private int differentValues;
@@ -61,10 +63,14 @@ public class Facet {
 
     public PondClassFacetId getId() { return id; }
 
-    public String getUri() { return uri; }
+    public URI getUri() {
+        try { return new URI(uri); }
+        catch (URISyntaxException e) { e.printStackTrace(); }
+        return null;
+    }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public void setUri(URI uri) {
+        this.uri = uri.toString();
         this.id.setFacetCurie(uri);
     }
 
@@ -74,23 +80,8 @@ public class Facet {
 
     public List<String> getRanges() { return ranges; }
 
-    public List<URI> getRangeUris() {
-        List<URI> rangesUris = new ArrayList<URI>();
-        for (String rangeUriStr: ranges)
-            try { rangesUris.add(new URI(rangeUriStr)); }
-            catch (URISyntaxException e) {}
-        return rangesUris;
-    }
-
     public String getRange() {
         return ranges.size() > 0 ? ranges.get(0) : null; //TODO: compute supertype if multiple ranges
-    }
-
-    public URI getRangeUri() {
-        URI rangeUri = null;
-        try { rangeUri = new URI(getRange()); }
-        catch (URISyntaxException e) {}
-        return rangeUri;
     }
 
     public Class getDomain() { return domain; }
@@ -114,7 +105,7 @@ public class Facet {
                 ", domain=" + domain.getId() +
                 ", uses=" + uses +
                 ", differentValues=" + differentValues +
-                ", ranges=" + ranges.toString() +
+                ", ranges=" + ranges +
                 '}';
     }
 }

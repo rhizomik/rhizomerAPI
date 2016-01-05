@@ -29,7 +29,7 @@ public class ExpectedClass {
     @Override
     public String toString() {
         return "ExpectedClass{" +
-                "id='" + id + '\'' +
+                "uri='" + id + '\'' +
                 ", uri='" + getUri() + '\'' +
                 ", label='" + label + '\'' +
                 ", instanceCount=" + instanceCount +

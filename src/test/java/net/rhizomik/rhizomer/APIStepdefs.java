@@ -7,9 +7,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.rhizomik.rhizomer.model.Class;
-import net.rhizomik.rhizomer.model.ExpectedClass;
-import net.rhizomik.rhizomer.model.Pond;
-import net.rhizomik.rhizomer.model.Server;
+import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.PondRepository;
 import net.rhizomik.rhizomer.repository.ServerRepository;
@@ -116,6 +114,16 @@ public class APIStepdefs {
                 .accept(MediaType.APPLICATION_JSON));
     }
 
+    @When("^I create facets for class \"([^\"]*)\" in pond \"([^\"]*)\"$")
+    public void iCreateAFacetForClassInPondWith(String classCurie, String pondId, List<ExpectedFacet> facets) throws Throwable {
+        String json = mapper.writeValueAsString(facets.get(0));
+
+        this.result = mockMvc.perform(post("/ponds/{pondId}/classes/{classCurie}/facets", pondId, classCurie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON));
+    }
+
     @Then("^the response status is (\\d+)$")
     public void theResponseStatusIs(int status) throws Throwable {
         this.result.andExpect(status().is(status));
@@ -145,6 +153,17 @@ public class APIStepdefs {
                 .andExpect(jsonPath("$.id", is(classUriStr)))
                 .andExpect(jsonPath("$.label", is(classLabel)))
                 .andExpect(jsonPath("$.instanceCount", is(instanceCount)));
+    }
+
+    @And("^exists a facet with id \"([^\"]*)\", label \"([^\"]*)\", uses (\\d+), different values (\\d+), allLiteral \"([^\"]*)\" and ranges \"([^\"]*)\"$")
+    public void existsAFacetWithIdLabelUsesDifferentValuesAllLiteralAndRanges(String facetUriStr, String facetLabel, int uses, int differentValues, boolean allLiteral, String ranges) throws Throwable {
+        this.result = mockMvc.perform(get(new URI(facetUriStr))
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", is(facetUriStr)))
+                .andExpect(jsonPath("$.label", is(facetLabel)))
+                .andExpect(jsonPath("$.uses", is(uses)));
     }
 
     @Given("^There is a pond \"([^\"]*)\" on a local server storing \"([^\"]*)\" in graph \"([^\"]*)\"$")
