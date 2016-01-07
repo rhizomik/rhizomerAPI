@@ -33,7 +33,7 @@ public class PondController {
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody Pond createPond(@Valid @RequestBody Pond newPond) throws Exception {
         Preconditions.checkState(!pondRepository.exists(newPond.getId()), "Pond with id {} already exists", newPond.getId());
-        logger.info("Creating Pond: {}", newPond.toString());
+        logger.info("Creating Pond: {}", newPond.getId());
         return pondRepository.save(newPond);
     }
 

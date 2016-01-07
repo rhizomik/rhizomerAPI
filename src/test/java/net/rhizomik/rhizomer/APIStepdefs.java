@@ -13,7 +13,6 @@ import net.rhizomik.rhizomer.repository.PondRepository;
 import net.rhizomik.rhizomer.repository.ServerRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
-import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +37,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -144,26 +144,22 @@ public class APIStepdefs {
                 .andExpect(jsonPath("$.id", is(pondId)));
     }
 
-    @And("^exists a class with id \"([^\"]*)\" and label \"([^\"]*)\" and instance count (\\d+)$")
-    public void existsAClassWithIdAndLabelAndInstanceCount(String classUriStr, String classLabel, int instanceCount) throws Throwable {
+    @And("^exists a class with id \"([^\"]*)\"$")
+    public void existsAClassWithId(String classUriStr) throws Throwable {
         this.result = mockMvc.perform(get(new URI(classUriStr))
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(classUriStr)))
-                .andExpect(jsonPath("$.label", is(classLabel)))
-                .andExpect(jsonPath("$.instanceCount", is(instanceCount)));
+                .andExpect(jsonPath("$.id", is(classUriStr)));
     }
 
-    @And("^exists a facet with id \"([^\"]*)\", label \"([^\"]*)\", uses (\\d+), different values (\\d+), allLiteral \"([^\"]*)\" and ranges \"([^\"]*)\"$")
-    public void existsAFacetWithIdLabelUsesDifferentValuesAllLiteralAndRanges(String facetUriStr, String facetLabel, int uses, int differentValues, boolean allLiteral, String ranges) throws Throwable {
+    @And("^exists a facet with id \"([^\"]*)\"$")
+    public void existsAFacetWithId(String facetUriStr) throws Throwable {
         this.result = mockMvc.perform(get(new URI(facetUriStr))
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(facetUriStr)))
-                .andExpect(jsonPath("$.label", is(facetLabel)))
-                .andExpect(jsonPath("$.uses", is(uses)));
+                .andExpect(jsonPath("$.id", is(facetUriStr)));
     }
 
     @Given("^There is a pond \"([^\"]*)\" on a local server storing \"([^\"]*)\" in graph \"([^\"]*)\"$")
@@ -174,6 +170,13 @@ public class APIStepdefs {
         pond.addPondGraph(graph.toString());
         pondRepository.save(pond);
         SPARQLServiceMockFactory.addData(graph.toString(), dataFile);
+    }
+
+    @And("^The query type for pond \"([^\"]*)\" is \"([^\"]*)\"$")
+    public void The_query_type_for_pond_is(String pondId, String queryTypeString) throws Throwable {
+        Pond pond = pondRepository.findOne(pondId);
+        pond.setQueryType(Queries.QueryType.valueOf(queryTypeString));
+        pondRepository.save(pond);
     }
 
     @And("^The inference for pond \"([^\"]*)\" is set to \"([^\"]*)\"$")
@@ -189,10 +192,37 @@ public class APIStepdefs {
                 .accept(MediaType.APPLICATION_JSON));
     }
 
-    @Then("^The list of classes in pond \"([^\"]*)\" is")
-    public void The_list_of_classes_in_is(String pondId, List<ExpectedClass> expectedClasses) throws Throwable {
+    @When("^I extract the facets for class \"([^\"]*)\" in pond \"([^\"]*)\"$")
+    public void iExtractTheFacetsForClassInPond(String classCurie, String pondId) throws Throwable {
+        this.result = mockMvc.perform(get("/ponds/{pondId}/classes/{classCurie}/facets", pondId, classCurie)
+                .accept(MediaType.APPLICATION_JSON));
+    }
+
+    @Then("^The retrieved classes are$")
+    public void theRetrievedClassesAre(List<ExpectedClass> expectedClasses) throws Throwable {
         String json = this.result.andReturn().getResponse().getContentAsString();
         List<ExpectedClass> actualClasses = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ExpectedClass.class));
-        assertThat(actualClasses, IsIterableContainingInOrder.contains(expectedClasses.toArray()));
+        assertThat(actualClasses, containsInAnyOrder(expectedClasses.toArray()));
+    }
+
+    @Then("^The retrieved class is$")
+    public void theRetrievedClassIs(List<ExpectedClass> expectedClasses) throws Throwable {
+        String json = this.result.andReturn().getResponse().getContentAsString();
+        ExpectedClass actualClass = mapper.readValue(json, ExpectedClass.class);
+        assertThat(actualClass, is(expectedClasses.get(0)));
+    }
+
+    @Then("^The retrieved facets are$")
+    public void theRetrievedFacetsAre(List<ExpectedFacet> expectedFacets) throws Throwable {
+        String json = this.result.andReturn().getResponse().getContentAsString();
+        List<ExpectedFacet> actualFacets = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ExpectedFacet.class));
+        assertThat(actualFacets, containsInAnyOrder(expectedFacets.toArray()));
+    }
+
+    @Then("^The retrieved facet is")
+    public void theRetrievedFacetIs(List<ExpectedFacet> expectedFacets) throws Throwable {
+        String json = this.result.andReturn().getResponse().getContentAsString();
+        ExpectedFacet actualFacet = mapper.readValue(json, ExpectedFacet.class);
+        assertThat(actualFacet, is(expectedFacets.get(0)));
     }
 }

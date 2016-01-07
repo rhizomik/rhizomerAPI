@@ -1,5 +1,8 @@
 package net.rhizomik.rhizomer.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by http://rhizomik.net/~roberto/
  */
@@ -8,6 +11,7 @@ public class ExpectedClass {
     public String uri;
     public String label;
     public int instanceCount = 0;
+    public List<ExpectedFacet> facets = new ArrayList<>();
 
     public ExpectedClass() {}
 

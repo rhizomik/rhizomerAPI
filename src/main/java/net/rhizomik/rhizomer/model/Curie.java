@@ -48,6 +48,10 @@ public class Curie {
         return new URI(prefix.expand(curie));
     }
 
+    static public String uriStrToCurie(String uriStr) {
+        return prefix.abbreviate(uriStr);
+    }
+
     @Override
     public String toString() { return curie; }
 }

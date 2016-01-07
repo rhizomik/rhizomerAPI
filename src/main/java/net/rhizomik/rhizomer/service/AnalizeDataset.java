@@ -4,10 +4,8 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Resource;
+import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.model.Class;
-import net.rhizomik.rhizomer.model.Facet;
-import net.rhizomik.rhizomer.model.Pond;
-import net.rhizomik.rhizomer.model.Queries;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import org.slf4j.Logger;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -52,7 +51,8 @@ public class AnalizeDataset {
     public void detectClassFacets(Class pondClass) {
         ResultSet result = sparqlService.querySelect(pondClass.getPond().getServer(),
                 Queries.getQueryClassFacets(pondClass.getUri().toString(), pondClass.getPond().getQueryType(),
-                        pondClass.getPond().getSampleSize(), pondClass.getInstanceCount(), pondClass.getPond().getCoverage()));
+                        pondClass.getPond().getSampleSize(), pondClass.getInstanceCount(), pondClass.getPond().getCoverage()),
+                        pondClass.getPond().getPondGraphsStrings(), null);
 
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
@@ -62,7 +62,8 @@ public class AnalizeDataset {
                 int values = soln.getLiteral("?values").getInt();
                 String[] ranges = {};
                 if (soln.contains("?ranges"))
-                    ranges = soln.getLiteral("?ranges").getString().split(",");
+                    ranges = Pattern.compile(",").splitAsStream(soln.getLiteral("?ranges").getString())
+                                                    .map(Curie::uriStrToCurie).toArray(String[]::new);
                 boolean allLiteralBoolean;
                 Literal allLiteral = soln.getLiteral("?allLiteral");
                 if(allLiteral.getDatatypeURI().equals("http://www.w3.org/2001/XMLSchema#integer"))

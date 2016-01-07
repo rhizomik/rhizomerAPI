@@ -1,6 +1,7 @@
 package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,29 +38,31 @@ public class Facet {
         this.id = new PondClassFacetId();
     }
 
-    public Facet(Class domain, String curie, String label, int uses, int differentValues, String[] ranges, boolean allLiteral)
+    public Facet(Class domain, String curie, String label, int uses, int differentValues, String[] rangesCuries, boolean allLiteral)
             throws URISyntaxException {
-        this(domain, Curie.toUri(curie), label, uses, differentValues, ranges, allLiteral);
+        this(domain, Curie.toUri(curie), label, uses, differentValues, rangesCuries, allLiteral);
     }
 
-    public Facet(String curie, String label, int uses, int differentValues, String[] ranges, boolean allLiteral)
+    public Facet(String curie, String label, int uses, int differentValues, String[] rangesCuries, boolean allLiteral)
             throws URISyntaxException {
-        this(null, Curie.toUri(curie), label, uses, differentValues, ranges, allLiteral);
+        this(null, Curie.toUri(curie), label, uses, differentValues, rangesCuries, allLiteral);
     }
 
-    public Facet(Class domain, URI uri, String label, int uses, int differentValues, String[] ranges, boolean allLiteral) {
+    public Facet(Class domain, URI uri, String label, int uses, int differentValues, String[] rangesCuries, boolean allLiteral) {
         this.id = new PondClassFacetId(domain.getPond(), domain.getUri(), uri);
         this.uri = uri.toString();
         this.label = label;
         this.domain = domain;
         this.uses = uses;
         this.differentValues = differentValues;
-        this.ranges = Arrays.asList(ranges);
+        this.ranges = Arrays.asList(rangesCuries);
         this.allLiteral = allLiteral;
-        logger.info("\t Created facet {} with ranges: {}", uri, ranges);
+        logger.info("\t Created facet {} with rangesCuries: {}", uri, rangesCuries);
     }
 
     public boolean isRelation() { return !allLiteral; }
+
+    public void setRelation(boolean isRelation) { this.allLiteral = !isRelation; }
 
     public PondClassFacetId getId() { return id; }
 
@@ -81,7 +84,7 @@ public class Facet {
     public List<String> getRanges() { return ranges; }
 
     public String getRange() {
-        return ranges.size() > 0 ? ranges.get(0) : null; //TODO: compute supertype if multiple ranges
+        return ranges.size() > 0 ? ranges.get(0) : null; //TODO: compute supertype if multiple rangesCuries
     }
 
     public Class getDomain() { return domain; }
@@ -95,6 +98,7 @@ public class Facet {
 
     public int getDifferentValues() { return differentValues; }
 
+    @JsonIgnore
     public boolean getAllLiteral() { return allLiteral; }
 
     @Override
@@ -105,7 +109,7 @@ public class Facet {
                 ", domain=" + domain.getId() +
                 ", uses=" + uses +
                 ", differentValues=" + differentValues +
-                ", ranges=" + ranges +
+                ", rangesCuries=" + ranges +
                 '}';
     }
 }
