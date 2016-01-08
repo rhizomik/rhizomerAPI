@@ -16,5 +16,5 @@ Feature: Create class facets in a pond
     Then the response status is 201
     And exists a facet with id "/ponds/vegetables/classes/examples:Potato/facets/foaf:name"
     And The retrieved facet is
-      | uri                                             | label     | uses    | differentValues | ranges            | relation   |
-      | http://xmlns.com/foaf/0.1/name                  | name      | 1       | 1               | xsd:string        | false      |
+      | uri                             | label   | uses    | differentValues | relation | ranges     |
+      | http://xmlns.com/foaf/0.1/name  | name    | 1       | 1               | false    | xsd:string |

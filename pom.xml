@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>net.rhizomik</groupId>
-	<artifactId>rhizomerEye</artifactId>
+	<artifactId>rhizomerAPI</artifactId>
 	<version>0.1</version>
 	<packaging>jar</packaging>
 
-	<name>rhizomerEye</name>
-	<description>Rhizomer Eye</description>
+	<name>rhizomerAPI</name>
+	<description>Rhizomer API</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -63,21 +63,25 @@
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-java</artifactId>
 			<scope>test</scope>
+			<version>1.2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-junit</artifactId>
 			<scope>test</scope>
+			<version>1.2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-spring</artifactId>
 			<scope>test</scope>
+			<version>1.2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 			<scope>test</scope>
+			<version>2.1.0</version>
 		</dependency>
 
 		<!-- Semantic Web -->

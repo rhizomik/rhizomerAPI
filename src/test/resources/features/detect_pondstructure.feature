@@ -13,11 +13,11 @@ Feature: Detect pond structure
   Scenario: The extracted classes are those instantiated by the data
     When I extract the classes from pond "apollo13"
     Then The retrieved classes are
-      | id                                        | label       | instanceCount | uri                                           |
-      | /ponds/apollo13/classes/foaf:Person       | Person      | 2             | http://xmlns.com/foaf/0.1/Person              |
-      | /ponds/apollo13/classes/space:Role        | Role        | 2             | http://purl.org/net/schemas/space/Role        |
-      | /ponds/apollo13/classes/space:MissionRole | MissionRole | 2             | http://purl.org/net/schemas/space/MissionRole |
-      | /ponds/apollo13/classes/space:Mission     | Mission     | 1             | http://purl.org/net/schemas/space/Mission     |
+      | uri                                           | label       | instanceCount |
+      | http://xmlns.com/foaf/0.1/Person              | Person      | 2             |
+      | http://purl.org/net/schemas/space/Role        | Role        | 2             |
+      | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
+      | http://purl.org/net/schemas/space/Mission     | Mission     | 1             |
     And exists a class with id "/ponds/apollo13/classes/foaf:Person"
 
   Scenario: The extracted facets for an existing class are those instantiated by the data

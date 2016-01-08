@@ -17,10 +17,10 @@ Feature: Create classes in a pond
       | /ponds/vegetables/classes/examples:Potato | Potato      | 1             | http://examples.org#Potato  |
 
   Scenario: manually define repeated class
-    Given a class in pond "vegetables" with URI "http://examples.org#Tomato", label "Tomato" and instance count 2
+    Given a class in pond "vegetables" with URI "http://examples.org#Tomato", label "Tomato" and instance count 1
     When I create a class in pond "vegetables" with URI "http://examples.org#Tomato", label "tomato2" and instance count 2
     Then the response status is 409 and message contains "Class with URI http://examples.org#Tomato already exists in Pond vegetables"
     And exists a class with id "/ponds/vegetables/classes/examples:Tomato"
     And The retrieved class is
       | id                                        | label       | instanceCount | uri                         |
-      | /ponds/vegetables/classes/examples:Tomato | Tomato      | 2             | http://examples.org#Tomato  |
+      | /ponds/vegetables/classes/examples:Tomato | Tomato      | 1             | http://examples.org#Tomato  |
