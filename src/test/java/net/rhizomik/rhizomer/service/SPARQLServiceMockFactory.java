@@ -5,6 +5,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateRequest;
+import net.rhizomik.rhizomer.model.Pond;
+import net.rhizomik.rhizomer.model.Queries;
 import net.rhizomik.rhizomer.model.Server;
 import org.apache.jena.riot.RDFDataMgr;
 import org.mockito.Mockito;
@@ -81,6 +83,17 @@ public class SPARQLServiceMockFactory {
             dataset.addNamedModel(graph, model);
             return null;
         }).when(mock).loadModel(isA(Server.class), anyString(), any(Model.class));
+
+        doAnswer(invocationOnMock -> {
+            Pond pond = (Pond) invocationOnMock.getArguments()[0];
+            List<String> targetGraphs = pond.getPondGraphsStrings();
+            targetGraphs.add(pond.getPondOntologiesGraph().toString());
+            UpdateRequest createGraph = Queries.getCreateGraph(pond.getPondInferenceGraph().toString());
+            mock.queryUpdate(pond.getServer(), createGraph);
+            UpdateRequest update = Queries.getUpdateInferTypes(targetGraphs, pond.getPondInferenceGraph().toString());
+            mock.queryUpdate(pond.getServer(), update);
+            return null;
+        }).when(mock).inferTypes(isA(Pond.class));
 
         return mock;
     }
