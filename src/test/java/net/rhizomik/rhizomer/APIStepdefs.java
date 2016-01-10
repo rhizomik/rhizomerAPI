@@ -64,8 +64,6 @@ public class APIStepdefs {
     @Autowired private ClassRepository classRepository;
     @Autowired private ServerRepository serverRepository;
 
-    @Autowired private SPARQLService sparqlService;
-
     @Configuration
     static class SPARQLServiceMockConfig {
         @Bean
@@ -184,6 +182,18 @@ public class APIStepdefs {
         Pond pond = pondRepository.findOne(pondId);
         pond.setInferenceEnabled(inference);
         pondRepository.save(pond);
+    }
+
+    @And("^The following ontologies are defined for the pond \"([^\"]*)\"$")
+    public void The_following_ontologies_are_defined(String pondId, List<String> ontologies) throws Throwable {
+        for (String ontologyUriStr: ontologies) {
+            this.result = mockMvc.perform(post("/ponds/{pondId}/ontologies", pondId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{ \"uri\": \"" + ontologyUriStr + "\" }")
+                    .accept(MediaType.APPLICATION_JSON));
+            this.result.andExpect(status().isCreated());
+        }
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
     }
 
     @When("^I extract the classes from pond \"([^\"]*)\"$")
