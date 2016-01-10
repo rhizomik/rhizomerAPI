@@ -10,7 +10,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -22,9 +24,9 @@ public class Pond {
     @Id
     private String id;
     @ElementCollection
-    private List<String> pondGraphs = new ArrayList<>();
+    private Set<String> pondGraphs = new HashSet<>();
     @ElementCollection
-    private List<String> pondOntologies = new ArrayList<>();
+    private Set<String> pondOntologies = new HashSet<>();
     @ManyToOne
     private Server server;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pond")
@@ -45,7 +47,7 @@ public class Pond {
         this(id, serverUrl, null, null);
     }
 
-    public Pond(String id, URL serverUrl, List<String> graphs, List<String> ontologies) throws MalformedURLException {
+    public Pond(String id, URL serverUrl, Set<String> graphs, Set<String> ontologies) throws MalformedURLException {
         this.id = id;
         this.server = new Server(serverUrl);
         this.pondGraphs = graphs;
@@ -62,17 +64,24 @@ public class Pond {
 
     public void addPondGraph(String graph) { this.pondGraphs.add(graph); }
 
-    public void addPondOntology(String ontology) { this.pondGraphs.add(ontology); }
+    public void addPondOntology(String ontology) { this.pondOntologies.add(ontology); }
 
     public String getId() { return id; }
 
     public void setId(String id) { this.id = id; }
 
     public List<String> getPondGraphsStrings() {
-        return pondGraphs;
+        ArrayList<String> copyPondGraphs = new ArrayList<>(pondGraphs);
+        if (isInferenceEnabled())
+            copyPondGraphs.add(this.getPondInferenceGraph().toString());
+        return copyPondGraphs;
     }
 
-    public void setPondGraphs(List<String> pondGraphs) { this.pondGraphs = pondGraphs; }
+    public void setPondGraphs(Set<String> pondGraphs) { this.pondGraphs = pondGraphs; }
+
+    public List<String> getPondOntologies() { return new ArrayList<>(pondOntologies); }
+
+    public void setPondOntologies(Set<String> pondOntologies) { this.pondOntologies = pondOntologies; }
 
     public Server getServer() { return server; }
 
@@ -85,7 +94,7 @@ public class Pond {
     public URI getPondUri() {
         URI pondURI = null;
         try {
-            pondURI = new URI("http://ontolake.net/pond/"+getId());
+            pondURI = new URI("http://rhizomik.net/pond/"+getId());
         } catch (URISyntaxException e) {
             logger.error(e.getMessage());
         }
