@@ -15,7 +15,6 @@ Feature: Detect pond structure
     Then The retrieved classes are
       | uri                                           | label       | instanceCount |
       | http://xmlns.com/foaf/0.1/Person              | Person      | 2             |
-      | http://purl.org/net/schemas/space/Role        | Role        | 2             |
       | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
       | http://purl.org/net/schemas/space/Mission     | Mission     | 1             |
     And exists a class with id "/ponds/apollo13/classes/foaf:Person"

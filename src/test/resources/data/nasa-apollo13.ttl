@@ -41,9 +41,3 @@
   foaf:name "James A. Lowell, Jr"^^xsd:string ;
   foaf:name "James Arthur Lovell, Jr." ;
 .
-<http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot>
-  rdf:type space:Role ;
-.
-<http://data.kasabi.com/dataset/nasa/roles/mission-commander>
-  rdf:type space:Role ;
-.
