@@ -10,7 +10,6 @@ import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.PondRepository;
-import net.rhizomik.rhizomer.repository.ServerRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
 import org.junit.runner.RunWith;
@@ -62,7 +61,6 @@ public class APIStepdefs {
     @Autowired private WebApplicationContext wac;
     @Autowired private PondRepository pondRepository;
     @Autowired private ClassRepository classRepository;
-    @Autowired private ServerRepository serverRepository;
 
     @Configuration
     static class SPARQLServiceMockConfig {
@@ -162,10 +160,9 @@ public class APIStepdefs {
 
     @Given("^There is a pond \"([^\"]*)\" on a local server storing \"([^\"]*)\" in graph \"([^\"]*)\"$")
     public void There_is_a_pond_on_a_local_server(String pondId, String dataFile, URI graph) throws Throwable {
-        Server server = new Server(new URL("http://test/sparqlmock"));
         Pond pond = new Pond(pondId);
-        pond.setServer(serverRepository.save(server));
         pond.addPondGraph(graph.toString());
+        pond.setSparqlEndPoint(new URL("http://sparql/mock"));
         pondRepository.save(pond);
         SPARQLServiceMockFactory.addData(graph.toString(), dataFile);
     }

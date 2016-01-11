@@ -23,19 +23,19 @@ public class Pond {
 
     @Id
     private String id;
-    @ElementCollection
-    private Set<String> pondGraphs = new HashSet<>();
-    @ElementCollection
-    private Set<String> pondOntologies = new HashSet<>();
-    @ManyToOne
-    private Server server;
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pond")
-    @JsonManagedReference
-    private List<Class> classes = new ArrayList<>();
+    private URL sparqlEndPoint;
     private Queries.QueryType queryType = Queries.QueryType.SIMPLE;
     private boolean inferenceEnabled = true;
     private int sampleSize = 0;
     private double coverage = 0.0;
+
+    @ElementCollection
+    private Set<String> pondGraphs = new HashSet<>();
+    @ElementCollection
+    private Set<String> pondOntologies = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pond")
+    @JsonManagedReference
+    private List<Class> classes = new ArrayList<>();
 
     public Pond() {}
 
@@ -47,12 +47,16 @@ public class Pond {
         this(id, serverUrl, null, null);
     }
 
-    public Pond(String id, URL serverUrl, Set<String> graphs, Set<String> ontologies) throws MalformedURLException {
+    public Pond(String id, URL sparqlEndPoint, Set<String> graphs, Set<String> ontologies) throws MalformedURLException {
         this.id = id;
-        this.server = new Server(serverUrl);
+        this.sparqlEndPoint = sparqlEndPoint;
         this.pondGraphs = graphs;
         this.pondOntologies = ontologies;
     }
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
 
     public List<Class> getClasses() {
         return classes;
@@ -62,15 +66,7 @@ public class Pond {
 
     public void addClass(Class aClass) { classes.add(aClass); }
 
-    public void addPondGraph(String graph) { this.pondGraphs.add(graph); }
-
-    public void addPondOntology(String ontology) { this.pondOntologies.add(ontology); }
-
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
-
-    public List<String> getPondGraphsStrings() {
+    public List<String> getPondGraphs() {
         ArrayList<String> copyPondGraphs = new ArrayList<>(pondGraphs);
         if (isInferenceEnabled())
             copyPondGraphs.add(this.getPondInferenceGraph().toString());
@@ -79,47 +75,21 @@ public class Pond {
 
     public void setPondGraphs(Set<String> pondGraphs) { this.pondGraphs = pondGraphs; }
 
+    public void addPondGraph(String graph) { this.pondGraphs.add(graph); }
+
+    public void addPondOntology(String ontology) { this.pondOntologies.add(ontology); }
+
     public List<String> getPondOntologies() { return new ArrayList<>(pondOntologies); }
 
     public void setPondOntologies(Set<String> pondOntologies) { this.pondOntologies = pondOntologies; }
 
-    public Server getServer() { return server; }
+    public URL getSparqlEndPoint() { return sparqlEndPoint; }
 
-    public void setServer(Server server) { this.server = server; }
+    public void setSparqlEndPoint(URL sparqlEndPoint) { this.sparqlEndPoint = sparqlEndPoint; }
 
     public Queries.QueryType getQueryType() { return queryType; }
 
     public void setQueryType(Queries.QueryType queryType) { this.queryType = queryType; }
-
-    public URI getPondUri() {
-        URI pondURI = null;
-        try {
-            pondURI = new URI("http://rhizomik.net/pond/"+getId());
-        } catch (URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-        return pondURI;
-    }
-
-    public URI getPondOntologiesGraph() {
-        URI pondOntologiesGraphURI = null;
-        try {
-            pondOntologiesGraphURI = new URI(getPondUri()+"/ontologies");
-        } catch (URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-        return pondOntologiesGraphURI;
-    }
-
-    public URI getPondInferenceGraph() {
-        URI pondInferenceGraphURI = null;
-        try {
-            pondInferenceGraphURI = new URI(getPondUri()+"/inference");
-        } catch (URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-        return pondInferenceGraphURI;
-    }
 
     public boolean isInferenceEnabled() { return inferenceEnabled; }
 
@@ -132,4 +102,34 @@ public class Pond {
     public double getCoverage() { return coverage; }
 
     public void setCoverage(double coverage) { this.coverage = coverage; }
+
+    public URI getPondUri() {
+        URI pondURI = null;
+        try {
+            pondURI = new URI("http://rhizomik.net/pond/"+getId());
+        } catch (URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+        return pondURI;
+    }
+
+    public java.net.URI getPondOntologiesGraph() {
+        URI pondOntologiesGraphURI = null;
+        try {
+            pondOntologiesGraphURI = new URI(getPondUri()+"/ontologies");
+        } catch (URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+        return pondOntologiesGraphURI;
+    }
+
+    public java.net.URI getPondInferenceGraph() {
+        URI pondInferenceGraphURI = null;
+        try {
+            pondInferenceGraphURI = new URI(getPondUri()+"/inference");
+        } catch (URISyntaxException e) {
+            logger.error(e.getMessage());
+        }
+        return pondInferenceGraphURI;
+    }
 }

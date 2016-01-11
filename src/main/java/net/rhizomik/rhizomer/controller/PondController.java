@@ -46,7 +46,7 @@ public class PondController {
     public @ResponseBody List<String> addPondOntology(@RequestBody Map<String, String> ontology, @PathVariable String pondId) throws Exception {
         Pond pond = pondRepository.findOne(pondId);
         Preconditions.checkNotNull(pond, "Pond with id {} not found", pondId);
-        sparqlService.loadOntology(pond.getServer(), pond.getPondOntologiesGraph().toString(), ontology.get("uri"));
+        sparqlService.loadOntology(pond.getSparqlEndPoint(), pond.getPondOntologiesGraph().toString(), ontology.get("uri"));
         pond.addPondOntology(ontology.get("uri"));
         pond = pondRepository.save(pond);
         return pond.getPondOntologies();

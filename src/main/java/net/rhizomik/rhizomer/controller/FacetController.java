@@ -37,7 +37,7 @@ public class FacetController {
         Class pondClass = classRepository.findOne(pondClassId);
         Preconditions.checkNotNull(pondClass, "Class with id %s not found", pondClassId);
         logger.info("Retrieving facets for Class {} in Pond {}", classCurie, pondId);
-        if (pondClass.getFacets().isEmpty() && pond.getServer()!=null )
+        if (pondClass.getFacets().isEmpty() && pond.getSparqlEndPoint()!=null )
             analiseDataset.detectClassFacets(pondClass);
         return pondClass.getFacets();
     }

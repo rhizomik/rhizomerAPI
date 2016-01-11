@@ -7,12 +7,12 @@ import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateRequest;
 import net.rhizomik.rhizomer.model.Pond;
 import net.rhizomik.rhizomer.model.Queries;
-import net.rhizomik.rhizomer.model.Server;
 import org.apache.jena.riot.RDFDataMgr;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.List;
 
 import static org.mockito.Matchers.isA;
@@ -35,7 +35,7 @@ public class SPARQLServiceMockFactory {
     public static SPARQLService build() {
         SPARQLService mock = Mockito.mock(SPARQLService.class);
 
-        when(mock.querySelect(isA(Server.class), isA(Query.class), anyList(), anyList()))
+        when(mock.querySelect(isA(URL.class), isA(Query.class), anyList(), anyList()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = (Query) invocationOnMock.getArguments()[1];
                     List<String> graphs = (List<String>) invocationOnMock.getArguments()[2];
@@ -47,7 +47,7 @@ public class SPARQLServiceMockFactory {
                     return qexec.execSelect();
                 });
 
-        when(mock.queryConstruct(isA(Server.class), isA(Query.class), anyList()))
+        when(mock.queryConstruct(isA(URL.class), isA(Query.class), anyList()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = (Query) invocationOnMock.getArguments()[1];
                     List<String> graphs = (List<String>) invocationOnMock.getArguments()[2];
@@ -64,16 +64,16 @@ public class SPARQLServiceMockFactory {
             logger.debug("Sending to {} query: \n{}", "mockServer", update.toString());
             UpdateAction.execute(update, dataset);
             return null;
-        }).when(mock).queryUpdate(isA(Server.class), any(UpdateRequest.class));
+        }).when(mock).queryUpdate(isA(URL.class), any(UpdateRequest.class));
 
         doAnswer(invocationOnMock -> {
-            Server server = (Server) invocationOnMock.getArguments()[0];
+            URL sparqlEndPoint = (URL) invocationOnMock.getArguments()[0];
             String graph = (String) invocationOnMock.getArguments()[1];
             String uri = (String) invocationOnMock.getArguments()[2];
             Model model = RDFDataMgr.loadModel(uri);
-            mock.loadModel(server, graph, model);
+            mock.loadModel(sparqlEndPoint, graph, model);
             return null;
-        }).when(mock).loadOntology(isA(Server.class), anyString(), anyString());
+        }).when(mock).loadOntology(isA(URL.class), anyString(), anyString());
 
         doAnswer(invocationOnMock -> {
             String graph = (String) invocationOnMock.getArguments()[1];
@@ -82,16 +82,16 @@ public class SPARQLServiceMockFactory {
                 model.add(dataset.getNamedModel(graph));
             dataset.addNamedModel(graph, model);
             return null;
-        }).when(mock).loadModel(isA(Server.class), anyString(), any(Model.class));
+        }).when(mock).loadModel(isA(URL.class), anyString(), any(Model.class));
 
         doAnswer(invocationOnMock -> {
             Pond pond = (Pond) invocationOnMock.getArguments()[0];
-            List<String> targetGraphs = pond.getPondGraphsStrings();
+            List<String> targetGraphs = pond.getPondGraphs();
             targetGraphs.add(pond.getPondOntologiesGraph().toString());
             UpdateRequest createGraph = Queries.getCreateGraph(pond.getPondInferenceGraph().toString());
-            mock.queryUpdate(pond.getServer(), createGraph);
+            mock.queryUpdate(pond.getSparqlEndPoint(), createGraph);
             UpdateRequest update = Queries.getUpdateInferTypes(targetGraphs, pond.getPondInferenceGraph().toString());
-            mock.queryUpdate(pond.getServer(), update);
+            mock.queryUpdate(pond.getSparqlEndPoint(), update);
             return null;
         }).when(mock).inferTypes(isA(Pond.class));
 

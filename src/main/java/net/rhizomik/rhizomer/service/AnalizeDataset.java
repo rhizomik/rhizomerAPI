@@ -32,8 +32,8 @@ public class AnalizeDataset {
         if (pond.isInferenceEnabled())
             sparqlService.inferTypes(pond);
 
-        ResultSet result = sparqlService.querySelect(pond.getServer(), Queries.getQueryClasses(pond.getQueryType()),
-                                              pond.getPondGraphsStrings(), null);
+        ResultSet result = sparqlService.querySelect(pond.getSparqlEndPoint(), Queries.getQueryClasses(pond.getQueryType()),
+                                              pond.getPondGraphs(), null);
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
             Resource r = soln.getResource("?class");
@@ -49,10 +49,10 @@ public class AnalizeDataset {
     }
 
     public void detectClassFacets(Class pondClass) {
-        ResultSet result = sparqlService.querySelect(pondClass.getPond().getServer(),
+        ResultSet result = sparqlService.querySelect(pondClass.getPond().getSparqlEndPoint(),
                 Queries.getQueryClassFacets(pondClass.getUri().toString(), pondClass.getPond().getQueryType(),
                         pondClass.getPond().getSampleSize(), pondClass.getInstanceCount(), pondClass.getPond().getCoverage()),
-                        pondClass.getPond().getPondGraphsStrings(), null);
+                        pondClass.getPond().getPondGraphs(), null);
 
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();

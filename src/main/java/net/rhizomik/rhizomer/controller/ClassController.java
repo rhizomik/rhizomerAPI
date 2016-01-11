@@ -34,7 +34,7 @@ public class ClassController {
         Pond pond = pondRepository.findOne(pondId);
         Preconditions.checkNotNull(pond, "Pond with id %s not found", pondId);
         logger.info("Retrieving classes in Pond {}", pondId);
-        if (pond.getClasses().isEmpty() && pond.getServer()!=null )
+        if (pond.getClasses().isEmpty() && pond.getSparqlEndPoint()!=null )
             analiseDataset.detectPondClasses(pond);
         //Pond savedPond = pondRepository.save(pond);
         return pond.getClasses();

@@ -8,7 +8,6 @@ import com.hp.hpl.jena.update.UpdateProcessor;
 import com.hp.hpl.jena.update.UpdateRequest;
 import net.rhizomik.rhizomer.model.Pond;
 import net.rhizomik.rhizomer.model.Queries;
-import net.rhizomik.rhizomer.model.Server;
 import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -17,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -26,27 +26,27 @@ import java.util.List;
 public class SPARQLService {
     private static final Logger logger = LoggerFactory.getLogger(SPARQLService.class);
 
-    public ResultSet querySelect(Server server, Query query) {
-        return this.querySelect(server, query, null, null);
+    public ResultSet querySelect(URL sparqlEndpoint, Query query) {
+        return this.querySelect(sparqlEndpoint, query, null, null);
     }
 
-    public ResultSet querySelect(Server server, Query query, List<String> graphs, List<String> ontologies) {
+    public ResultSet querySelect(URL sparqlEndpoint, Query query, List<String> graphs, List<String> ontologies) {
         graphs.forEach(query::addGraphURI);
-        logger.debug("Sending to {} query: \n{}", server.getEndpoint(), query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(server.getEndpoint(), query, graphs, ontologies);
+        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, query);
+        QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, ontologies);
         return ResultSetFactory.copyResults(q.execSelect());
     }
 
-    public Model queryConstruct(Server server, Query query, List<String> graphs) {
+    public Model queryConstruct(URL sparqlEndpoint, Query query, List<String> graphs) {
         graphs.forEach(query::addGraphURI);
-        logger.debug("Sending to {} query: \n{}", server.getEndpoint(), query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(server.getEndpoint(), query, graphs, null);
+        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, query);
+        QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, null);
         return q.execConstruct();
     }
 
-    public void queryUpdate(Server server, UpdateRequest update) {
-        logger.debug("Sending to {} query: \n{}", server.getEndpoint(), update.toString());
-        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, server.getEndpoint());
+    public void queryUpdate(URL sparqlEndpoint, UpdateRequest update) {
+        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
+        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, sparqlEndpoint.toString());
         try {
             processor.execute();
         } catch (Exception e) {
@@ -54,18 +54,18 @@ public class SPARQLService {
         }
     }
 
-    public void loadOntology(Server server, String graph, String uri) {
+    public void loadOntology(URL sparqlEndpoint, String graph, String uri) {
         Model model = RDFDataMgr.loadModel(uri);
-        loadModel(server, graph, model);
+        loadModel(sparqlEndpoint, graph, model);
     }
 
-    public void loadModel(Server server, String graph, Model model) {
+    public void loadModel(URL sparqlEndpoint, String graph, Model model) {
         StringWriter out = new StringWriter();
         RDFDataMgr.write(out, model, Lang.NTRIPLES);
         String insertString = "INSERT DATA { GRAPH <" + graph + "> { " + out.toString() + " } } ";
         UpdateRequest update = UpdateFactory.create(insertString);
-        logger.debug("Sending to {} query: \n{}", server.getEndpoint(), update.toString());
-        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, server.getEndpoint());
+        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
+        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, sparqlEndpoint.toString());
         try {
             processor.execute();
         } catch (HttpException e) {
@@ -74,26 +74,26 @@ public class SPARQLService {
     }
 
     public void inferTypes(Pond pond) {
-        List<String> targetGraphs = pond.getPondGraphsStrings();
+        List<String> targetGraphs = pond.getPondGraphs();
         targetGraphs.add(pond.getPondOntologiesGraph().toString());
         UpdateRequest createGraph = Queries.getCreateGraph(pond.getPondInferenceGraph().toString());
-        queryUpdate(pond.getServer(), createGraph);
+        queryUpdate(pond.getSparqlEndPoint(), createGraph);
         UpdateRequest update = Queries.getUpdateInferTypes(targetGraphs, pond.getPondInferenceGraph().toString());
-        queryUpdate(pond.getServer(), update);
+        queryUpdate(pond.getSparqlEndPoint(), update);
     }
 
     public void inferTypesConstruct(Pond pond) {
         UpdateRequest createGraph = Queries.getCreateGraph(pond.getPondInferenceGraph().toString());
-        queryUpdate(pond.getServer(), createGraph);
-        List<String> targetGraphs = pond.getPondGraphsStrings();
+        queryUpdate(pond.getSparqlEndPoint(), createGraph);
+        List<String> targetGraphs = pond.getPondGraphs();
         targetGraphs.add(pond.getPondOntologiesGraph().toString());
-        Model inferredModel = queryConstruct(pond.getServer(), Queries.getQueryInferTypes(), targetGraphs);
+        Model inferredModel = queryConstruct(pond.getSparqlEndPoint(), Queries.getQueryInferTypes(), targetGraphs);
         /*File inferenceOut = new File(pond.getId() + "-inference.ttl");
         try {
             RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage());
         }*/
-        loadModel(pond.getServer(), pond.getPondInferenceGraph().toString(), inferredModel);
+        loadModel(pond.getSparqlEndPoint(), pond.getPondInferenceGraph().toString(), inferredModel);
     }
 }
