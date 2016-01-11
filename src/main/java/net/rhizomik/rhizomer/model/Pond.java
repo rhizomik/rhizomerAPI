@@ -1,6 +1,6 @@
 package net.rhizomik.rhizomer.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,6 @@ public class Pond {
     @ElementCollection
     private Set<String> pondOntologies = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pond")
-    @JsonManagedReference
     private List<Class> classes = new ArrayList<>();
 
     public Pond() {}
@@ -58,6 +57,7 @@ public class Pond {
 
     public void setId(String id) { this.id = id; }
 
+    @JsonIgnore
     public List<Class> getClasses() {
         return classes;
     }
@@ -66,6 +66,7 @@ public class Pond {
 
     public void addClass(Class aClass) { classes.add(aClass); }
 
+    @JsonIgnore
     public List<String> getPondGraphs() {
         ArrayList<String> copyPondGraphs = new ArrayList<>(pondGraphs);
         if (isInferenceEnabled())
@@ -79,6 +80,7 @@ public class Pond {
 
     public void addPondOntology(String ontology) { this.pondOntologies.add(ontology); }
 
+    @JsonIgnore
     public List<String> getPondOntologies() { return new ArrayList<>(pondOntologies); }
 
     public void setPondOntologies(Set<String> pondOntologies) { this.pondOntologies = pondOntologies; }
@@ -103,6 +105,7 @@ public class Pond {
 
     public void setCoverage(double coverage) { this.coverage = coverage; }
 
+    @JsonIgnore
     public URI getPondUri() {
         URI pondURI = null;
         try {
@@ -113,6 +116,7 @@ public class Pond {
         return pondURI;
     }
 
+    @JsonIgnore
     public java.net.URI getPondOntologiesGraph() {
         URI pondOntologiesGraphURI = null;
         try {
@@ -123,6 +127,7 @@ public class Pond {
         return pondOntologiesGraphURI;
     }
 
+    @JsonIgnore
     public java.net.URI getPondInferenceGraph() {
         URI pondInferenceGraphURI = null;
         try {

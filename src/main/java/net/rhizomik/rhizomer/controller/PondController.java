@@ -41,6 +41,19 @@ public class PondController {
         return pondRepository.save(newPond);
     }
 
+    @RequestMapping(value = "/ponds/{pondId}", method = RequestMethod.PUT)
+    public @ResponseBody Pond createPond(@Valid @RequestBody Pond updatedPond, @PathVariable String pondId) throws Exception {
+        Pond pond = pondRepository.findOne(pondId);
+        Preconditions.checkNotNull(pond, "Pond with id {} not found", pondId);
+        logger.info("Updating Pond: {}", pondId);
+        pond.setSparqlEndPoint(updatedPond.getSparqlEndPoint());
+        pond.setQueryType(updatedPond.getQueryType());
+        pond.setInferenceEnabled(updatedPond.isInferenceEnabled());
+        pond.setSampleSize(updatedPond.getSampleSize());
+        pond.setCoverage(updatedPond.getCoverage());
+        return pondRepository.save(pond);
+    }
+
     @RequestMapping(value = "/ponds/{pondId}/ontologies", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody List<String> addPondOntology(@RequestBody Map<String, String> ontology, @PathVariable String pondId) throws Exception {

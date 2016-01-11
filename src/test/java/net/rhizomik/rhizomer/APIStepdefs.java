@@ -38,8 +38,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -169,9 +168,16 @@ public class APIStepdefs {
 
     @And("^The query type for pond \"([^\"]*)\" is \"([^\"]*)\"$")
     public void The_query_type_for_pond_is(String pondId, String queryTypeString) throws Throwable {
-        Pond pond = pondRepository.findOne(pondId);
+        existsAPondWithId(pondId);
+        String pondJson = this.result.andReturn().getResponse().getContentAsString();
+        Pond pond = mapper.readValue(pondJson, Pond.class);
         pond.setQueryType(Queries.QueryType.valueOf(queryTypeString));
-        pondRepository.save(pond);
+        pondJson = mapper.writeValueAsString(pond);
+        this.result = mockMvc.perform(put("/ponds/{pondId}", pondId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(pondJson)
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(jsonPath("$.queryType", is(queryTypeString)));
     }
 
     @And("^The inference for pond \"([^\"]*)\" is set to \"([^\"]*)\"$")
