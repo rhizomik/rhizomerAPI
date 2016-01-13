@@ -91,6 +91,11 @@ public class Queries {
             "CREATE GRAPH <" + graph + ">");
     }
 
+    public static UpdateRequest getClearGraph(String graph) {
+        return UpdateFactory.create(
+            "CLEAR GRAPH <" + graph + ">");
+    }
+
     public static Query getQueryCountUntyped() {
         return QueryFactory.create(prefixes +
             "SELECT (COUNT(DISTINCT(?i)) AS ?n) \n" +
@@ -99,6 +104,12 @@ public class Queries {
             "\t UNION \n" +
             "\t { ?s ?p ?i FILTER NOT EXISTS { ?i a ?class } } \n" +
             "}");
+    }
+
+    public static Query getQueryCountTriples() {
+        return QueryFactory.create(prefixes +
+                "SELECT (COUNT(?s)) AS ?n) \n" +
+                "WHERE { ?s ?p ?o }");
     }
 
     public static Query getQueryCountType(String type) {

@@ -7,7 +7,7 @@ Feature: Detect pond structure considering inference
 
   Background: Existing pond in local server storing file data
     Given There is a pond "apollo13i" on a local server storing "data/nasa-apollo13.ttl" in graph "http://rhizomik.net/pond/apollo13i"
-    And The following ontologies are defined for the pond "apollo13i"
+    And The following ontologies are set for pond "apollo13i"
       | data/nasa-schema.ttl                                                            |
     And The query type for pond "apollo13i" is set to "FULL"
     And The inference for pond "apollo13i" is set to "true"

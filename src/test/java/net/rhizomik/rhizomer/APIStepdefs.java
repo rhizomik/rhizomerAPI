@@ -33,9 +33,9 @@ import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,6 +60,7 @@ public class APIStepdefs {
     @Autowired private WebApplicationContext wac;
     @Autowired private PondRepository pondRepository;
     @Autowired private ClassRepository classRepository;
+    @Autowired private SPARQLService sparqlService;
 
     @Configuration
     static class SPARQLServiceMockConfig {
@@ -187,16 +188,43 @@ public class APIStepdefs {
         pondRepository.save(pond);
     }
 
-    @And("^The following ontologies are defined for the pond \"([^\"]*)\"$")
-    public void The_following_ontologies_are_defined(String pondId, List<String> ontologies) throws Throwable {
-        for (String ontologyUriStr: ontologies) {
-            this.result = mockMvc.perform(post("/ponds/{pondId}/ontologies", pondId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content("{ \"uri\": \"" + ontologyUriStr + "\" }")
-                    .accept(MediaType.APPLICATION_JSON));
-            this.result.andExpect(status().isCreated());
-        }
+
+    @When("^I add the ontology \"([^\"]*)\" to the pond \"([^\"]*)\"$")
+    public void iAddTheOntologyToThePond(String ontologyUriStr, String pondId) throws Throwable {
+        this.result = mockMvc.perform(post("/ponds/{pondId}/ontologies", pondId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"uri\": \"" + ontologyUriStr + "\" }")
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(status().isCreated());
+        this.result.andExpect(jsonPath("$", hasItem(ontologyUriStr)));
+    }
+
+    @And("^The following ontologies are set for pond \"([^\"]*)\"$")
+    public void The_following_ontologies_are_added(String pondId, List<String> ontologies) throws Throwable {
+        ontologies = ontologies.stream().filter(s -> s.length()>0).collect(Collectors.toList());
+        String ontologiesJson = mapper.writeValueAsString(ontologies);
+        this.result = mockMvc.perform(put("/ponds/{pondId}/ontologies", pondId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(ontologiesJson)
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(status().isOk());
         this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
+    }
+
+
+    @And("^The following ontologies are defined for the pond \"([^\"]*)\"$")
+    public void theFollowingOntologiesAreDefinedForThePond(String pondId, List<String> ontologies) throws Throwable {
+        ontologies = ontologies.stream().filter(s -> s.length()>0).collect(Collectors.toList());
+        this.result = mockMvc.perform(get("/ponds/{pondId}/ontologies", pondId)
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
+    }
+
+    @And("^The size of pond \"([^\"]*)\" ontologies graph is (\\d+)$")
+    public void theSizeOfPondOntologiesGraphIs(String pondId, int expectedSize) throws Throwable {
+        Pond pond = pondRepository.findOne(pondId);
+        int actualSize = sparqlService.countGraphTriples(pond.getSparqlEndPoint(), pond.getPondOntologiesGraph().toString());
+        assertThat(actualSize, is(expectedSize));
     }
 
     @When("^I extract the classes from pond \"([^\"]*)\"$")

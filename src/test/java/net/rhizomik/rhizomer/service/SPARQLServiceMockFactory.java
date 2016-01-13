@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
@@ -66,6 +67,15 @@ public class SPARQLServiceMockFactory {
             return null;
         }).when(mock).queryUpdate(isA(URL.class), any(UpdateRequest.class));
 
+        when(mock.countGraphTriples(isA(URL.class), anyString()))
+                .thenAnswer(invocationOnMock -> {
+                    String graph = (String) invocationOnMock.getArguments()[1];
+                    if (dataset.containsNamedModel(graph))
+                        return dataset.getNamedModel(graph).size();
+                    else
+                        return -1;
+                });
+
         doAnswer(invocationOnMock -> {
             URL sparqlEndPoint = (URL) invocationOnMock.getArguments()[0];
             String graph = (String) invocationOnMock.getArguments()[1];
@@ -83,6 +93,13 @@ public class SPARQLServiceMockFactory {
             dataset.addNamedModel(graph, model);
             return null;
         }).when(mock).loadModel(isA(URL.class), anyString(), any(Model.class));
+
+        doAnswer(invocationOnMock -> {
+            URI graph = (URI) invocationOnMock.getArguments()[1];
+            Model blankModel = ModelFactory.createDefaultModel();
+            dataset.addNamedModel(graph.toString(), blankModel);
+            return null;
+        }).when(mock).clearGraph(isA(URL.class), isA(URI.class));
 
         doAnswer(invocationOnMock -> {
             Pond pond = (Pond) invocationOnMock.getArguments()[0];

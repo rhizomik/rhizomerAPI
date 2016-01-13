@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.StringWriter;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
@@ -54,6 +55,19 @@ public class SPARQLService {
         }
     }
 
+    public int countGraphTriples(URL sparqlEndPoint, String graph) {
+        Query countTriples = Queries.getQueryCountTriples();
+        countTriples.addGraphURI(graph);
+        ResultSet result = querySelect(sparqlEndPoint, countTriples);
+        int count = -1;
+        while (result.hasNext()) {
+            QuerySolution soln = result.nextSolution();
+            if (soln.contains("?n"))
+                count = soln.getLiteral("?n").getInt();
+        }
+        return count;
+    }
+
     public void loadOntology(URL sparqlEndpoint, String graph, String uri) {
         Model model = RDFDataMgr.loadModel(uri);
         loadModel(sparqlEndpoint, graph, model);
@@ -71,6 +85,11 @@ public class SPARQLService {
         } catch (HttpException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    public void clearGraph(URL sparqlEndPoint, URI pondOntologiesGraph) {
+        UpdateRequest clearGraph = Queries.getClearGraph(pondOntologiesGraph.toString());
+        queryUpdate(sparqlEndPoint, clearGraph);
     }
 
     public void inferTypes(Pond pond) {
