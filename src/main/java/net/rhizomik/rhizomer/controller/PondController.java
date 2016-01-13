@@ -42,7 +42,7 @@ public class PondController {
     }
 
     @RequestMapping(value = "/ponds/{pondId}", method = RequestMethod.PUT)
-    public @ResponseBody Pond createPond(@Valid @RequestBody Pond updatedPond, @PathVariable String pondId) throws Exception {
+    public @ResponseBody Pond updatePond(@Valid @RequestBody Pond updatedPond, @PathVariable String pondId) throws Exception {
         Pond pond = pondRepository.findOne(pondId);
         Preconditions.checkNotNull(pond, "Pond with id {} not found", pondId);
         logger.info("Updating Pond: {}", pondId);

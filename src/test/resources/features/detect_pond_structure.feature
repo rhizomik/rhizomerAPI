@@ -7,7 +7,7 @@ Feature: Detect pond structure
 
   Background: Existing pond in local server storing file data
     Given There is a pond "apollo13" on a local server storing "data/nasa-apollo13.ttl" in graph "http://ontolake.net/data"
-    And The query type for pond "apollo13" is "FULL"
+    And The query type for pond "apollo13" is set to "FULL"
     And The inference for pond "apollo13" is set to "false"
 
   Scenario: The extracted classes are those instantiated by the data

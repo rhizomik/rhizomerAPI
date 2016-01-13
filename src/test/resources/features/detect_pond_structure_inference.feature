@@ -9,7 +9,7 @@ Feature: Detect pond structure considering inference
     Given There is a pond "apollo13i" on a local server storing "data/nasa-apollo13.ttl" in graph "http://rhizomik.net/pond/apollo13i"
     And The following ontologies are defined for the pond "apollo13i"
       | data/nasa-schema.ttl                                                            |
-    And The query type for pond "apollo13i" is "FULL"
+    And The query type for pond "apollo13i" is set to "FULL"
     And The inference for pond "apollo13i" is set to "true"
 
   Scenario: The extracted classes are those instantiated by the data

@@ -166,7 +166,7 @@ public class APIStepdefs {
         SPARQLServiceMockFactory.addData(graph.toString(), dataFile);
     }
 
-    @And("^The query type for pond \"([^\"]*)\" is \"([^\"]*)\"$")
+    @And("^The query type for pond \"([^\"]*)\" is set to \"([^\"]*)\"$")
     public void The_query_type_for_pond_is(String pondId, String queryTypeString) throws Throwable {
         existsAPondWithId(pondId);
         String pondJson = this.result.andReturn().getResponse().getContentAsString();
