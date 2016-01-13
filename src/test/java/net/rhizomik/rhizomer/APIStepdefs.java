@@ -158,6 +158,27 @@ public class APIStepdefs {
                 .andExpect(jsonPath("$.id", is(facetUriStr)));
     }
 
+    @And("^There is no pond with id \"([^\"]*)\"$")
+    public void thereIsNoPondWithId(String pondId) throws Throwable {
+        this.result = mockMvc.perform(get("/ponds/{pondId}", pondId)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @And("^There is no class \"([^\"]*)\" in pond \"([^\"]*)\"$")
+    public void thereIsNoClassInPond(String classCurie, String pondId) throws Throwable {
+        this.result = mockMvc.perform(get("/ponds/{pondId}/classes/{classCurie}", pondId, classCurie)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @And("^There is no facet \"([^\"]*)\" for class \"([^\"]*)\" in pond \"([^\"]*)\"$")
+    public void thereIsNoFacetForClassInPond(String facetCurie, String classCurie, String pondId) throws Throwable {
+        this.result = mockMvc.perform(get("/ponds/{pondId}/classes/{classCurie}/facets/{facetCurie}", pondId, classCurie, facetCurie)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
     @Given("^There is a pond \"([^\"]*)\" on a local server storing \"([^\"]*)\" in graph \"([^\"]*)\"$")
     public void There_is_a_pond_on_a_local_server(String pondId, String dataFile, URI graph) throws Throwable {
         Pond pond = new Pond(pondId);
@@ -165,6 +186,11 @@ public class APIStepdefs {
         pond.setSparqlEndPoint(new URL("http://sparql/mock"));
         pondRepository.save(pond);
         SPARQLServiceMockFactory.addData(graph.toString(), dataFile);
+    }
+
+    @When("^I delete a pond with id \"([^\"]*)\"$")
+    public void iDeleteAPondWithId(String pondId) throws Throwable {
+        this.result = mockMvc.perform(delete("/ponds/{pondId}", pondId));
     }
 
     @And("^The query type for pond \"([^\"]*)\" is set to \"([^\"]*)\"$")
@@ -187,7 +213,6 @@ public class APIStepdefs {
         pond.setInferenceEnabled(inference);
         pondRepository.save(pond);
     }
-
 
     @When("^I add the ontology \"([^\"]*)\" to the pond \"([^\"]*)\"$")
     public void iAddTheOntologyToThePond(String ontologyUriStr, String pondId) throws Throwable {
