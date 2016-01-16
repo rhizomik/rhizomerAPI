@@ -215,9 +215,16 @@ public class APIStepdefs {
 
     @And("^The inference for pond \"([^\"]*)\" is set to \"([^\"]*)\"$")
     public void theInferenceForPondIsSetTo(String pondId, boolean inference) throws Throwable {
-        Pond pond = pondRepository.findOne(pondId);
+        existsAPondWithId(pondId);
+        String pondJson = this.result.andReturn().getResponse().getContentAsString();
+        Pond pond = mapper.readValue(pondJson, Pond.class);
         pond.setInferenceEnabled(inference);
-        pondRepository.save(pond);
+        pondJson = mapper.writeValueAsString(pond);
+        this.result = mockMvc.perform(put("/ponds/{pondId}", pondId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(pondJson)
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(jsonPath("$.inferenceEnabled", is(inference)));
     }
 
     @When("^I add the ontology \"([^\"]*)\" to the pond \"([^\"]*)\"$")
