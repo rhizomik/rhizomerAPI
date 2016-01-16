@@ -1,0 +1,1975 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc11: <http://purl.org/dc/elements/1.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ns0: <http://purl.org/net/schemas/space/> .
+@prefix ns1: <http://purl.org/ontology/po/> .
+
+<http://data.kasabi.com/dataset/nasa/person/jackrobertlousma> owl:sameAs <http://dbpedia.org/resource/Jack_R._Lousma> .
+<http://data.kasabi.com/dataset/nasa/spacecraft/1972-096D>
+  a <http://purl.org/net/schemas/space/Spacecraft> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17>
+  a ns0:Mission ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/5>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/8>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/7>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/1> ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_17> ;
+  dc11:title "Apollo 17" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/6>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesmossdukejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/charlesmossdukejr>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/backup-lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/backup-lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/0> ;
+  foaf:name "Charles Moss Duke, &#x0A;      Jr.", "Charles Moss Duke, Jr." ;
+  owl:sameAs <http://dbpedia.org/resource/Charles_Duke> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesmossdukejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16>
+  a ns0:Mission ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/7>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/8>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/5>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/2> ;
+  dc11:title "Apollo 16" ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_16> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/7>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/anthonywayneenglandphd> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/anthonywayneenglandphd>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/7> ;
+  foaf:name "Anthony Wayne England, &#x0A;      Ph. D." .
+
+<http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> a ns0:Role .
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/donaldherodpeterson> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/donaldherodpeterson>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Donald_H._Peterson> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/0> ;
+  foaf:name "Donald Herod &#x0A;      Peterson" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/8>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/robertfranklynovermyer> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/robertfranklynovermyer>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Robert_F._Overmyer> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/8> ;
+  foaf:name "Robert Franklyn &#x0A;      Overmyer" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/robertfranklynovermyer> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/5>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/edgardeanmitchell> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/edgardeanmitchell>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Edgar_Mitchell> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/backup-lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/5>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/backup-lunar-module-pilot> ;
+  foaf:name "Edgar Dean &#x0A;      Mitchell", "Edgar Dean Mitchell" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/edgardeanmitchell> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14>
+  a ns0:Mission ;
+  dc11:title "Apollo 14" ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/2> ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_14> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/ronaldellwinevans> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/ronaldellwinevans>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/backup-command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/command-module-pilot> ;
+  foaf:name "Ronald Ellwin &#x0A;      Evans", "Ronald Ellwin Evans" ;
+  owl:sameAs <http://dbpedia.org/resource/Ronald_Evans> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/ronaldellwinevans> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7>
+  a ns0:Mission ;
+  dc11:title "Apollo 7" ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/5>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/4> ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_7> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/5>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/eugeneandrewcernan> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/eugeneandrewcernan>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Eugene_Cernan> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/5>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/backup-commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/backup-lunar-module-pilot> ;
+  foaf:name "Eugene Andrew &#x0A;      Cernan", "Eugene Andrew Cernan" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/eugeneandrewcernan> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10>
+  a ns0:Mission ;
+  dc11:title "Apollo 10" ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/0> ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_10> ;
+  foaf:isPrimaryTopicOf <http://www.bbc.co.uk/programmes/b00lg2xb#programme> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/brucemccandlessii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/brucemccandlessii>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Bruce_McCandless_II> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/2> ;
+  foaf:name "Bruce &#x0A;      McCandless, II" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/brucemccandlessii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/brucemccandlessii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11>
+  a ns0:Mission ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/9>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/8>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/7>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/5> ;
+  foaf:isPrimaryTopicOf <http://www.bbc.co.uk/programmes/b00lg2xb#programme> ;
+  dc11:title "Apollo 11" ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_11> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesmossdukejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/4>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/williamalisonanders> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/williamalisonanders>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/William_Anders> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/backup-command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/lunar-module-pilot> ;
+  foaf:name "William Alison &#x0A;      Anders", "William Alison Anders" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/williamalisonanders> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> a ns0:Role .
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/williamalisonanders> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8>
+  a ns0:Mission ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/5> ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_8> ;
+  dc11:title "Apollo 8" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/thomaskennethmattinglyii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/thomaskennethmattinglyii>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/backup-command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/5>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/5> ;
+  foaf:name "Thomas Kenneth &#x0A;      Mattingly, II", "Thomas Kenneth Mattingly, II" ;
+  owl:sameAs <http://dbpedia.org/resource/Ken_Mattingly> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/thomaskennethmattinglyii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13>
+  a ns0:Mission ;
+  dc11:title "Apollo 13" ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/0> ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_13> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/4>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/thomaskennethmattinglyii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnwattsyoungusn> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/johnwattsyoungusn>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/8>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/4> ;
+  foaf:name "John Watts Young, &#x0A;      USN" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/8>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnwattsyoungusn> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/4>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnwattsyoungusn> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jackrobertlousmausmc> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/jackrobertlousmausmc>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/2> ;
+  foaf:name "Jack Robert Lousma, &#x0A;      USMC" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jackrobertlousmausmc> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/vancedevoebrand> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/vancedevoebrand>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Vance_D._Brand> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/backup-command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/8>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/5> ;
+  foaf:name "Vance DeVoe Brand" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/vancedevoebrand> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15>
+  a ns0:Mission ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/7>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/5>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/8> ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_15> ;
+  dc11:title "Apollo 15" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/josephpercivalalleniv> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/josephpercivalalleniv>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Joseph_P._Allen> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/0> ;
+  foaf:name "Joseph Percival Allen, &#x0A;      IV" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/josephpercivalalleniv> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/6>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alanbartlettshepardjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/alanbartlettshepardjr>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Alan_Shepard> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/6> ;
+  foaf:name "Alan Bartlett &#x0A;      Shepard, Jr.", "Alan Bartlett Shepard, Jr." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/4>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alanbartlettshepardjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alanbartlettshepardjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/roles/mission-commander> a ns0:Role .
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesgordonfullerton> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/charlesgordonfullerton>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/C._Gordon_Fullerton> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/1> ;
+  foaf:name "Charles Gordon &#x0A;      Fullerton" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesgordonfullerton> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesgordonfullerton> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesgordonfullerton> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/7>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/richardfrancisgordonjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/richardfrancisgordonjr>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Richard_F._Gordon%2C_Jr.> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/backup-commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/7>, <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/backup-command-module-pilot> ;
+  foaf:name "Richard Francis &#x0A;      Gordon, Jr.", "Richard Francis Gordon, Jr." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/4>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/richardfrancisgordonjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9>
+  a ns0:Mission ;
+  dc11:title "Apollo 9" ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/5> ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_9> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesconradjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/charlesconradjr>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Pete_Conrad> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/backup-commander> ;
+  foaf:name "Charles Conrad, &#x0A;      Jr.", "Charles Conrad, Jr." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesconradjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12>
+  a ns0:Mission ;
+  ns0:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/1>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/5> ;
+  owl:sameAs <http://dbpedia.org/resource/Apollo_12> ;
+  dc11:title "Apollo 12" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/4>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/davidrandolphscott> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/davidrandolphscott>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/David_Scott> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/4>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/backup-commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/commander> ;
+  foaf:name "David Randolph &#x0A;      Scott", "David Randolph Scott" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/davidrandolphscott> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> a ns0:Role .
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/davidrandolphscott> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> a ns0:Role .
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/davidrandolphscott> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/donleslielind> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/donleslielind>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Don_L._Lind> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/7>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/3> ;
+  foaf:name "Don Leslie Lind" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/7>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/donleslielind> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/pauljosephweitzusn> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/pauljosephweitzusn>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/2> ;
+  foaf:name "Paul Joseph Weitz, &#x0A;      USN" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/6>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jamesbensonirwin> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/jamesbensonirwin>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/James_Irwin> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/backup-lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/lunar-module-pilot> ;
+  foaf:name "James Benson &#x0A;      Irwin", "James Benson Irwin" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jamesbensonirwin> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> a ns0:Role .
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jamesbensonirwin> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> a ns0:Role .
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/edwardgeorgegibsonphd> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/edwardgeorgegibsonphd>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/1> ;
+  foaf:name "Edward George Gibson, &#x0A;      Ph. D." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/geraldpaulcarr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/geraldpaulcarr>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Gerald_P._Carr> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/0> ;
+  foaf:name "Gerald Paul &#x0A;      Carr" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/5>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alfredmerrillworden> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/alfredmerrillworden>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Alfred_Worden> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/capsule-communicator/5>, <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/backup-command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/command-module-pilot> ;
+  foaf:name "Alfred Merrill &#x0A;      Worden", "Alfred Merrill Worden" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alfredmerrillworden> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alfredmerrillworden> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alfredmerrillworden> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesconradjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/stuartallenroosausaf> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/stuartallenroosausaf>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/0> ;
+  foaf:name "Stuart Allen Roosa, &#x0A;      USAF" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/ronaldellwinevans> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/5>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alanlavernbeanusn> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/alanlavernbeanusn>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/capsule-communicator/5> ;
+  foaf:name "Alan LaVern Bean, &#x0A;      USN" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/richardfrancisgordonjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/richardfrancisgordonjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/richardfrancisgordonjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/4>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/robertalanridleyparker> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/robertalanridleyparker>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Robert_A._Parker> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/4> ;
+  foaf:name "Robert Alan Ridley &#x0A;      Parker" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/robertalanridleyparker> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/5>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/harrisonhaganschmittphd> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/harrisonhaganschmittphd>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/9>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/5> ;
+  foaf:name "Harrison Hagan Schmitt, &#x0A;      Ph. D." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/9>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/harrisonhaganschmittphd> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/karlgordonhenizephd> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/karlgordonhenizephd>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/2> ;
+  foaf:name "Karl Gordon Henize, Ph. &#x0A;      D." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/edgardeanmitchellusn/scd> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/edgardeanmitchellusn/scd>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Edgar_Mitchell> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/3> ;
+  foaf:name "Edgar Dean &#x0A;      Mitchell, USN/Sc. D." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/capsule-communicator/8>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/vancedevoebrand> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/5>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/vancedevoebrand> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/josephpeterkerwin> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/josephpeterkerwin>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Joseph_P._Kerwin> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/capsule-communicator/0> ;
+  foaf:name "Joseph Peter &#x0A;      Kerwin" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/5>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/thomaskennethmattinglyii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/thomaskennethmattinglyii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/5>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/thomaskennethmattinglyii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/6>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/2>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/backup-lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/backup-commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/backup-lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/6>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/3> ;
+  owl:sameAs <http://dbpedia.org/resource/Fred_Haise> ;
+  foaf:name "Fred Wallace Haise, Jr." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/6>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/4>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/edwineugenealdrin> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/edwineugenealdrin>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Buzz_Aldrin> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/4> ;
+  foaf:name "Edwin Eugene &#x0A;      Aldrin" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/geraldpaulcarrusmc> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/geraldpaulcarrusmc>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/2> ;
+  foaf:name "Gerald Paul Carr, &#x0A;      USMC" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/michaelcollins> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/michaelcollins>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Michael_Collins_%28astronaut%29> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/0>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/command-module-pilot> ;
+  foaf:name "Michael &#x0A;      Collins", "Michael Collins" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/michaelcollins> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/neilaldenarmstrong> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/neilaldenarmstrong>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Neil_Armstrong> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/backup-commander> ;
+  foaf:name "Neil Alden Armstrong" ;
+  foaf:isPrimaryTopicOf <http://www.bbc.co.uk/programmes/b00lg2xb#programme> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/neilaldenarmstrong> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/neilaldenarmstrong> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://www.bbc.co.uk/programmes/b00lg2xb#programme>
+  a <http://purl.org/ontology/po/Episode> ;
+  dc11:title "One Small Step" ;
+  ns1:short_synopsis "The story of Neil Armstrong and Buzz Aldrin's trip to the moon." ;
+  foaf:primaryTopic <http://data.kasabi.com/dataset/nasa/mission/apollo-10>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11>, <http://data.kasabi.com/dataset/nasa/person/neilaldenarmstrong>, <http://data.kasabi.com/dataset/nasa/person/edwineugenealdrinjr> ;
+  foaf:topic <http://data.kasabi.com/dataset/nasa/mission/apollo-10> .
+
+<http://data.kasabi.com/dataset/nasa/person/edwineugenealdrinjr>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Buzz_Aldrin> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/backup-command-module-pilot> ;
+  foaf:name "Edwin Eugene Aldrin, Jr." ;
+  foaf:isPrimaryTopicOf <http://www.bbc.co.uk/programmes/b00lg2xb#programme> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/edwineugenealdrinjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/edwineugenealdrinjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jamesarthurlovelljr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/jamesarthurlovelljr>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Jim_Lovell> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/backup-commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/3>, <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/command-module-pilot> ;
+  foaf:name "James Arthur &#x0A;      Lovell, Jr.", "James Arthur Lovell, Jr." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jamesarthurlovelljr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jamesarthurlovelljr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jamesarthurlovelljr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/8>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/owenkaygarriottjrphd> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/owenkaygarriottjrphd>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/8> ;
+  foaf:name "Owen Kay Garriott, Jr., &#x0A;      Ph. D." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-11/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 11 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/ronaldellwinevans> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/1>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/joehenryengleusaf> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/joehenryengleusaf>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/1> ;
+  foaf:name "Joe Henry Engle, &#x0A;      USAF" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesmossdukejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/eugeneandrewcernan> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/eugeneandrewcernan> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/eugeneandrewcernan> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/0>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/thomaspattenstafford> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/thomaspattenstafford>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Thomas_Patten_Stafford> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/backup-commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/0> ;
+  foaf:name "Thomas Patten &#x0A;      Stafford", "Thomas Patten Stafford" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/thomaspattenstafford> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/thomaspattenstafford> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/3>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnleonardswigertjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/johnleonardswigertjr>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Jack_Swigert> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/3> ;
+  foaf:name "John Leonard Swigert, &#x0A;      Jr.", "John Leonard Swigert, Jr." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnleonardswigertjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/williamreidpogueusaf> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/williamreidpogueusaf>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/capsule-communicator/2> ;
+  foaf:name "William Reid Pogue, &#x0A;      USAF" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/ronaldellwinevans> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/ronaldellwinevans> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/edgardeanmitchell> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/edgardeanmitchell> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/6>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/henrywarrenhartsfieldjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/henrywarrenhartsfieldjr>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Henry_Hartsfield> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/6> ;
+  foaf:name "Henry Warren &#x0A;      Hartsfield, Jr." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/4>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/stuartallenroosa> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/stuartallenroosa>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Stuart_Roosa> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/7>, <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/backup-command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/backup-command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/4> ;
+  foaf:name "Stuart Allen &#x0A;      Roosa", "Stuart Allen Roosa" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/stuartallenroosa> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/capsule-communicator/7>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/stuartallenroosa> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/stuartallenroosa> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/stuartallenroosa> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/2>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Capsule Communicator" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jamesbensonirwinusaf> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/capsule-communicator> .
+
+<http://data.kasabi.com/dataset/nasa/person/jamesbensonirwinusaf>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/capsule-communicator/2> ;
+  foaf:name "James Benson Irwin, &#x0A;      USAF" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesmossdukejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/charlesmossdukejr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-018D>
+  a ns0:Spacecraft ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1972-031E>
+  a ns0:Spacecraft ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-059D>
+  a ns0:Spacecraft ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1971-063E>
+  a ns0:Spacecraft ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1972-096B>
+  a ns0:Spacecraft ;
+  foaf:name "Apollo 17 SIVB" ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1972-096B> ;
+  ns0:alternateName "06301", "Apollo sturn V third stage" ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command, Service, and Lunar Modules (CSM and LM). The SIVB provided the thrust to take the CSM and LM from Earth orbit into a lunar transfer orbit. After achieving trajectory towards the Moon, the LM and CSM decoupled from the SIVB at 10:18:02 UT on 7 December 1972. The SIVB was left on a course towards the Moon where it impacted at 20:32:41 UT on 10 December 1972 at 4.21 S, 12.31 W at approximately 2.55 km/sec, providing a seismic source for the ALSEP seismic stations. " ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:agency "United States" ;
+  ns0:internationalDesignator "1972-096B" ;
+  ns0:mass "13300.0" ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1972-096> .
+
+<http://data.kasabi.com/dataset/nasa/discipline/planetaryscience>
+  a ns0:Discipline ;
+  rdfs:label "Planetary Science" .
+
+<http://data.kasabi.com/dataset/nasa/person/owenkaygarriottjr> owl:sameAs <http://dbpedia.org/resource/Owen_K._Garriott> .
+<http://data.kasabi.com/dataset/nasa/spacecraft/1971-063B>
+  a ns0:Spacecraft ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command, Service, and Lunar Modules (CSM and LM). The SIVB provided the thrust to take the CSM and LM from Earth orbit into a lunar transfer orbit. After achieving trajectory towards the Moon, the LM and CSM decoupled from the SIVB at 17:52:01 UT on 26 July 1971. The SIVB was left on a course towards the Moon where it impacted at 20:58:41 UT on 29 July at 1.51 S, 11.81 W at approximately 2.58 km/sec, providing a seismic source for the ALSEP seismic stations. " ;
+  ns0:internationalDesignator "1971-063B" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1971-063B> ;
+  ns0:agency "United States" ;
+  ns0:alternateName "05352", "Apollo Saturn V third stage" ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  foaf:name "Apollo 15 SIVB" ;
+  ns0:mass "13300.0" ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1971-063> .
+
+<http://data.kasabi.com/dataset/nasa/discipline/navigationglobalpositioning>
+  a ns0:Discipline ;
+  rdfs:label "Navigation &amp; Global Positioning" .
+
+<http://data.kasabi.com/dataset/nasa/discipline/resupply/refurbishment/repair>
+  a ns0:Discipline ;
+  rdfs:label "Resupply/Refurbishment/Repair" .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1972-031B>
+  a ns0:Spacecraft ;
+  ns0:alternateName "06001", "Apollo Saturn V third stage" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  foaf:name "Apollo 16 SIVB" ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1972-031B> ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1972-031> ;
+  ns0:agency "United States" ;
+  ns0:mass "13300.0" ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command, Service, and Lunar Modules (CSM and LM). The SIVB provided the thrust to take the CSM and LM from Earth orbit into a lunar transfer orbit. After achieving trajectory towards the Moon, the LM and CSM decoupled from the SIVB at 21:53:15 UT on 16 April 1972. The SIVB was left on a course towards the Moon where it compacted on 19 April. A malfunction resulted in premature loss of tracking data for the Apollo 16 SIVB. Estimates from seismic data indicate that impact occurred at about 21:02:03 UT at 1.3 N, 23.8 W at a velocity of 2.5 to 2.6 km/s. " ;
+  ns0:internationalDesignator "1972-031B" .
+
+<http://data.kasabi.com/dataset/nasa/discipline/communications>
+  a ns0:Discipline ;
+  rdfs:label "Communications" .
+
+<http://data.kasabi.com/dataset/nasa/discipline/surveillanceandothermilitary>
+  a ns0:Discipline ;
+  rdfs:label "Surveillance and Other Military" .
+
+<http://data.kasabi.com/dataset/nasa/person/anthonywayneengland> owl:sameAs <http://dbpedia.org/resource/Anthony_W._England> .
+<http://www.bbc.co.uk/programmes/b007stmh#programme>
+  a ns1:Episode ;
+  dc11:title "Blast Off!" ;
+  ns1:short_synopsis "James May investigates what the Space Race did for all of us." ;
+  foaf:topic <http://data.kasabi.com/dataset/nasa/launchsite/capecanaveral> .
+
+<http://data.kasabi.com/dataset/nasa/launchsite/capecanaveral>
+  a ns0:LaunchSite ;
+  rdfs:label "Cape Canaveral, United States" ;
+  ns0:country "United States" ;
+  ns0:place "Cape Canaveral" .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-043C>
+  a ns0:Spacecraft ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> .
+
+<http://data.kasabi.com/dataset/nasa/person/williamreidpogue> owl:sameAs <http://dbpedia.org/resource/William_R._Pogue> .
+<http://data.kasabi.com/dataset/nasa/discipline/other>
+  a ns0:Discipline ;
+  rdfs:label "Other" .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-099B>
+  a ns0:Spacecraft ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1969-099> ;
+  foaf:name "Apollo 12 SIVB" ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command, Service, and Lunar Modules (CSM and LM). The SIVB provided the thrust to take the CSM and LM from Earth orbit into a lunar transfer orbit. After achieving trajectory towards the Moon, the LM and CSM decoupled from the SIVB at 20:35 UT on 14 November 1969 and made a course correction to head for lunar orbit. Propellants were fired to target the SIVB stage past the Moon and into solar orbit, but the stage did not go close enough to the Moon to permit escape, and it ended in a highly elliptical Earth orbit. " ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:alternateName "Apollo 12 Saturn V third stage", "04226" ;
+  ns0:agency "United States" ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:internationalDesignator "1969-099B" ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1969-099B> ;
+  ns0:mass "13300.0" .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1971-008D>
+  a ns0:Spacecraft ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> .
+
+<http://data.kasabi.com/dataset/nasa/discipline/uncategorizedcosmos>
+  a ns0:Discipline ;
+  rdfs:label "Uncategorized Cosmos" .
+
+<http://data.kasabi.com/dataset/nasa/discipline/technologyapplications>
+  a ns0:Discipline ;
+  rdfs:label "Technology Applications" .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1971-008B>
+  a ns0:Spacecraft ;
+  foaf:name "Apollo 14 SIVB" ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1971-008> ;
+  ns0:internationalDesignator "1971-008B" ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1971-008B> ;
+  ns0:mass "13300.0" ;
+  ns0:alternateName "Apollo Saturn V third stage", "04904" ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command, Service, and Lunar Modules (CSM and LM). The SIVB provided the thrust to take the CSM and LM from Earth orbit into a lunar transfer orbit. After achieving trajectory towards the Moon, the LM and CSM decoupled from the SIVB at 02:50:16 UT on 1 February 1971. The SIVB was left on a course towards the Moon where it impacted at 07:40:54 UT on 4 February at 8.09 S, 26.02 W at approximately 2.54 km/sec, providing a seismic source for the ALSEP seismic station. " ;
+  ns0:agency "United States" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> .
+
+<http://data.kasabi.com/dataset/nasa/person/pauljosephweitz> owl:sameAs <http://dbpedia.org/resource/Paul_J._Weitz> .
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-059B>
+  a ns0:Spacecraft ;
+  ns0:agency "United States" ;
+  ns0:alternateName "Apollo 11 Saturn V third stage", "04040" ;
+  ns0:mass "13300.0" ;
+  foaf:name "Apollo 11 SIVB" ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1969-059> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1969-059B> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:internationalDesignator "1969-059B" ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command, Service, and Lunar Modules (CSM and LM). The SIVB provided the thrust to take the CSM and LM from Earth orbit into a lunar transfer orbit. After achieving trajectory towards the Moon, the LM and CSM decoupled from the SIVB at 17:49 UT on 16 July 1969 and made a course correction to head for lunar orbit. The SIVB stage was left on a ballistic trajectory to fly by the Moon on 19 July and entered solar orbit. " .
+
+<http://data.kasabi.com/dataset/nasa/person/karlgordonhenize> owl:sameAs <http://dbpedia.org/resource/Karl_Gordon_Henize> .
+<http://data.kasabi.com/dataset/nasa/person/edwardgeorgegibson> owl:sameAs <http://dbpedia.org/resource/Edward_Gibson> .
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-099D>
+  a ns0:Spacecraft ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1968-089B>
+  a ns0:Spacecraft ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1970-029A>
+  a ns0:Spacecraft ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_13_sm.jpg> ;
+  ns0:alternateName "Apollo 13 CSM", "CSM-109", "Odyssey", "04371" ;
+  ns0:missionProfile "Apollo 13 was launched on Saturn V SA-508 on 11 April 1970 at 19:13:00 UT (02:13:00 p.m. EST) from pad 39A at Kennedy Space Center. During second stage boost the center engine of the S-II stage cut off 132 seconds early, causing the remaining four engines to burn 34 seconds longer than normal. The velocity after S-II burn was still lower than planned by 68 m/sec, so the S-IVB orbital insertion burn at 19:25:40 was 9 seconds longer than planned. Translunar injection took place at 21:54:47 UT, CSM/S-IVB separation at 22:19:39 UT, and CSM-LM docking at 22:32:09 UT. The S-IVB auxilliary propulsive system burned at 01:13 UT on 12 April for 217 seconds to put the S-IVB into a lunar impact trajectory. (It impacted the lunar surface on 14 April at 01:09:41.0 at 2.75 S, 27.86 W with a velocity of 2.58 km/s at a 76 degrees angle from horizontal.) A 3.4 second mid-course correction was made at 01:27 UT on 13 April." ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1970-029A> ;
+  ns0:agency "United States" ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:internationalDesignator "1970-029A" ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1970-029> ;
+  dc11:description "Apollo 13 was intended to be the third mission to carry humans to the surface of the Moon, but an explosion of one of the oxygen tanks and resulting damage to other systems resulted in the mission being aborted before the planned lunar landing could take place. The crew, commander James A. Lovell, Jr., command module pilot John L. Swigert, Jr., and lunar module pilot Fred W. Haise Jr., were returned safely to Earth on 17 April 1970." ;
+  ns0:mass "28945.0" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  foaf:name "Apollo 13 Command and Service Module (CSM)" .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_13_sm.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1970-029A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_13_sm.gif> .
+
+<http://data.kasabi.com/dataset/nasa/discipline/humancrew>
+  a ns0:Discipline ;
+  rdfs:label "Human Crew" .
+
+<http://nasa.dataincubator.org/launch/1970-029>
+  a ns0:Launch ;
+  ns0:launched "1970-04-11" ;
+  ns0:launchsite <http://data.kasabi.com/dataset/nasa/launchsite/capecanaveral> ;
+  ns0:launchvehicle "Saturn 5" ;
+  ns0:spacecraft <http://data.kasabi.com/dataset/nasa/spacecraft/1970-029A>, <http://data.kasabi.com/dataset/nasa/spacecraft/1970-029C>, <http://data.kasabi.com/dataset/nasa/spacecraft/1970-029B> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1970-029C>
+  a ns0:Spacecraft ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1970-029C> ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_13_lm.jpg> ;
+  ns0:agency "United States" ;
+  ns0:internationalDesignator "1970-029C" ;
+  ns0:alternateName "LM-7", "ALSEP 13", "LEM 13", "Aquarius" ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/spacephysics>, <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1970-029> ;
+  foaf:name "Apollo 13 Lunar Module/ALSEP" ;
+  dc11:description "The Apollo 13 Lunar Module (LM or LEM) was originally supposed to land at the Fra Mauro region of the Moon. The Apollo 13 mission was aborted as a lunar landing mission on 13 April 1970, 2 days after launch, when an oxygen tank on the Command and Service Module (CSM) overheated and exploded. The LM, designed to support two astronauts for 45 hours, was used as a lifeboat to house the three astronauts (Commander James A. Lovell Jr., CSM pilot John L. Swigert Jr., and LM pilot Fred W. Haise Jr.) for 90 hours, as the CSM could not provide life support. Energy and water consumption were cut drastically for the duration of the trip, and the CM lithium hydroxide cannisters, used to scrub carbon dioxide out of the air, were adapted for use on the LM. The Apollo 13 continued on to the Moon, and the LM descent engine was used to accelerate the spacecraft around the Moon and back to Earth. The LM was jettisoned shortly before reaching Earth, the astronauts returning to the Command Module for the reentry. The LM re-entered and burned in the Earth's atmosphere over the southwest Pacific, any surviving pieces impacted in the deep ocean off the coast of New Zealand." ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:mass "15196.0" .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_13_lm.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1970-029C> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_13_lm.gif> .
+
+<http://data.kasabi.com/dataset/nasa/discipline/spacephysics>
+  a ns0:Discipline ;
+  rdfs:label "Space Physics" .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1970-029B>
+  a ns0:Spacecraft ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1970-029B> ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1970-029> ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command, Service, and Lunar Modules (CSM and LM). The SIVB provided the thrust to take the CSM and LM from Earth orbit into a lunar transfer orbit. After achieving trajectory towards the Moon, the LM and CSM decoupled from the SIVB at 23:14 UT on 11 April 1970. The SIVB was left on a course towards the Moon where it impacted at 1:09:40 UT on 15 April at 2.75 S, 27.86 W at approximately 2.58 km/sec, providing a seismic source for the ALSEP seismic station. " ;
+  foaf:name "Apollo 13 SIVB" ;
+  ns0:mass "13300.0" ;
+  ns0:agency "United States" ;
+  ns0:alternateName "Apollo 13 Saturn V third stage", "04372" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:internationalDesignator "1970-029B" ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1968-089A>
+  a ns0:Spacecraft ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1968-089> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1968-089A> ;
+  foaf:name "Apollo 7" ;
+  ns0:internationalDesignator "1968-089A" ;
+  ns0:mass "14781.0" ;
+  ns0:agency "United States" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/earthscience> ;
+  dc11:description "Apollo 7 was the first crewed flight of the Apollo spacecraft, with astronauts Walter Schirra, Jr, Donn Eisele, and Walter Cunningham on board. The primary objectives of the Earth orbiting mission were to demonstrate Command and Service Module (CSM), crew, launch vehicle, and mission support facilities performance and to demonstrate CSM rendezvous capability. Two photographic experiments and three medical experiments were planned." ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_7_launch.jpg> ;
+  ns0:alternateName "03486" .
+
+<http://nasa.dataincubator.org/launch/1968-089>
+  a ns0:Launch ;
+  ns0:launched "1968-10-11" ;
+  ns0:launchsite <http://data.kasabi.com/dataset/nasa/launchsite/capecanaveral> ;
+  ns0:launchvehicle "Saturn 1B" ;
+  ns0:spacecraft <http://data.kasabi.com/dataset/nasa/spacecraft/1968-089A> .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_7_launch.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1968-089A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_7_launch.gif> .
+
+<http://data.kasabi.com/dataset/nasa/discipline/earthscience>
+  a ns0:Discipline ;
+  rdfs:label "Earth Science" .
+
+<http://nasa.dataincubator.org/launch/1969-043>
+  a ns0:Launch ;
+  ns0:launched "1969-05-18" ;
+  ns0:launchsite <http://data.kasabi.com/dataset/nasa/launchsite/capecanaveral> ;
+  ns0:launchvehicle "Saturn 5" ;
+  ns0:spacecraft <http://data.kasabi.com/dataset/nasa/spacecraft/1969-043A>, <http://data.kasabi.com/dataset/nasa/spacecraft/1969-043B> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-043A>
+  a ns0:Spacecraft ;
+  ns0:mass "28834.0" ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_10_cm.jpg> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1969-043A> ;
+  ns0:internationalDesignator "1969-043A" ;
+  ns0:alternateName "03941" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  foaf:name "Apollo 10" ;
+  dc11:description "This spacecraft was the second Apollo mission to orbit the Moon, and the first to travel to the Moon with the full Apollo spacecraft, consisting of the Command and Service Module (CSM-106, 'Charlie Brown') and the Lunar Module (LM-4, 'Snoopy'). The spacecraft mass of 28,834 kg is the mass of the CSM including propellants and expendables. The LM mass including propellants was 13,941 kg. The primary objectives of the mission were to demonstrate crew, space vehicle, and mission support facilities during a manned lunar mission and to evaluate LM performance in cislunar and lunar environment. The mission was a full 'dry run' for the Apollo 11 mission, in which all operations except the actual lunar landing were performed. The flight carried a three man crew: Commander Thomas P. Stafford, Command Module (CM) Pilot John W. Young, and Lunar Module (LM) Pilot Eugene A. Cernan." ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1969-043> ;
+  ns0:agency "United States" .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_10_cm.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1969-043A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_10_cm.gif> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-043B>
+  a ns0:Spacecraft ;
+  ns0:agency "United States" ;
+  ns0:alternateName "03943", "Apollo 10 Saturn V third stage" ;
+  ns0:mass "13300.0" ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command, Service, and Lunar Modules (CSM and LM). The SIVB provided the thrust to take the CSM and LM from Earth orbit into a lunar transfer orbit. After achieving trajectory towards the Moon, the Apollo 10 LM and CSM decoupled from the SIVB at 20:45 UT on 18 May and made a course correction to head for lunar orbit. The SIVB stage was put on a ballistic trajectory to fly by the Moon on 21 May and entered solar orbit. " ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  foaf:name "Apollo 10 SIVB" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1969-043B> ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1969-043> ;
+  ns0:internationalDesignator "1969-043B" .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_subsat.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1971-063D>, <http://data.kasabi.com/dataset/nasa/spacecraft/1972-031D> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_subsat.gif> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1971-063D>
+  a ns0:Spacecraft ;
+  ns0:alternateName "Apollo 15D", "PFS-1", "P + F S", "05377" ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/spacephysics>, <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1971-063> ;
+  foaf:name "Apollo 15 Subsatellite" ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_subsat.jpg> ;
+  ns0:agency "United States" ;
+  ns0:missionProfile "Apollo 15 launched at 13:34:00 UT (09:34:00 a.m. EDT) on 26 July 1971 and went into orbit around the Moon on 29 July at 20:06 UT. The Apollo 15 subsatellite was deployed on 4 August 1971 at 21:00:31 UT by launching it from the scientific instrument module of the Service Module at a relative velocity of approximately 1.2 m/s using a spring loaded device which also imparted a spin of 140 rpm to the satellite. After release, the booms were deployed, lowering the spin rate to 12 rpm. The spin axis was normal to the ecliptic plane within 1 degree. The orbital period was approximately 120 minutes, clockwise as viewed from the north. The perilune of the first orbit was 102 km, the apolune 139 km, and the inclination 28.5 degrees with respect to the Moon's equator, but the orbit was rapidly altered by gravitational perturbations. The geocentric ecliptic longitude of the Moon at the time of launch was 155 degrees. The subsatellite provided about 6 months of data coverage before two successive electronic failures in February 1972 caused the loss of most of the data channels. The surviving data channels were monitored intermittently until June 1972 and then more or less continuously until late January 1973, when ground support was terminated. It is assumed the subsatellite orbit decayed and it impacted the Moon sometime after this, the impact site is unknown." ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1971-063D> ;
+  ns0:nominalPower "24.0" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:internationalDesignator "1971-063D" ;
+  ns0:mass "36.3" ;
+  dc11:description "The Apollo 15 subsatellite (PFS-1) was a small satellite released into lunar orbit from the Apollo 15 Service Module. Its main objectives were to study the plasma, particle, and magnetic field environment of the Moon and map the lunar gravity field. Specifically it measured plasma and energetic particle intensities and vector magnetic fields, and facilitated tracking of the satellite velocity to high precision. A basic requirement was that the satellite acquire fields and particle data everywhere on the orbit around the Moon. A virtually identical subsatellite was also deployed by Apollo 16. The Moon's roughly circular orbit about the Earth at ~380000 km (60 Earth radii) carried the subsatellite into both interplanetary space and various regions of the Earth's magnetosphere. The satellite orbited the Moon and returned data from 4 August 1971 until January 1973." .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1972-031D>
+  a ns0:Spacecraft ;
+  ns0:alternateName "Apollo 16D", "06009", "PFS-2" ;
+  ns0:nominalPower "24.0" ;
+  foaf:name "Apollo 16 Subsatellite" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience>, <http://data.kasabi.com/dataset/nasa/discipline/spacephysics> ;
+  ns0:mass "36.3" ;
+  ns0:missionProfile "Apollo 16 launched at 17:54:00 UT (12:54:00 p.m. EST) on 16 April 1972 and went into orbit around the Moon on 19 April at 20:22 UT. The Apollo 16 subsatellite was deployed on 24 April at 21:56:09 UT by launching it from the Service Module at a relative velocity of approximately 1.2 m/s using a spring loaded device which also imparted a spin of 140 rpm to the satellite. After release, the booms were deployed, lowering the spin rate to 12 rpm. The spin axis was about 5.5 degrees from normal to the ecliptic plane. A planned CSM orbit shaping maneuver was not performed prior to deployment to avoid firing the CSM main engine due to degraded backup thrust vector control, so the satellite was not released into a nominal orbit. The initial periselene was 90 km, initial aposelene was 130 km, and initial orbital inclination was 10 degrees with respect to the Moon's equator, but the orbit was rapidly altered by gravitational perturbations. The orbital period was approximately 120 minutes, clockwise as viewed from north. The geocentric ecliptic longitude of the Moon at the time of launch was 138 degrees. Because the initial orbit was not optimal, it decayed rapidly and the subsatellite prematurely impacted the Moon on May 29, 1972, after 34 days (425 revolutions) in orbit. The final telemetry was received at 20:31 UT just before lunar impact." ;
+  dc11:description "The Apollo 16 subsatellite (PFS-2) was a small satellite released into lunar orbit from the Apollo 16 Service Module. Its main objectives were to study the plasma, particle, and magnetic field environment of the Moon and map the lunar gravity field. Specifically it measured plasma and energetic particle intensities and vector magnetic fields, and facilitated tracking of the satellite velocity to high precision. A basic requirement was that the satellite acquire fields and particle data everywhere on the orbit around the Moon. The subsatellite was virtually identical to the one deployed by Apollo 15. The Moon's roughly circular orbit about the Earth at ~380000 km (60 Earth radii) carried the subsatellite into both interplanetary space and various regions of the Earth's magnetosphere. The subsatellite orbited the Moon and returned data from 24 April until 29 May 1972." ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1972-031> ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_subsat.jpg> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1972-031D> ;
+  ns0:agency "United States" ;
+  ns0:internationalDesignator "1972-031D" .
+
+<http://data.kasabi.com/dataset/nasa/person/donnfultoneisele>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Donn_F._Eisele> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/backup-command-module-pilot> ;
+  foaf:name "Donn Fulton Eisele" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/donnfultoneisele> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/donnfultoneisele> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/person/johnwattsyoung>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/John_Young_%28astronaut%29> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/backup-commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/backup-commander>, <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/backup-command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/command-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/commander> ;
+  foaf:name "John Watts Young" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnwattsyoung> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 13 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnwattsyoung> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/backup-command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Backup Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnwattsyoung> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/command-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Command Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnwattsyoung> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/command-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-16/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 16 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/johnwattsyoung> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/person/harrisonhaganschmitt>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Harrison_Schmitt> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/backup-lunar-module-pilot> ;
+  foaf:name "Harrison Hagan Schmitt" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-17/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 17 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/harrisonhaganschmitt> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-15/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 15 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/harrisonhaganschmitt> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1968-118A>
+  a ns0:Spacecraft ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1968-118A> ;
+  ns0:mass "28817.0" ;
+  dc11:description "This spacecraft was the first of the Apollo series to successfully orbit the moon, and the first manned spacecraft to leave Earth's gravity and reach the Moon. The mission achieved operational experience and tested the Apollo command module systems, including communications, tracking, and life-support, in cis-lunar space and lunar orbit, and allowed evaluation of crew performance on a lunar orbiting mission. The crew photographed the lunar surface, both farside and nearside, obtaining information on topography and landmarks as well as other scientific information necessary for future Apollo landings. Additionally, six live television transmission sessions were done by the crew during the mission, including the famous Christmas Eve broadcast in which the astronauts read from the book of Genesis. All systems operated within allowable parameters and all objectives of the mission were achieved. The flight carried a three man crew: Commander Frank Borman, Command Module Pilot James A. Lovell, Jr., and Lunar Module Pilot William A. Anders." ;
+  ns0:alternateName "03626" ;
+  ns0:agency "United States" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1968-118> ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_8_launch.jpg> ;
+  foaf:name "Apollo 8" ;
+  ns0:internationalDesignator "1968-118A" .
+
+<http://nasa.dataincubator.org/launch/1968-118>
+  a ns0:Launch ;
+  ns0:launched "1968-12-21" ;
+  ns0:launchsite <http://data.kasabi.com/dataset/nasa/launchsite/capecanaveral> ;
+  ns0:launchvehicle "Saturn 5" ;
+  ns0:spacecraft <http://data.kasabi.com/dataset/nasa/spacecraft/1968-118A>, <http://data.kasabi.com/dataset/nasa/spacecraft/1968-118B> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1968-118B>
+  a ns0:Spacecraft ;
+  ns0:alternateName "03627", "Apollo 8 Saturn V third stage" ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1968-118> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1968-118B> ;
+  foaf:name "Apollo 8 SIVB" ;
+  ns0:mass "13300.0" ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:agency "United States" ;
+  ns0:internationalDesignator "1968-118B" ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command and Service Module (CSM). The SIVB provided the thrust to take the CSM from Earth orbit into a lunar transfer orbit. After achieving trajectory towards the Moon, the Apollo 8 CSM decoupled from the SIVB at 16:12 UT on 21 December 1968 and made a course correction to head for lunar orbit. The SIVB stage was put on a trajectory to fly by the Moon on 24 December after which it entered solar orbit. " .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_8_launch.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1968-118A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_8_launch.gif> .
+
+<http://data.kasabi.com/dataset/nasa/person/alanlavernbean>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Alan_Bean> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/backup-lunar-module-pilot>, <http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/lunar-module-pilot> ;
+  foaf:name "Alan LaVern Bean" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alanlavernbean> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-12/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 12 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/alanlavernbean> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://nasa.dataincubator.org/launch/1969-018>
+  a ns0:Launch ;
+  ns0:launched "1969-03-03" ;
+  ns0:launchsite <http://data.kasabi.com/dataset/nasa/launchsite/capecanaveral> ;
+  ns0:launchvehicle "Saturn 5" ;
+  ns0:spacecraft <http://data.kasabi.com/dataset/nasa/spacecraft/1969-018A>, <http://data.kasabi.com/dataset/nasa/spacecraft/1969-018B> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-018A>
+  a ns0:Spacecraft ;
+  ns0:agency "United States" ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/earthscience>, <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/engineering> ;
+  ns0:alternateName "03769" ;
+  ns0:internationalDesignator "1969-018A" ;
+  foaf:name "Apollo 9" ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1969-018> ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_9.jpg> ;
+  ns0:mass "26801.0" ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1969-018A> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  dc11:description "Apollo 9 was the third crewed Apollo flight and the first crewed flight to include the Lunar Module (LM). The crew was Commander James McDivitt, Command Module (CM) pilot David Scott, and LM pilot Russell Schweickart. The primary objective of the mission was to test all aspects of the Lunar Module in Earth orbit, including operation of the LM as an independent self-sufficient spacecraft and performance of docking and rendezvous manuevers. The goal was to simulate maneuvers which would be performed in actual lunar missions. Other concurrent objectives included overall checkout of launch vehicle and spacecraft systems, crew, and procedures. A multispectral photographic experiment was also performed." .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_9.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1969-018A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_9.gif> .
+
+<http://data.kasabi.com/dataset/nasa/discipline/engineering>
+  a ns0:Discipline ;
+  rdfs:label "Engineering" .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-018B>
+  a ns0:Spacecraft ;
+  dc11:description "The Apollo Saturn V SIVB was the third stage of the Saturn V booster. The SIVB consisted of a truncated cone with a bottom diameter of 10.06 m topped by a long cylinder with a diameter of 6.60 m. Total height was 17.80 m. It contained liquid hydrogen and liquid oxygen tanks and a J2 engine. It was launched into Earth orbit attached to the Command, Service, and Lunar Modules (CSM and LM). For lunar missions the SIVB provided the thrust to take the CSM and LM from Earth orbit into a lunar transfer orbit. The CSM and LM on this mission were left in Earth orbit for rendezvous and docking practice. On 3 March 1969 the S-IVB stage made a third burn to put it into a solar orbit. " ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  foaf:name "Apollo 9 SIVB" ;
+  ns0:internationalDesignator "1969-018B" ;
+  ns0:mass "13300.0" ;
+  ns0:alternateName "Apollo 9 Saturn V third stage", "03770" ;
+  ns0:agency "United States" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1969-018B> ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1969-018> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/waltermartyschirrajr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/person/waltermartyschirrajr>
+  a foaf:Person ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/commander> ;
+  foaf:name "Walter Marty Schirra, Jr." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/backup-commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 10 Backup Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/leroygordoncooperjr> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-10> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/person/leroygordoncooperjr>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Gordon_Cooper> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-10/role/backup-commander> ;
+  foaf:name "Leroy Gordon Cooper, Jr." .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-059A>
+  a ns0:Spacecraft ;
+  ns0:alternateName "CSM-107", "Columbia", "Apollo 11 CSM", "04039" ;
+  ns0:agency "United States" ;
+  dc11:description "Apollo 11 was the first mission in which humans walked on the lunar surface and returned to Earth. On 20 July 1969 two astronauts (Apollo 11 Commander Neil A. Armstrong and LM pilot Edwin E. 'Buzz' Aldrin Jr.) landed in Mare Tranquilitatis (the Sea of Tranquility) on the Moon in the Lunar Module (LM) while the Command and Service Module (CSM) (with CM pilot Michael Collins) continued in lunar orbit. During their stay on the Moon, the astronauts set up scientific experiments, took photographs, and collected lunar samples. The LM took off from the Moon on 21 July and the astronauts returned to Earth on 24 July." ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1969-059A> ;
+  foaf:name "Apollo 11 Command and Service Module (CSM)" ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_11_cm.jpg> ;
+  ns0:internationalDesignator "1969-059A" ;
+  ns0:missionProfile "After launch on Saturn V SA-504 on 16 July 1969 at 13:32 UT (9:32 a.m. EDT) from pad 39A of Kennedy Space Center, Apollo 11 entered Earth orbit. After 1 1/2 Earth orbits, the S-IVB stage was re-ignited at 16:16:16 UT for a translunar injection burn of 5 minutes, 48 seconds putting the spacecraft on course for the Moon. The CSM separated from the S-IVB stage containing the LM 33 minutes later, turned around and docked with the LM at 16:56:03 UT. About an hour and 15 minutes later the S-IVB stage was injected into heliocentric orbit. During translunar coast a color TV transmission was made from Apollo 11 and on 17 July a 3-second mid-course correction burn of the main engine was performed. Lunar orbit insertion was achieved on 19 July at 17:21:50 UT by a retrograde firing of the main engine for 357.5 seconds while the spacecraft was behind the Moon and out of contact with Earth. A later 17 second burn circularized the orbit. On 20 July Armstrong and Aldrin entered the LM for final checkout. At 18:11:53 the LM and CSM separated. After a visual inspection by Collins, the LM descent engine fired for 30 seconds at 19:08 UT, putting the craft into a descent orbit with a closest approach 14.5 km above the Moon's surface. At 20:05 the LM descent engine fired for 756.3 seconds and descent to the lunar surface began." ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1969-059> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-11> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:mass "28801.0" .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_11_cm.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1969-059A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_11_cm.gif> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1969-099A>
+  a ns0:Spacecraft ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-12> ;
+  ns0:alternateName "04225", "CSM-108", "Yankee Clipper", "Apollo 12 CSM" ;
+  ns0:missionProfile "Launch took place under cloudy, rain-swept skies on Saturn V SA-507 on 14 November 1969 at 16:22:00 UT (11:22:00 a.m. EST) from Pad 39A at Kennedy Space Center. The spacecraft was struck by lightning 36 seconds after launch and again 52 seconds after launch, which momentarily shut off electrical power and cut out telemetry contact. Power was automatically switched to battery backup while the crew resored the primary power system. There were no further problems with the power system and the spacecraft entered planned Earth parking orbit at 11 minutes 44 seconds after liftoff. After 1 1/2 orbits the S-IVB stage was re-ignited at 19:15:14 UT for a translunar injection burn of 5 min. 45 sec. putting the spacecraft on course for the Moon. The CSM separated from the S-IVB stage containing the LM 25 minutes later, turned around and docked with the LM at 19:48:53 UT. The S-IVB stage was then jettisoned into Earth orbit instead of planned heliocentric orbit due to error in the instrument unit. During lunar coast, the LM was checked out to ensure no electrical damage had been caused by the lightning. A midcourse correction was made on 16 November at 02:15 UT. A six minute SPS burn on 18 November at 03:47:23 UT put the Apollo 12 into lunar orbit. Two orbits later a second burn circularized the orbit. Conrad and Bean entered the LM and it separated from the CSM at 04:16:03 UT on 19 November. The LM descent engine fired for 29 seconds at 05:47 UT, and the LM landed in Oceanus Procellarum near the rim of Surveyor crater at 06:54:35 UT. Conrad and Bean performed two surface EVA's, one on 19 November and one on 20 November, during which an Apollo lunar surface experiments package (ALSEP) was placed on the lunar surface, 34.35 kg of samples of the lunar terrain were acquired, various photographs were exposed by the astronauts during lunar surface activities, and parts were taken from the Surveyor 3 spacecraft for examination." ;
+  ns0:mass "28790.0" ;
+  ns0:internationalDesignator "1969-099A" ;
+  ns0:agency "United States" ;
+  dc11:description "Apollo 12 was the second mission in which humans walked on the lunar surface and returned to Earth. On 19 November 1969 two astronauts (Apollo 12 Commander Charles P. 'Pete' Conrad and LM Pilot Alan L. Bean) landed in Oceanus Procellarum (Ocean of Storms) on the Moon in the Lunar Module (LM) while the Command and Service Module (CSM) (with CM pilot Richard F. Gordon) continued in lunar orbit. During their stay on the Moon, the astronauts set up scientific experiments, took photographs, examined the nearby Surveyor 3 spacecraft which had landed on the Moon 2 1/2 years earlier and removed pieces for later examination on Earth, and collected lunar samples on two moonwalk EVA's. The LM took off from the Moon on 20 November and the astronauts returned to Earth on 24 November." ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1969-099A> ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1969-099> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience>, <http://data.kasabi.com/dataset/nasa/discipline/humancrew> ;
+  foaf:name "Apollo 12 Command and Service Module (CSM)" ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_12_launch.jpg> .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_12_launch.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1969-099A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_12_launch.gif> .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_15_cm.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1971-063A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_15_cm.gif> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1971-063A>
+  a ns0:Spacecraft ;
+  ns0:alternateName "05351", "Apollo 15 CSM", "CSM-112", "Endeavor" ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1971-063A> ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1971-063> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/astronomy>, <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:internationalDesignator "1971-063A" ;
+  ns0:missionProfile "Apollo 15 launched on 26 July 1971 at 13:34:00 UT (9:34:00 a.m. EDT) on Saturn V SA-510 from Pad 39A at Kennedy Space Center. The spacecraft was inserted into Earth orbit at 13:45:44 UT and translunar injection took place at 16:30:03 UT. The CSM separated from the S-IVB stage at 16:56:24 UT and docked with the LM at 17:07:49 UT. The S-IVB stage was released and burns at 19:22 UT and 23:34 UT sent the stage into a lunar impact trajectory. (It impacted the lunar surface on 29 July at 20:58:42.9 UT at 1.51 S, 11.81 W with a velocity of 2.58 km/s at a 62 degree angle from the horizontal.) A short was discovered in the service propulsion system and contingency procedures were developed for using the engine. A mid-course correction was performed on 27 July at 18:14:22 UT and another on 29 July at 15:05:15. During cruise it was discovered that the LM range/range-rate exterior glass cover had broken and a small water leak had developed in the CM requiring repair and clean-up. The SIM door was jettisoned at 15:40 UT and lunar orbit insertion took place at 20:05:47 UT. The descent orbit maneuver was executed at 00:13:49 UT on 30 July." ;
+  foaf:name "Apollo 15 Command and Service Module (CSM)" ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_15_cm.jpg> ;
+  ns0:agency "United States" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-15> ;
+  ns0:mass "30371.0" ;
+  dc11:description "Apollo 15 was the fourth mission in which humans walked on the lunar surface and returned to Earth. On 30 July 1971 two astronauts (Apollo 15 Commander David R. Scott and LM pilot James B. Irwin) landed in the Hadley Rille/Apennines region of the Moon in the Lunar Module (LM) while the Command and Service Module (CSM) (with CM pilot Alfred M. Worden) continued in lunar orbit. During their stay on the Moon, the astronauts set up scientific experiments, took photographs, and collected lunar samples. The LM took off from the Moon on 2 August and the astronauts returned to Earth on 7 August." .
+
+<http://data.kasabi.com/dataset/nasa/discipline/astronomy>
+  a ns0:Discipline ;
+  rdfs:label "Astronomy" .
+
+<http://data.kasabi.com/dataset/nasa/person/frankfrederickbormanii>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Frank_Borman> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/commander> ;
+  foaf:name "Frank Frederick Borman, II" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-8/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 8 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/frankfrederickbormanii> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-8> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 7 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/ronniewaltercunningham> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-7> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/person/ronniewaltercunningham>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Walter_Cunningham> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-7/role/lunar-module-pilot> ;
+  foaf:name "Ronnie Walter Cunningham" .
+
+<http://data.kasabi.com/dataset/nasa/person/russelllouisschweickart>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Rusty_Schweickart> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/lunar-module-pilot> ;
+  foaf:name "Russell Louis Schweickart" .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/russelllouisschweickart> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_14_cm.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1971-008A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_14_cm.gif> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1971-008A>
+  a ns0:Spacecraft ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/astronomy>, <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience>, <http://data.kasabi.com/dataset/nasa/discipline/spacephysics> ;
+  ns0:alternateName "04900", "Kitty Hawk", "Apollo 14 CSM", "CSM-110" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1971-008A> ;
+  foaf:name "Apollo 14 Command and Service Module (CSM)" ;
+  ns0:internationalDesignator "1971-008A" ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1971-008> ;
+  ns0:agency "United States" ;
+  ns0:mass "29229.0" ;
+  dc11:description "Apollo 14 was the third mission in which humans walked on the lunar surface and returned to Earth. On 5 February 1971 two astronauts (Apollo 14 Commander Alan B. Shepard, Jr. and LM pilot Edgar D. Mitchell) landed near Fra Mauro crater on the Moon in the Lunar Module (LM) while the Command and Service Module (CSM) (with CM pilot Stuart A. Roosa) continued in lunar orbit. During their stay on the Moon, the astronauts set up scientific experiments, took photographs, and collected lunar samples. The LM took off from the Moon on 6 February and the astronauts returned to Earth on 9 February." ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_14_cm.jpg> ;
+  ns0:missionProfile "After a delay of 40 minutes, 2 seconds due to clouds and rain, Apollo 14 was launched into Earth parking orbit on 31 January 1971 at 21:03:02 UT (4:03:02 p.m. EST) from pad 39A of Kennedy Space Center on Saturn V SA-509. Earth orbit insertion occurred at 21:14:51 UT followed by translunar injection at 23:37:34. An early first mid-course correction was made to make up for the launch delay so the spacecraft would arrive at the Moon on schedule. The CSM separated from the S-IVB stage containing the LM at 00:05:31 UT on 1 February. Five attempts were made to dock the CSM and the LM, all unsuccessful because the catches on the docking ring did not release. The sixth attempt, at 02:00:02 UT, was successful and no further problems with the docking mechanism occurred. The S-IVB stage was released into a lunar impact trajectory. (It impacted the lunar surface on 4 February at 07:40:55.4 UT at 8.09 S, 26.02 W with a velocity of 2.54 km/s at a 69 degree angle from the horizontal.) A second mid-course correction was made on 2 February and a third on 4 February. Lunar orbit insertion occurred at 06:59:43 UT on 4 February." .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/backup-lunar-module-pilot>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 14 Backup Lunar Module Pilot" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/joehenryengle> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-14> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/backup-lunar-module-pilot> .
+
+<http://data.kasabi.com/dataset/nasa/person/joehenryengle>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/Joe_Engle> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-14/role/backup-lunar-module-pilot> ;
+  foaf:name "Joe Henry Engle" .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1972-031A>
+  a ns0:Spacecraft ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/lifescience>, <http://data.kasabi.com/dataset/nasa/discipline/astronomy>, <http://data.kasabi.com/dataset/nasa/discipline/engineering>, <http://data.kasabi.com/dataset/nasa/discipline/microgravity>, <http://data.kasabi.com/dataset/nasa/discipline/solarphysics>, <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience> ;
+  ns0:missionProfile "Apollo 16 launched on 16 April 1972 at 17:54:00 (12:54:00 p.m. EST) on Saturn V SA-511 from Pad 39A at Kennedy Space Center. (The launch was postponed from the originally scheduled date, March 17, because of a docking ring jettison malfunction.) The spacecraft entered Earth parking orbit at 18:05:56 UT and translunar injection took place at 20:27:37 UT. The CSM and S-IVB stage separated at 20:58:59 UT and CSM-LM docking was achieved at 21:15:53 UT. The S-IVB stage was released into a lunar impact trajectory, but due to an earlier problem with the auxiliary propulsion system (APS) helium regulators, which resulted in continuous venting and loss of helium, the second APS burn could not be made. Tracking of the S-IVB was lost on 17 April at 21:03 UT due to a transponder failure. (The S-IVB stage impacted the Moon on 19 April at 21:02:04 UT at 1.3 N, 23.8 W with a velocity of 2.5 to 2.6 km/s at a 79 degree angle from the horizontal, as estimated from the Apollo 12, 14 and 16 seismic station data.) A mid-course correction was performed at 00:33:01 UT on 18 April. During translunar coast a CSM navigation problem was discovered in which a false indication would cause loss of inertial reference, this was solved by a real-time change in the computer program. The SIM door was jettisoned on 19 April at 15:57:00 UT and lunar orbit insertion took place at 20:22:28 UT. Two revolutions later the orbit was lowered to one with a perilune of 20 km." ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-16> ;
+  ns0:mass "30354.0" ;
+  ns0:alternateName "Casper", "Apollo 16 CSM", "CSM-113", "06000" ;
+  ns0:internationalDesignator "1972-031A" ;
+  dc11:description "Apollo 16 was the fifth mission in which humans walked on the lunar surface and returned to Earth. On 21 April 1972 two astronauts (Apollo 16 Commander John W. Young and LM pilot Charles M. Duke, Jr.) landed in the Descartes region of the Moon in the Lunar Module (LM) while the Command and Service Module (CSM) (with CM pilot Thomas K. Mattingly, II) continued in lunar orbit. During their stay on the Moon, the astronauts set up scientific experiments, took photographs, and collected lunar samples. The LM took off from the Moon on 24 April and the astronauts returned to Earth on 27 April." ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1972-031A> ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_16_cm.jpg> ;
+  ns0:agency "United States" ;
+  foaf:name "Apollo 16 Command and Service Module (CSM)" ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1972-031> .
+
+<http://data.kasabi.com/dataset/nasa/discipline/lifescience>
+  a ns0:Discipline ;
+  rdfs:label "Life Science" .
+
+<http://data.kasabi.com/dataset/nasa/discipline/microgravity>
+  a ns0:Discipline ;
+  rdfs:label "Microgravity" .
+
+<http://data.kasabi.com/dataset/nasa/discipline/solarphysics>
+  a ns0:Discipline ;
+  rdfs:label "Solar Physics" .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_16_cm.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1972-031A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_16_cm.gif> .
+
+<http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/commander>
+  a ns0:MissionRole ;
+  rdfs:label "Apollo 9 Mission Commander" ;
+  ns0:actor <http://data.kasabi.com/dataset/nasa/person/jamesaltonmcdivitt> ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-9> ;
+  ns0:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> .
+
+<http://data.kasabi.com/dataset/nasa/person/jamesaltonmcdivitt>
+  a foaf:Person ;
+  owl:sameAs <http://dbpedia.org/resource/James_McDivitt> ;
+  ns0:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-9/role/commander> ;
+  foaf:name "James Alton McDivitt" .
+
+<http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_17_cm.jpg>
+  a foaf:Image ;
+  foaf:depicts <http://data.kasabi.com/dataset/nasa/spacecraft/1972-096A> ;
+  foaf:thumbnail <http://nssdc.gsfc.nasa.gov/thumbnail/spacecraft/apollo_17_cm.gif> .
+
+<http://data.kasabi.com/dataset/nasa/spacecraft/1972-096A>
+  a ns0:Spacecraft ;
+  foaf:depiction <http://nssdc.gsfc.nasa.gov/image/spacecraft/apollo_17_cm.jpg> ;
+  ns0:discipline <http://data.kasabi.com/dataset/nasa/discipline/planetaryscience>, <http://data.kasabi.com/dataset/nasa/discipline/lifescience>, <http://data.kasabi.com/dataset/nasa/discipline/humancrew>, <http://data.kasabi.com/dataset/nasa/discipline/astronomy> ;
+  foaf:homepage <http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1972-096A> ;
+  ns0:agency "United States" ;
+  ns0:missionProfile "Apollo 17 lifted off at 05:33:00 UT (12:33:00 a.m. EST) on 7 December 1972 after a 2 hour, 40 minute delay due to a malfunction of a launch sequencer. Launch was on Saturn V SA-512 from Pad 39A at Kennedy Space Center and was the first nighttime launch of an Apollo. The spacecraft began Earth parking orbit at 05:44:53 UT and translunar injection took place at 08:45:37 UT. The CSM separated from the S-IVB at 09:15:29 UT and CSM-LM docking took place at 09:29:45 UT. The S-IVB was released at 10:18 UT into a lunar impact trajectory. (It impacted the lunar surface on 10 December at 20:32:42.3 UT at 4.21 S, 12.31 W with a velocity of 2.55 km/s at a 55 degree angle from the horizontal.) A single mid-course correction requiring a 1.6 second burn of the Service Propulsion System (SPS) was made at 17:03:00 UT on 8 December. On December 10 at 15:05:40 UT the SIM bay door was jettisoned and a 398 second burn of the SPS was initiated at 19:47:23 UT to insert Apollo 17 into lunar orbit. Approximately 4 hours 20 minutes later another maneuver lowered the orbit to a perilune of 28 km. At 14:35 UT on 11 December Cernan and Schmitt entered the LM." ;
+  ns0:alternateName "CSM-114", "America", "Apollo 17A", "Apollo 17 CSM", "06300" ;
+  dc11:description "Apollo 17 was the sixth and last Apollo mission in which humans walked on the lunar surface. On 11 December 1972 two astronauts (Commander Eugene A. Cernan and LM pilot Harrison H. Schmitt, the first scientist on the Moon) landed in the Taurus-Littrow region of the Moon in the Lunar Module (LM) while the Command and Service Module (CSM) (with CM pilot Ronald E. Evans) continued in lunar orbit. During their stay on the Moon, the astronauts set up scientific experiments, took photographs, and collected lunar samples. The LM took off from the Moon on 14 December and the astronauts returned to Earth on 19 December." ;
+  ns0:launch <http://nasa.dataincubator.org/launch/1972-096> ;
+  foaf:name "Apollo 17 Command and Service Module (CSM)" ;
+  ns0:mass "30320.0" ;
+  ns0:internationalDesignator "1972-096A" ;
+  ns0:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-17> .
