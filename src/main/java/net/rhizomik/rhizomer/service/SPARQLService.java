@@ -59,7 +59,7 @@ public class SPARQLService {
         Query countTriples = Queries.getQueryCountTriples();
         countTriples.addGraphURI(graph);
         ResultSet result = querySelect(sparqlEndPoint, countTriples);
-        int count = -1;
+        int count = 0;
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
             if (soln.contains("?n"))

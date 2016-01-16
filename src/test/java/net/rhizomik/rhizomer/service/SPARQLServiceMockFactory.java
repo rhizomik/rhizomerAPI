@@ -73,7 +73,7 @@ public class SPARQLServiceMockFactory {
                     if (dataset.containsNamedModel(graph))
                         return dataset.getNamedModel(graph).size();
                     else
-                        return -1;
+                        return 0;
                 });
 
         doAnswer(invocationOnMock -> {
