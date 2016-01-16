@@ -228,24 +228,26 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$.inferenceEnabled", is(inference)));
     }
 
-    @When("^I add the ontology \"([^\"]*)\" to the pond \"([^\"]*)\"$")
-    public void iAddTheOntologyToThePond(String ontologyUriStr, String pondId) throws Throwable {
+    @When("^I add ontologies to the pond \"([^\"]*)\"$")
+    public void iAddTheOntologyToThePond(String pondId, List<String> ontologies) throws Throwable {
+        String ontologiesJson = mapper.writeValueAsString(ontologies);
         this.result = mockMvc.perform(post("/ponds/{pondId}/ontologies", pondId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"uri\": \"" + ontologyUriStr + "\" }")
+                .content(ontologiesJson)
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(status().isCreated());
-        this.result.andExpect(jsonPath("$", hasItem(ontologyUriStr)));
+        this.result.andExpect(jsonPath("$", hasItems(ontologies.toArray())));
     }
 
-    @When("^I add the graph \"([^\"]*)\" to the pond \"([^\"]*)\"$")
-    public void iAddTheGraphToThePond(String graphUriStr, String pondId) throws Throwable {
+    @When("^I add the graphs to the pond \"([^\"]*)\"$")
+    public void iAddTheGraphToThePond(String pondId, List<String> graphs) throws Throwable {
+        String graphsJson = mapper.writeValueAsString(graphs);
         this.result = mockMvc.perform(post("/ponds/{pondId}/graphs", pondId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"uri\": \"" + graphUriStr + "\" }")
+                .content(graphsJson)
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(status().isCreated());
-        this.result.andExpect(jsonPath("$", hasItem(graphUriStr)));
+        this.result.andExpect(jsonPath("$", hasItems(graphs.toArray())));
     }
 
     @And("^The following ontologies are set for pond \"([^\"]*)\"$")

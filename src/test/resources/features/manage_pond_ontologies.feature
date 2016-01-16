@@ -12,7 +12,8 @@ Feature: Manage pond ontologies
     And The size of pond "apollo13o" ontologies graph is 27
 
   Scenario: Add an ontology to a pond
-    When I add the ontology "data/foaf.rdf" to the pond "apollo13o"
+    When I add ontologies to the pond "apollo13o"
+      | data/foaf.rdf                   |
     Then the response status is 201
     And The following ontologies are defined for the pond "apollo13o"
       | data/nasa-schema.ttl            |

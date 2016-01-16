@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @RepositoryRestController
@@ -29,12 +28,14 @@ public class OntologiesController {
 
     @RequestMapping(value = "/ponds/{pondId}/ontologies", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody List<String> addPondOntology(@RequestBody Map<String, String> ontology, @PathVariable String pondId) throws Exception {
+    public @ResponseBody List<String> addPondOntology(@RequestBody List<String> ontologies, @PathVariable String pondId) throws Exception {
         Pond pond = pondRepository.findOne(pondId);
         Preconditions.checkNotNull(pond, "Pond with id {} not found", pondId);
-        sparqlService.loadData(pond.getSparqlEndPoint(), pond.getPondOntologiesGraph().toString(), ontology.get("uri"));
-        pond.addPondOntology(ontology.get("uri"));
-        logger.info("Added ontology {} to Pond {}", ontology.get("uri"), pondId);
+        ontologies.forEach(ontology -> {
+            sparqlService.loadData(pond.getSparqlEndPoint(), pond.getPondOntologiesGraph().toString(), ontology);
+            pond.addPondOntology(ontology);
+        });
+        logger.info("Added ontologies {} to Pond {}", ontologies.toString(), pondId);
         return pondRepository.save(pond).getPondOntologies();
     }
 

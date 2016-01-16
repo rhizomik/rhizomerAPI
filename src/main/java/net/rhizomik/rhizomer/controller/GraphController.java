@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @RepositoryRestController
@@ -28,11 +27,11 @@ public class GraphController {
 
     @RequestMapping(value = "/ponds/{pondId}/graphs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody List<String> addPondGraph(@RequestBody Map<String, String> graph, @PathVariable String pondId) throws Exception {
+    public @ResponseBody List<String> addPondGraph(@RequestBody List<String> addGraphs, @PathVariable String pondId) throws Exception {
         Pond pond = pondRepository.findOne(pondId);
         Preconditions.checkNotNull(pond, "Pond with id {} not found", pondId);
-        pond.addPondGraph(graph.get("uri"));
-        logger.info("Added graph {} to Pond {}", graph.get("uri"), pondId);
+        addGraphs.forEach(graph -> pond.addPondGraph(graph));
+        logger.info("Added graphs {} to Pond {}", addGraphs.toString(), pondId);
         return pondRepository.save(pond).getPondGraphs();
     }
 

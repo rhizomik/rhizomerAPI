@@ -14,7 +14,8 @@ Feature: Manage pond graphs
     And The size of pond "apollo13g" data graphs is 23
 
   Scenario: Add a graph to a pond
-    When I add the graph "http://rhizomik.net/data/nasa-apollo" to the pond "apollo13g"
+    When I add the graphs to the pond "apollo13g"
+      | http://rhizomik.net/data/nasa-apollo      |
     Then the response status is 201
     And The following data graphs are defined for the pond "apollo13g"
       | http://rhizomik.net/data/nasa-apollo13    |
