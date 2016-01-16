@@ -8,7 +8,7 @@ Feature: Manage pond graphs
   Background: Existing pond with local server and one graph with data
     Given There is a pond "apollo13g" on a local server storing "data/nasa-apollo13.ttl" in graph "http://rhizomik.net/data/nasa-apollo13"
     And The inference for pond "apollo13g" is set to "false"
-    And The local server stores data
+    And The pond "apollo13g" server stores data
       | data                            | graph                                 |
       | data/nasa-apollo.ttl            | http://rhizomik.net/data/nasa-apollo  |
     And The size of pond "apollo13g" data graphs is 23

@@ -189,9 +189,10 @@ public class APIStepdefs {
         SPARQLServiceMockFactory.addData(graph.toString(), dataFile);
     }
 
-    @And("^The local server stores data$")
-    public void theLocalServerStoresData(List<Map<String, String>> datasets) throws Throwable {
-        datasets.stream().forEach(dataset -> SPARQLServiceMockFactory.addData(dataset.get("graph"), dataset.get("data")));
+    @And("^The pond \"([^\"]*)\" server stores data$")
+    public void thePondServerStoresData(String pondId, List<Map<String, String>> datasets) throws Throwable {
+        Pond pond = pondRepository.findOne(pondId);
+        datasets.stream().forEach(dataset -> sparqlService.loadData(pond.getSparqlEndPoint(), dataset.get("graph"), dataset.get("data")));
     }
 
     @When("^I delete a pond with id \"([^\"]*)\"$")
