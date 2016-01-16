@@ -33,6 +33,7 @@ import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -188,6 +189,11 @@ public class APIStepdefs {
         SPARQLServiceMockFactory.addData(graph.toString(), dataFile);
     }
 
+    @And("^The local server stores data$")
+    public void theLocalServerStoresData(List<Map<String, String>> datasets) throws Throwable {
+        datasets.stream().forEach(dataset -> SPARQLServiceMockFactory.addData(dataset.get("graph"), dataset.get("data")));
+    }
+
     @When("^I delete a pond with id \"([^\"]*)\"$")
     public void iDeleteAPondWithId(String pondId) throws Throwable {
         this.result = mockMvc.perform(delete("/ponds/{pondId}", pondId));
@@ -224,8 +230,18 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", hasItem(ontologyUriStr)));
     }
 
+    @When("^I add the graph \"([^\"]*)\" to the pond \"([^\"]*)\"$")
+    public void iAddTheGraphToThePond(String graphUriStr, String pondId) throws Throwable {
+        this.result = mockMvc.perform(post("/ponds/{pondId}/graphs", pondId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"uri\": \"" + graphUriStr + "\" }")
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(status().isCreated());
+        this.result.andExpect(jsonPath("$", hasItem(graphUriStr)));
+    }
+
     @And("^The following ontologies are set for pond \"([^\"]*)\"$")
-    public void The_following_ontologies_are_added(String pondId, List<String> ontologies) throws Throwable {
+    public void theFollowingOntologiesAreSetForPond(String pondId, List<String> ontologies) throws Throwable {
         ontologies = ontologies.stream().filter(s -> s.length()>0).collect(Collectors.toList());
         String ontologiesJson = mapper.writeValueAsString(ontologies);
         this.result = mockMvc.perform(put("/ponds/{pondId}/ontologies", pondId)
@@ -236,6 +252,17 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
     }
 
+    @When("^The following data graphs are set for pond \"([^\"]*)\"$")
+    public void theFollowingDataGraphsAreSetForPond(String pondId, List<String> graphs) throws Throwable {
+        graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
+        String graphsJson = mapper.writeValueAsString(graphs);
+        this.result = mockMvc.perform(put("/ponds/{pondId}/graphs", pondId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(graphsJson)
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(status().isOk());
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(graphs.toArray())));
+    }
 
     @And("^The following ontologies are defined for the pond \"([^\"]*)\"$")
     public void theFollowingOntologiesAreDefinedForThePond(String pondId, List<String> ontologies) throws Throwable {
@@ -245,10 +272,29 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
     }
 
+    @And("^The following data graphs are defined for the pond \"([^\"]*)\"$")
+    public void theFollowingDataGraphsAreDefinedForThePond(String pondId, List<String> graphs) throws Throwable {
+        graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
+        this.result = mockMvc.perform(get("/ponds/{pondId}/graphs", pondId)
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(graphs.toArray())));
+    }
+
     @And("^The size of pond \"([^\"]*)\" ontologies graph is (\\d+)$")
     public void theSizeOfPondOntologiesGraphIs(String pondId, int expectedSize) throws Throwable {
         Pond pond = pondRepository.findOne(pondId);
         int actualSize = sparqlService.countGraphTriples(pond.getSparqlEndPoint(), pond.getPondOntologiesGraph().toString());
+        assertThat(actualSize, is(expectedSize));
+    }
+
+    @And("^The size of pond \"([^\"]*)\" data graphs is (\\d+)$")
+    public void theSizeOfPondGraphsIs(String pondId, int expectedSize) throws Throwable {
+        Pond pond = pondRepository.findOne(pondId);
+        this.result = mockMvc.perform(get("/ponds/{pondId}/graphs", pondId)
+                .accept(MediaType.APPLICATION_JSON));
+        String json = this.result.andReturn().getResponse().getContentAsString();
+        List<String> pondGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+        int actualSize = pondGraphs.stream().mapToInt(graph -> sparqlService.countGraphTriples(pond.getSparqlEndPoint(), graph)).sum();
         assertThat(actualSize, is(expectedSize));
     }
 
