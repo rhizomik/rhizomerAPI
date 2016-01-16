@@ -6,7 +6,7 @@ Feature: Create classes in a pond
   I want to identify the classes in it
 
   Background: Existing pond
-    Given a pond with id "vegetables"
+    Given There is a pond with id "vegetables"
 
   Scenario: manually define a class
     When I create a class in pond "vegetables" with URI "http://examples.org#Potato", label "Potato" and instance count 1

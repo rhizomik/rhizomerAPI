@@ -6,7 +6,7 @@ Feature: Create class facets in a pond
   I want to identify the classes facets in it
 
   Background: Existing pond
-    Given a pond with id "vegetables"
+    Given There is a pond with id "vegetables"
     And a class in pond "vegetables" with URI "http://examples.org#Potato", label "Potato" and instance count 1
 
   Scenario: Manually define a class facet

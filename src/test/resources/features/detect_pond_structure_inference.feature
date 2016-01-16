@@ -6,9 +6,15 @@ Feature: Detect pond structure considering inference
   I want to detect all the classes defined in the dataset and their facets considering inference
 
   Background: Existing pond in local server storing file data
-    Given There is a pond "apollo13i" on a local server storing "data/nasa-apollo13.ttl" in graph "http://rhizomik.net/pond/apollo13i"
+    Given There is a pond with id "apollo13i"
+    And The pond "apollo13i" has a mock server
+    And The pond "apollo13i" server stores data
+      | data                            | graph                                  |
+      | data/nasa-apollo13.ttl          | http://rhizomik.net/pond/apollo13i     |
+    When I add the graphs to the pond "apollo13i"
+      | http://rhizomik.net/pond/apollo13i      |
     And The following ontologies are set for pond "apollo13i"
-      | data/nasa-schema.ttl                                                            |
+      | data/nasa-schema.ttl                    |
     And The query type for pond "apollo13i" is set to "FULL"
     And The inference for pond "apollo13i" is set to "true"
 

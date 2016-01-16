@@ -78,7 +78,7 @@ public class APIStepdefs {
                 .build();
     }
 
-    @Given("^a pond with id \"([^\"]*)\"$")
+    @Given("^There is a pond with id \"([^\"]*)\"$")
     public void aPondWithId(String pondId) throws Throwable {
         pondRepository.save(new Pond(pondId));
     }
@@ -180,13 +180,11 @@ public class APIStepdefs {
                 .andExpect(status().isNotFound());
     }
 
-    @Given("^There is a pond \"([^\"]*)\" on a local server storing \"([^\"]*)\" in graph \"([^\"]*)\"$")
-    public void There_is_a_pond_on_a_local_server(String pondId, String dataFile, URI graph) throws Throwable {
-        Pond pond = new Pond(pondId);
-        pond.addPondGraph(graph.toString());
+    @Given("^The pond \"([^\"]*)\" has a mock server$")
+    public void thePondHasAMockServer(String pondId) throws Throwable {
+        Pond pond = pondRepository.findOne(pondId);
         pond.setSparqlEndPoint(new URL("http://sparql/mock"));
         pondRepository.save(pond);
-        SPARQLServiceMockFactory.addData(graph.toString(), dataFile);
     }
 
     @And("^The pond \"([^\"]*)\" server stores data$")
@@ -311,13 +309,15 @@ public class APIStepdefs {
     @When("^I extract the classes from pond \"([^\"]*)\"$")
     public void I_extract_the_classes_from_pond(String pondId) throws Throwable {
         this.result = mockMvc.perform(get("/ponds/{pondId}/classes", pondId)
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @When("^I extract the facets for class \"([^\"]*)\" in pond \"([^\"]*)\"$")
     public void iExtractTheFacetsForClassInPond(String classCurie, String pondId) throws Throwable {
         this.result = mockMvc.perform(get("/ponds/{pondId}/classes/{classCurie}/facets", pondId, classCurie)
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Then("^The retrieved classes are$")

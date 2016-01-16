@@ -6,7 +6,8 @@ Feature: Manage pond ontologies
   I want to manage the set of ontologies associated to a pond
 
   Background: Existing pond with classes and facets
-    Given There is a pond "apollo13o" on a local server storing "data/nasa-apollo13.ttl" in graph "http://rhizomik.net/pond/apollo13o"
+    Given There is a pond with id "apollo13o"
+    And The pond "apollo13o" has a mock server
     And The following ontologies are set for pond "apollo13o"
       | data/nasa-schema.ttl            |
     And The size of pond "apollo13o" ontologies graph is 27
