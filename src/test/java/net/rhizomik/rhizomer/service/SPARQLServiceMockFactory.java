@@ -83,7 +83,7 @@ public class SPARQLServiceMockFactory {
             Model model = RDFDataMgr.loadModel(uri);
             mock.loadModel(sparqlEndPoint, graph, model);
             return null;
-        }).when(mock).loadOntology(isA(URL.class), anyString(), anyString());
+        }).when(mock).loadData(isA(URL.class), anyString(), anyString());
 
         doAnswer(invocationOnMock -> {
             String graph = (String) invocationOnMock.getArguments()[1];

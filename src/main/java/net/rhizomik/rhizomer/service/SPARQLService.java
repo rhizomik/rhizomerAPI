@@ -68,7 +68,7 @@ public class SPARQLService {
         return count;
     }
 
-    public void loadOntology(URL sparqlEndpoint, String graph, String uri) {
+    public void loadData(URL sparqlEndpoint, String graph, String uri) {
         Model model = RDFDataMgr.loadModel(uri);
         loadModel(sparqlEndpoint, graph, model);
     }
