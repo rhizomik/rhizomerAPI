@@ -226,6 +226,20 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$.inferenceEnabled", is(inference)));
     }
 
+    @And("^The pond \"([^\"]*)\" server is set to \"([^\"]*)\"$")
+    public void thePondServerIsSetTo(String pondId, URL sparqlEndPoint) throws Throwable {
+        existsAPondWithId(pondId);
+        String pondJson = this.result.andReturn().getResponse().getContentAsString();
+        Pond pond = mapper.readValue(pondJson, Pond.class);
+        pond.setSparqlEndPoint(sparqlEndPoint);
+        pondJson = mapper.writeValueAsString(pond);
+        this.result = mockMvc.perform(put("/ponds/{pondId}", pondId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(pondJson)
+                .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(jsonPath("$.sparqlEndPoint", is(sparqlEndPoint.toString())));
+    }
+
     @When("^I add ontologies to the pond \"([^\"]*)\"$")
     public void iAddTheOntologyToThePond(String pondId, List<String> ontologies) throws Throwable {
         String ontologiesJson = mapper.writeValueAsString(ontologies);
