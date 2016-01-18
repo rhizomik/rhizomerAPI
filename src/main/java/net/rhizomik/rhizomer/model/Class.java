@@ -19,7 +19,7 @@ public class Class {
     private static final Logger logger = LoggerFactory.getLogger(Class.class);
 
     @EmbeddedId
-    private PondClassId id;
+    private DatasetClassId id;
 
     private String uri;
     private String label;
@@ -28,28 +28,28 @@ public class Class {
     private List<Facet> facets = new ArrayList<>();
     private int instanceCount;
     @ManyToOne
-    @MapsId("pondId")
+    @MapsId("datasetId")
     @JsonBackReference
-    private Pond pond;
+    private Dataset dataset;
 
     public Class() {
-        this.id = new PondClassId();
+        this.id = new DatasetClassId();
     }
 
-    public Class(Pond pond, String curie, String label, int instanceCount) throws URISyntaxException {
-        this(pond, Curie.toUri(curie), label, instanceCount);
+    public Class(Dataset dataset, String curie, String label, int instanceCount) throws URISyntaxException {
+        this(dataset, Curie.toUri(curie), label, instanceCount);
     }
 
-    public Class(Pond pond, String namespace, String localName, String label, int instanceCount) throws URISyntaxException {
-        this(pond, new URI(namespace+localName), label, instanceCount);
+    public Class(Dataset dataset, String namespace, String localName, String label, int instanceCount) throws URISyntaxException {
+        this(dataset, new URI(namespace+localName), label, instanceCount);
     }
 
-    public Class(Pond pond, URI uri, String label, int instanceCount) {
-        this.id = new PondClassId(pond, uri);
+    public Class(Dataset dataset, URI uri, String label, int instanceCount) {
+        this.id = new DatasetClassId(dataset, uri);
         this.uri = uri.toString();
         this.label = label;
         this.instanceCount = instanceCount;
-        this.pond = pond;
+        this.dataset = dataset;
         logger.debug("Created class: {}", super.toString());
     }
 
@@ -59,9 +59,9 @@ public class Class {
 
     public void addFacet(Facet facet) { facets.add(facet); }
 
-    public PondClassId getId() { return id; }
+    public DatasetClassId getId() { return id; }
 
-    public void setId(PondClassId id) {
+    public void setId(DatasetClassId id) {
         this.id = id;
     }
 
@@ -84,11 +84,11 @@ public class Class {
 
     public void setInstanceCount(int instanceCount) { this.instanceCount = instanceCount; }
 
-    public Pond getPond() { return pond; }
+    public Dataset getDataset() { return dataset; }
 
-    public void setPond(Pond pond) {
-        this.pond = pond;
-        this.id.setPondId(pond.getId());
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+        this.id.setDatasetId(dataset.getId());
     }
 
     @Override

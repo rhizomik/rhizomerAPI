@@ -4,8 +4,8 @@ package net.rhizomik.rhizomer.controller;
  * Created by http://rhizomik.net/~roberto/
  */
 import com.google.common.base.Preconditions;
-import net.rhizomik.rhizomer.model.Pond;
-import net.rhizomik.rhizomer.repository.PondRepository;
+import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,40 +23,40 @@ import java.util.Set;
 public class OntologiesController {
     final Logger logger = LoggerFactory.getLogger(OntologiesController.class);
 
-    @Autowired private PondRepository pondRepository;
+    @Autowired private DatasetRepository datasetRepository;
     @Autowired private SPARQLService sparqlService;
 
-    @RequestMapping(value = "/ponds/{pondId}/ontologies", method = RequestMethod.POST)
+    @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody List<String> addPondOntology(@RequestBody List<String> ontologies, @PathVariable String pondId) throws Exception {
-        Pond pond = pondRepository.findOne(pondId);
-        Preconditions.checkNotNull(pond, "Pond with id {} not found", pondId);
+    public @ResponseBody List<String> addDatasetOntology(@RequestBody List<String> ontologies, @PathVariable String datasetId) throws Exception {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
         ontologies.forEach(ontology -> {
-            sparqlService.loadData(pond.getSparqlEndPoint(), pond.getPondOntologiesGraph().toString(), ontology);
-            pond.addPondOntology(ontology);
+            sparqlService.loadData(dataset.getSparqlEndPoint(), dataset.getDatasetOntologiesGraph().toString(), ontology);
+            dataset.addDatasetOntology(ontology);
         });
-        logger.info("Added ontologies {} to Pond {}", ontologies.toString(), pondId);
-        return pondRepository.save(pond).getPondOntologies();
+        logger.info("Added ontologies {} to Dataset {}", ontologies.toString(), datasetId);
+        return datasetRepository.save(dataset).getDatasetOntologies();
     }
 
-    @RequestMapping(value = "/ponds/{pondId}/ontologies", method = RequestMethod.GET)
-    public @ResponseBody List<String> retrievePondOntologies(@PathVariable String pondId) throws Exception {
-        Pond pond = pondRepository.findOne(pondId);
-        Preconditions.checkNotNull(pond, "Pond with id {} not found", pondId);
-        logger.info("Retrieved ontologies for Pond {}", pondId);
-        return pond.getPondOntologies();
+    @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.GET)
+    public @ResponseBody List<String> retrieveDatasetOntologies(@PathVariable String datasetId) throws Exception {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
+        logger.info("Retrieved ontologies for Dataset {}", datasetId);
+        return dataset.getDatasetOntologies();
     }
 
-    @RequestMapping(value = "/ponds/{pondId}/ontologies", method = RequestMethod.PUT)
-    public @ResponseBody List<String> updatePondOntologies(@Valid @RequestBody Set<String> updatedOntologies, @PathVariable String pondId) throws Exception {
-        Pond pond = pondRepository.findOne(pondId);
-        Preconditions.checkNotNull(pond, "Pond with id {} not found", pondId);
-        pond.setPondOntologies(updatedOntologies);
-        URI pondOntologiesGraph = pond.getPondOntologiesGraph();
-        sparqlService.clearGraph(pond.getSparqlEndPoint(), pondOntologiesGraph);
+    @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.PUT)
+    public @ResponseBody List<String> updateDatasetOntologies(@Valid @RequestBody Set<String> updatedOntologies, @PathVariable String datasetId) throws Exception {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
+        dataset.setDatasetOntologies(updatedOntologies);
+        URI datasetOntologiesGraph = dataset.getDatasetOntologiesGraph();
+        sparqlService.clearGraph(dataset.getSparqlEndPoint(), datasetOntologiesGraph);
         updatedOntologies.forEach(ontologyUriStr ->
-                sparqlService.loadData(pond.getSparqlEndPoint(), pondOntologiesGraph.toString(), ontologyUriStr));
-        logger.info("Updated Pond {} ontologies", pondId);
-        return pondRepository.save(pond).getPondOntologies();
+                sparqlService.loadData(dataset.getSparqlEndPoint(), datasetOntologiesGraph.toString(), ontologyUriStr));
+        logger.info("Updated Dataset {} ontologies", datasetId);
+        return datasetRepository.save(dataset).getDatasetOntologies();
     }
 }

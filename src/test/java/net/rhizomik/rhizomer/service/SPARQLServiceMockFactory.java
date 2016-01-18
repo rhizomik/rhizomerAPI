@@ -5,7 +5,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.update.UpdateAction;
 import com.hp.hpl.jena.update.UpdateRequest;
-import net.rhizomik.rhizomer.model.Pond;
+import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.Queries;
 import org.apache.jena.riot.RDFDataMgr;
 import org.mockito.Mockito;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 public class SPARQLServiceMockFactory {
     private static final Logger logger = LoggerFactory.getLogger(SPARQLServiceMockFactory.class);
 
-    private static Dataset dataset = DatasetFactory.createMem();
+    private static com.hp.hpl.jena.query.Dataset dataset = DatasetFactory.createMem();
 
     public static void addData(String graph, String dataFile) {
         Model model = RDFDataMgr.loadModel(dataFile);
@@ -102,15 +102,15 @@ public class SPARQLServiceMockFactory {
         }).when(mock).clearGraph(isA(URL.class), isA(URI.class));
 
         doAnswer(invocationOnMock -> {
-            Pond pond = (Pond) invocationOnMock.getArguments()[0];
-            List<String> targetGraphs = pond.getPondGraphs();
-            targetGraphs.add(pond.getPondOntologiesGraph().toString());
-            UpdateRequest createGraph = Queries.getCreateGraph(pond.getPondInferenceGraph().toString());
-            mock.queryUpdate(pond.getSparqlEndPoint(), createGraph);
-            UpdateRequest update = Queries.getUpdateInferTypes(targetGraphs, pond.getPondInferenceGraph().toString());
-            mock.queryUpdate(pond.getSparqlEndPoint(), update);
+            Dataset dataset = (Dataset) invocationOnMock.getArguments()[0];
+            List<String> targetGraphs = dataset.getDatasetGraphs();
+            targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
+            UpdateRequest createGraph = Queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
+            mock.queryUpdate(dataset.getSparqlEndPoint(), createGraph);
+            UpdateRequest update = Queries.getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
+            mock.queryUpdate(dataset.getSparqlEndPoint(), update);
             return null;
-        }).when(mock).inferTypes(isA(Pond.class));
+        }).when(mock).inferTypes(isA(Dataset.class));
 
         return mock;
     }

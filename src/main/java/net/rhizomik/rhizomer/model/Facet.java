@@ -20,12 +20,12 @@ public class Facet {
     private static final Logger logger = LoggerFactory.getLogger(Facet.class);
 
     @EmbeddedId
-    PondClassFacetId id;
+    DatasetClassFacetId id;
 
     private String uri;
     private String label;
     @ManyToOne
-    @MapsId("pondClassId")
+    @MapsId("datasetClassId")
     @JsonBackReference
     private Class domain;
     private int uses;
@@ -35,7 +35,7 @@ public class Facet {
     private boolean allLiteral;
 
     public Facet() {
-        this.id = new PondClassFacetId();
+        this.id = new DatasetClassFacetId();
     }
 
     public Facet(Class domain, String curie, String label, int uses, int differentValues, String[] rangesCuries, boolean allLiteral)
@@ -49,7 +49,7 @@ public class Facet {
     }
 
     public Facet(Class domain, URI uri, String label, int uses, int differentValues, String[] rangesCuries, boolean allLiteral) {
-        this.id = new PondClassFacetId(domain.getPond(), domain.getUri(), uri);
+        this.id = new DatasetClassFacetId(domain.getDataset(), domain.getUri(), uri);
         this.uri = uri.toString();
         this.label = label;
         this.domain = domain;
@@ -64,7 +64,7 @@ public class Facet {
 
     public void setRelation(boolean isRelation) { this.allLiteral = !isRelation; }
 
-    public PondClassFacetId getId() { return id; }
+    public DatasetClassFacetId getId() { return id; }
 
     public URI getUri() {
         try { return new URI(uri); }
@@ -91,7 +91,7 @@ public class Facet {
 
     public void setDomain(Class domain) {
         this.domain = domain;
-        this.id.setPondClassId(domain.getId());
+        this.id.setDatasetClassId(domain.getId());
     }
 
     public int getUses() { return uses; }

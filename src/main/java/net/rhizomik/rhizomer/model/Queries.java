@@ -66,9 +66,9 @@ public class Queries {
             "}");
     }
 
-    public static UpdateRequest getUpdateInferTypes(List<String> targetGraphs, String pondInferenceGraph) {
+    public static UpdateRequest getUpdateInferTypes(List<String> targetGraphs, String datasetInferenceGraph) {
         return UpdateFactory.create(prefixes +
-            "INSERT { GRAPH <" + pondInferenceGraph + "> { ?i a ?type } } \n" +
+            "INSERT { GRAPH <" + datasetInferenceGraph + "> { ?i a ?type } } \n" +
             targetGraphs.stream().map(s -> String.format("USING <%s> \n", s)).collect(Collectors.joining()) +
             "WHERE { \n" +
             "{\t ?p rdfs:domain ?type . \n" +

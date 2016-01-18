@@ -18,8 +18,8 @@ import java.util.Set;
  * Created by http://rhizomik.net/~roberto/
  */
 @Entity
-public class Pond {
-    private static final Logger logger = LoggerFactory.getLogger(Pond.class);
+public class Dataset {
+    private static final Logger logger = LoggerFactory.getLogger(Dataset.class);
 
     @Id
     private String id;
@@ -30,27 +30,27 @@ public class Pond {
     private double coverage = 0.0;
 
     @ElementCollection
-    private Set<String> pondGraphs = new HashSet<>();
+    private Set<String> datasetGraphs = new HashSet<>();
     @ElementCollection
-    private Set<String> pondOntologies = new HashSet<>();
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "pond")
+    private Set<String> datasetOntologies = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
     private List<Class> classes = new ArrayList<>();
 
-    public Pond() {}
+    public Dataset() {}
 
-    public Pond(String id) {
+    public Dataset(String id) {
         this.id = id;
     }
 
-    public Pond(String id, URL serverUrl) throws MalformedURLException {
+    public Dataset(String id, URL serverUrl) throws MalformedURLException {
         this(id, serverUrl, null, null);
     }
 
-    public Pond(String id, URL sparqlEndPoint, Set<String> graphs, Set<String> ontologies) throws MalformedURLException {
+    public Dataset(String id, URL sparqlEndPoint, Set<String> graphs, Set<String> ontologies) throws MalformedURLException {
         this.id = id;
         this.sparqlEndPoint = sparqlEndPoint;
-        this.pondGraphs = graphs;
-        this.pondOntologies = ontologies;
+        this.datasetGraphs = graphs;
+        this.datasetOntologies = ontologies;
     }
 
     public String getId() { return id; }
@@ -67,23 +67,23 @@ public class Pond {
     public void addClass(Class aClass) { classes.add(aClass); }
 
     @JsonIgnore
-    public List<String> getPondGraphs() {
-        ArrayList<String> copyPondGraphs = new ArrayList<>(pondGraphs);
+    public List<String> getDatasetGraphs() {
+        ArrayList<String> copyDatasetGraphs = new ArrayList<>(datasetGraphs);
         if (isInferenceEnabled())
-            copyPondGraphs.add(this.getPondInferenceGraph().toString());
-        return copyPondGraphs;
+            copyDatasetGraphs.add(this.getDatasetInferenceGraph().toString());
+        return copyDatasetGraphs;
     }
 
-    public void setPondGraphs(Set<String> pondGraphs) { this.pondGraphs = pondGraphs; }
+    public void setDatasetGraphs(Set<String> datasetGraphs) { this.datasetGraphs = datasetGraphs; }
 
-    public void addPondGraph(String graph) { this.pondGraphs.add(graph); }
+    public void addDatasetGraph(String graph) { this.datasetGraphs.add(graph); }
 
-    public void addPondOntology(String ontology) { this.pondOntologies.add(ontology); }
+    public void addDatasetOntology(String ontology) { this.datasetOntologies.add(ontology); }
 
     @JsonIgnore
-    public List<String> getPondOntologies() { return new ArrayList<>(pondOntologies); }
+    public List<String> getDatasetOntologies() { return new ArrayList<>(datasetOntologies); }
 
-    public void setPondOntologies(Set<String> pondOntologies) { this.pondOntologies = pondOntologies; }
+    public void setDatasetOntologies(Set<String> datasetOntologies) { this.datasetOntologies = datasetOntologies; }
 
     public URL getSparqlEndPoint() { return sparqlEndPoint; }
 
@@ -106,35 +106,35 @@ public class Pond {
     public void setCoverage(double coverage) { this.coverage = coverage; }
 
     @JsonIgnore
-    public URI getPondUri() {
-        URI pondURI = null;
+    public URI getDatasetUri() {
+        URI datasetURI = null;
         try {
-            pondURI = new URI("http://rhizomik.net/pond/"+getId());
+            datasetURI = new URI("http://rhizomik.net/dataset/"+getId());
         } catch (URISyntaxException e) {
             logger.error(e.getMessage());
         }
-        return pondURI;
+        return datasetURI;
     }
 
     @JsonIgnore
-    public java.net.URI getPondOntologiesGraph() {
-        URI pondOntologiesGraphURI = null;
+    public java.net.URI getDatasetOntologiesGraph() {
+        URI datasetOntologiesGraphURI = null;
         try {
-            pondOntologiesGraphURI = new URI(getPondUri()+"/ontologies");
+            datasetOntologiesGraphURI = new URI(getDatasetUri()+"/ontologies");
         } catch (URISyntaxException e) {
             logger.error(e.getMessage());
         }
-        return pondOntologiesGraphURI;
+        return datasetOntologiesGraphURI;
     }
 
     @JsonIgnore
-    public java.net.URI getPondInferenceGraph() {
-        URI pondInferenceGraphURI = null;
+    public java.net.URI getDatasetInferenceGraph() {
+        URI datasetInferenceGraphURI = null;
         try {
-            pondInferenceGraphURI = new URI(getPondUri()+"/inference");
+            datasetInferenceGraphURI = new URI(getDatasetUri()+"/inference");
         } catch (URISyntaxException e) {
             logger.error(e.getMessage());
         }
-        return pondInferenceGraphURI;
+        return datasetInferenceGraphURI;
     }
 }

@@ -9,7 +9,7 @@ import cucumber.api.java.en.When;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.repository.ClassRepository;
-import net.rhizomik.rhizomer.repository.PondRepository;
+import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
 import org.junit.runner.RunWith;
@@ -60,7 +60,7 @@ public class APIStepdefs {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Autowired private WebApplicationContext wac;
-    @Autowired private PondRepository pondRepository;
+    @Autowired private DatasetRepository datasetRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private SPARQLService sparqlService;
 
@@ -89,44 +89,44 @@ public class APIStepdefs {
                 .build();
     }
 
-    @Given("^There is a pond with id \"([^\"]*)\"$")
-    public void aPondWithId(String pondId) throws Throwable {
-        pondRepository.save(new Pond(pondId));
+    @Given("^There is a dataset with id \"([^\"]*)\"$")
+    public void aDatasetWithId(String datasetId) throws Throwable {
+        datasetRepository.save(new Dataset(datasetId));
     }
 
-    @Given("^a class in pond \"([^\"]*)\" with URI \"([^\"]*)\", label \"([^\"]*)\" and instance count (\\d+)$")
-    public void aClassInPondWithURILabelAndInstanceCount(String pondId, String classUriStr, String classLabel, int instanceCount) throws Throwable {
-        Pond pond = pondRepository.findOne(pondId);
-        classRepository.save(new Class(pond, new URI(classUriStr), classLabel, instanceCount));
+    @Given("^a class in dataset \"([^\"]*)\" with URI \"([^\"]*)\", label \"([^\"]*)\" and instance count (\\d+)$")
+    public void aClassInDatasetWithURILabelAndInstanceCount(String datasetId, String classUriStr, String classLabel, int instanceCount) throws Throwable {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        classRepository.save(new Class(dataset, new URI(classUriStr), classLabel, instanceCount));
     }
 
-    @When("^I create a pond with id \"([^\"]*)\"$")
-    public void aManagerCreatesAPondWithId(String pondId) throws Throwable {
-        Pond pond = new Pond(pondId);
-        String json = mapper.writeValueAsString(pond);
-        this.result = mockMvc.perform(post("/ponds")
+    @When("^I create a dataset with id \"([^\"]*)\"$")
+    public void aManagerCreatesADatasetWithId(String datasetId) throws Throwable {
+        Dataset dataset = new Dataset(datasetId);
+        String json = mapper.writeValueAsString(dataset);
+        this.result = mockMvc.perform(post("/datasets")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON));
     }
 
-    @When("^I create a class in pond \"([^\"]*)\" with URI \"([^\"]*)\", label \"([^\"]*)\" and instance count (\\d+)$")
-    public void iCreateAClassWithURILabelAndInstanceCount(String pondId, String classUriStr, String classLabel, int instanceCount) throws Throwable {
+    @When("^I create a class in dataset \"([^\"]*)\" with URI \"([^\"]*)\", label \"([^\"]*)\" and instance count (\\d+)$")
+    public void iCreateAClassWithURILabelAndInstanceCount(String datasetId, String classUriStr, String classLabel, int instanceCount) throws Throwable {
         String json = MessageFormat.format("'{' " +
                 "\"uri\": \"{0}\", " +
                 "\"label\": \"{1}\", " +
                 "\"instanceCount\": {2,number,integer} '}'", classUriStr, classLabel, instanceCount);
-        this.result = mockMvc.perform(post("/ponds/{pondId}/classes", pondId)
+        this.result = mockMvc.perform(post("/datasets/{datasetId}/classes", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON));
     }
 
-    @When("^I create facets for class \"([^\"]*)\" in pond \"([^\"]*)\"$")
-    public void iCreateAFacetForClassInPondWith(String classCurie, String pondId, List<ExpectedFacet> facets) throws Throwable {
+    @When("^I create facets for class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
+    public void iCreateAFacetForClassInDatasetWith(String classCurie, String datasetId, List<ExpectedFacet> facets) throws Throwable {
         String json = mapper.writeValueAsString(facets.get(0));
 
-        this.result = mockMvc.perform(post("/ponds/{pondId}/classes/{classCurie}/facets", pondId, classCurie)
+        this.result = mockMvc.perform(post("/datasets/{datasetId}/classes/{classCurie}/facets", datasetId, classCurie)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON));
@@ -143,13 +143,13 @@ public class APIStepdefs {
                 .andExpect(jsonPath("$.message", containsString(message)));
     }
 
-    @And("^exists a pond with id \"([^\"]*)\"$")
-    public void existsAPondWithId(String pondId) throws Throwable {
-        this.result = mockMvc.perform(get("/ponds/{pondId}", pondId)
+    @And("^exists a dataset with id \"([^\"]*)\"$")
+    public void existsADatasetWithId(String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}", datasetId)
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(pondId)));
+                .andExpect(jsonPath("$.id", is(datasetId)));
     }
 
     @And("^exists a class with id \"([^\"]*)\"$")
@@ -170,91 +170,91 @@ public class APIStepdefs {
                 .andExpect(jsonPath("$.id", is(facetUriStr)));
     }
 
-    @And("^There is no pond with id \"([^\"]*)\"$")
-    public void thereIsNoPondWithId(String pondId) throws Throwable {
-        this.result = mockMvc.perform(get("/ponds/{pondId}", pondId)
+    @And("^There is no dataset with id \"([^\"]*)\"$")
+    public void thereIsNoDatasetWithId(String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}", datasetId)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
-    @And("^There is no class \"([^\"]*)\" in pond \"([^\"]*)\"$")
-    public void thereIsNoClassInPond(String classCurie, String pondId) throws Throwable {
-        this.result = mockMvc.perform(get("/ponds/{pondId}/classes/{classCurie}", pondId, classCurie)
+    @And("^There is no class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
+    public void thereIsNoClassInDataset(String classCurie, String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/classes/{classCurie}", datasetId, classCurie)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
-    @And("^There is no facet \"([^\"]*)\" for class \"([^\"]*)\" in pond \"([^\"]*)\"$")
-    public void thereIsNoFacetForClassInPond(String facetCurie, String classCurie, String pondId) throws Throwable {
-        this.result = mockMvc.perform(get("/ponds/{pondId}/classes/{classCurie}/facets/{facetCurie}", pondId, classCurie, facetCurie)
+    @And("^There is no facet \"([^\"]*)\" for class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
+    public void thereIsNoFacetForClassInDataset(String facetCurie, String classCurie, String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}", datasetId, classCurie, facetCurie)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
-    @Given("^The pond \"([^\"]*)\" has a mock server$")
-    public void thePondHasAMockServer(String pondId) throws Throwable {
-        Pond pond = pondRepository.findOne(pondId);
-        pond.setSparqlEndPoint(new URL("http://sparql/mock"));
-        pondRepository.save(pond);
+    @Given("^The dataset \"([^\"]*)\" has a mock server$")
+    public void theDatasetHasAMockServer(String datasetId) throws Throwable {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        dataset.setSparqlEndPoint(new URL("http://sparql/mock"));
+        datasetRepository.save(dataset);
     }
 
-    @And("^The pond \"([^\"]*)\" server stores data$")
-    public void thePondServerStoresData(String pondId, List<Map<String, String>> datasets) throws Throwable {
-        Pond pond = pondRepository.findOne(pondId);
-        datasets.stream().forEach(dataset -> sparqlService.loadData(pond.getSparqlEndPoint(), dataset.get("graph"), dataset.get("data")));
+    @And("^The dataset \"([^\"]*)\" server stores data$")
+    public void theDatasetServerStoresData(String datasetId, List<Map<String, String>> graphs) throws Throwable {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        graphs.stream().forEach(graph -> sparqlService.loadData(dataset.getSparqlEndPoint(), graph.get("graph"), graph.get("data")));
     }
 
-    @When("^I delete a pond with id \"([^\"]*)\"$")
-    public void iDeleteAPondWithId(String pondId) throws Throwable {
-        this.result = mockMvc.perform(delete("/ponds/{pondId}", pondId));
+    @When("^I delete a dataset with id \"([^\"]*)\"$")
+    public void iDeleteADatasetWithId(String datasetId) throws Throwable {
+        this.result = mockMvc.perform(delete("/datasets/{datasetId}", datasetId));
     }
 
-    @And("^The query type for pond \"([^\"]*)\" is set to \"([^\"]*)\"$")
-    public void The_query_type_for_pond_is(String pondId, String queryTypeString) throws Throwable {
-        existsAPondWithId(pondId);
-        String pondJson = this.result.andReturn().getResponse().getContentAsString();
-        Pond pond = mapper.readValue(pondJson, Pond.class);
-        pond.setQueryType(Queries.QueryType.valueOf(queryTypeString));
-        pondJson = mapper.writeValueAsString(pond);
-        this.result = mockMvc.perform(put("/ponds/{pondId}", pondId)
+    @And("^The query type for dataset \"([^\"]*)\" is set to \"([^\"]*)\"$")
+    public void The_query_type_for_dataset_is(String datasetId, String queryTypeString) throws Throwable {
+        existsADatasetWithId(datasetId);
+        String datasetJson = this.result.andReturn().getResponse().getContentAsString();
+        Dataset dataset = mapper.readValue(datasetJson, Dataset.class);
+        dataset.setQueryType(Queries.QueryType.valueOf(queryTypeString));
+        datasetJson = mapper.writeValueAsString(dataset);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(pondJson)
+                .content(datasetJson)
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(jsonPath("$.queryType", is(queryTypeString)));
     }
 
-    @And("^The inference for pond \"([^\"]*)\" is set to \"([^\"]*)\"$")
-    public void theInferenceForPondIsSetTo(String pondId, boolean inference) throws Throwable {
-        existsAPondWithId(pondId);
-        String pondJson = this.result.andReturn().getResponse().getContentAsString();
-        Pond pond = mapper.readValue(pondJson, Pond.class);
-        pond.setInferenceEnabled(inference);
-        pondJson = mapper.writeValueAsString(pond);
-        this.result = mockMvc.perform(put("/ponds/{pondId}", pondId)
+    @And("^The inference for dataset \"([^\"]*)\" is set to \"([^\"]*)\"$")
+    public void theInferenceForDatasetIsSetTo(String datasetId, boolean inference) throws Throwable {
+        existsADatasetWithId(datasetId);
+        String datasetJson = this.result.andReturn().getResponse().getContentAsString();
+        Dataset dataset = mapper.readValue(datasetJson, Dataset.class);
+        dataset.setInferenceEnabled(inference);
+        datasetJson = mapper.writeValueAsString(dataset);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(pondJson)
+                .content(datasetJson)
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(jsonPath("$.inferenceEnabled", is(inference)));
     }
 
-    @And("^The pond \"([^\"]*)\" server is set to \"([^\"]*)\"$")
-    public void thePondServerIsSetTo(String pondId, URL sparqlEndPoint) throws Throwable {
-        existsAPondWithId(pondId);
-        String pondJson = this.result.andReturn().getResponse().getContentAsString();
-        Pond pond = mapper.readValue(pondJson, Pond.class);
-        pond.setSparqlEndPoint(sparqlEndPoint);
-        pondJson = mapper.writeValueAsString(pond);
-        this.result = mockMvc.perform(put("/ponds/{pondId}", pondId)
+    @And("^The dataset \"([^\"]*)\" server is set to \"([^\"]*)\"$")
+    public void theDatasetServerIsSetTo(String datasetId, URL sparqlEndPoint) throws Throwable {
+        existsADatasetWithId(datasetId);
+        String datasetJson = this.result.andReturn().getResponse().getContentAsString();
+        Dataset dataset = mapper.readValue(datasetJson, Dataset.class);
+        dataset.setSparqlEndPoint(sparqlEndPoint);
+        datasetJson = mapper.writeValueAsString(dataset);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(pondJson)
+                .content(datasetJson)
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(jsonPath("$.sparqlEndPoint", is(sparqlEndPoint.toString())));
     }
 
-    @When("^I add ontologies to the pond \"([^\"]*)\"$")
-    public void iAddTheOntologyToThePond(String pondId, List<String> ontologies) throws Throwable {
+    @When("^I add ontologies to the dataset \"([^\"]*)\"$")
+    public void iAddTheOntologyToTheDataset(String datasetId, List<String> ontologies) throws Throwable {
         String ontologiesJson = mapper.writeValueAsString(ontologies);
-        this.result = mockMvc.perform(post("/ponds/{pondId}/ontologies", pondId)
+        this.result = mockMvc.perform(post("/datasets/{datasetId}/ontologies", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ontologiesJson)
                 .accept(MediaType.APPLICATION_JSON));
@@ -262,10 +262,10 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", hasItems(ontologies.toArray())));
     }
 
-    @When("^I add the graphs to the pond \"([^\"]*)\"$")
-    public void iAddTheGraphToThePond(String pondId, List<String> graphs) throws Throwable {
+    @When("^I add the graphs to the dataset \"([^\"]*)\"$")
+    public void iAddTheGraphToTheDataset(String datasetId, List<String> graphs) throws Throwable {
         String graphsJson = mapper.writeValueAsString(graphs);
-        this.result = mockMvc.perform(post("/ponds/{pondId}/graphs", pondId)
+        this.result = mockMvc.perform(post("/datasets/{datasetId}/graphs", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(graphsJson)
                 .accept(MediaType.APPLICATION_JSON));
@@ -273,11 +273,11 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", hasItems(graphs.toArray())));
     }
 
-    @And("^The following ontologies are set for pond \"([^\"]*)\"$")
-    public void theFollowingOntologiesAreSetForPond(String pondId, List<String> ontologies) throws Throwable {
+    @And("^The following ontologies are set for dataset \"([^\"]*)\"$")
+    public void theFollowingOntologiesAreSetForDataset(String datasetId, List<String> ontologies) throws Throwable {
         ontologies = ontologies.stream().filter(s -> s.length()>0).collect(Collectors.toList());
         String ontologiesJson = mapper.writeValueAsString(ontologies);
-        this.result = mockMvc.perform(put("/ponds/{pondId}/ontologies", pondId)
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/ontologies", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ontologiesJson)
                 .accept(MediaType.APPLICATION_JSON));
@@ -285,11 +285,11 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
     }
 
-    @When("^The following data graphs are set for pond \"([^\"]*)\"$")
-    public void theFollowingDataGraphsAreSetForPond(String pondId, List<String> graphs) throws Throwable {
+    @When("^The following data graphs are set for dataset \"([^\"]*)\"$")
+    public void theFollowingDataGraphsAreSetForDataset(String datasetId, List<String> graphs) throws Throwable {
         graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
         String graphsJson = mapper.writeValueAsString(graphs);
-        this.result = mockMvc.perform(put("/ponds/{pondId}/graphs", pondId)
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/graphs", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(graphsJson)
                 .accept(MediaType.APPLICATION_JSON));
@@ -297,50 +297,50 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", containsInAnyOrder(graphs.toArray())));
     }
 
-    @And("^The following ontologies are defined for the pond \"([^\"]*)\"$")
-    public void theFollowingOntologiesAreDefinedForThePond(String pondId, List<String> ontologies) throws Throwable {
+    @And("^The following ontologies are defined for the dataset \"([^\"]*)\"$")
+    public void theFollowingOntologiesAreDefinedForTheDataset(String datasetId, List<String> ontologies) throws Throwable {
         ontologies = ontologies.stream().filter(s -> s.length()>0).collect(Collectors.toList());
-        this.result = mockMvc.perform(get("/ponds/{pondId}/ontologies", pondId)
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/ontologies", datasetId)
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
     }
 
-    @And("^The following data graphs are defined for the pond \"([^\"]*)\"$")
-    public void theFollowingDataGraphsAreDefinedForThePond(String pondId, List<String> graphs) throws Throwable {
+    @And("^The following data graphs are defined for the dataset \"([^\"]*)\"$")
+    public void theFollowingDataGraphsAreDefinedForTheDataset(String datasetId, List<String> graphs) throws Throwable {
         graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
-        this.result = mockMvc.perform(get("/ponds/{pondId}/graphs", pondId)
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/graphs", datasetId)
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(jsonPath("$", containsInAnyOrder(graphs.toArray())));
     }
 
-    @And("^The size of pond \"([^\"]*)\" ontologies graph is (\\d+)$")
-    public void theSizeOfPondOntologiesGraphIs(String pondId, int expectedSize) throws Throwable {
-        Pond pond = pondRepository.findOne(pondId);
-        int actualSize = sparqlService.countGraphTriples(pond.getSparqlEndPoint(), pond.getPondOntologiesGraph().toString());
+    @And("^The size of dataset \"([^\"]*)\" ontologies graph is (\\d+)$")
+    public void theSizeOfDatasetOntologiesGraphIs(String datasetId, int expectedSize) throws Throwable {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        int actualSize = sparqlService.countGraphTriples(dataset.getSparqlEndPoint(), dataset.getDatasetOntologiesGraph().toString());
         assertThat(actualSize, is(expectedSize));
     }
 
-    @And("^The size of pond \"([^\"]*)\" data graphs is (\\d+)$")
-    public void theSizeOfPondGraphsIs(String pondId, int expectedSize) throws Throwable {
-        Pond pond = pondRepository.findOne(pondId);
-        this.result = mockMvc.perform(get("/ponds/{pondId}/graphs", pondId)
+    @And("^The size of dataset \"([^\"]*)\" data graphs is (\\d+)$")
+    public void theSizeOfDatasetGraphsIs(String datasetId, int expectedSize) throws Throwable {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/graphs", datasetId)
                 .accept(MediaType.APPLICATION_JSON));
         String json = this.result.andReturn().getResponse().getContentAsString();
-        List<String> pondGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, String.class));
-        int actualSize = pondGraphs.stream().mapToInt(graph -> sparqlService.countGraphTriples(pond.getSparqlEndPoint(), graph)).sum();
+        List<String> datasetGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+        int actualSize = datasetGraphs.stream().mapToInt(graph -> sparqlService.countGraphTriples(dataset.getSparqlEndPoint(), graph)).sum();
         assertThat(actualSize, is(expectedSize));
     }
 
-    @When("^I extract the classes from pond \"([^\"]*)\"$")
-    public void I_extract_the_classes_from_pond(String pondId) throws Throwable {
-        this.result = mockMvc.perform(get("/ponds/{pondId}/classes", pondId)
+    @When("^I extract the classes from dataset \"([^\"]*)\"$")
+    public void I_extract_the_classes_from_dataset(String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/classes", datasetId)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
-    @When("^I extract the facets for class \"([^\"]*)\" in pond \"([^\"]*)\"$")
-    public void iExtractTheFacetsForClassInPond(String classCurie, String pondId) throws Throwable {
-        this.result = mockMvc.perform(get("/ponds/{pondId}/classes/{classCurie}/facets", pondId, classCurie)
+    @When("^I extract the facets for class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
+    public void iExtractTheFacetsForClassInDataset(String classCurie, String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/classes/{classCurie}/facets", datasetId, classCurie)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

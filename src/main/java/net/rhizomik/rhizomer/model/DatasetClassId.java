@@ -10,31 +10,31 @@ import java.net.URI;
  * Created by http://rhizomik.net/~roberto/
  */
 @Embeddable
-public class PondClassId implements Serializable {
-    private String pondId;
+public class DatasetClassId implements Serializable {
+    private String datasetId;
     private String classCurie;
 
-    public PondClassId() {}
+    public DatasetClassId() {}
 
-    public PondClassId(String idStr) {
+    public DatasetClassId(String idStr) {
         String[] idComponents = idStr.split("/");
-        this.pondId = idComponents[1];
+        this.datasetId = idComponents[1];
         this.classCurie = idComponents[3];
     }
 
-    public PondClassId(Pond pond, URI uri) {
-        this.pondId = pond.getId();
+    public DatasetClassId(Dataset dataset, URI uri) {
+        this.datasetId = dataset.getId();
         this.classCurie = new Curie(uri).toString();
     }
 
-    public PondClassId(Pond pond, Curie classCurie) {
-        this.pondId = pond.getId();
+    public DatasetClassId(Dataset dataset, Curie classCurie) {
+        this.datasetId = dataset.getId();
         this.classCurie = classCurie.toString();
     }
 
-    public String getPondId() { return pondId; }
+    public String getDatasetId() { return datasetId; }
 
-    public void setPondId(String pondId) { this.pondId = pondId; }
+    public void setDatasetId(String datasetId) { this.datasetId = datasetId; }
 
     public String getClassCurie() { return classCurie; }
 
@@ -45,21 +45,21 @@ public class PondClassId implements Serializable {
     @Override
     @JsonValue
     public String toString() {
-        return "/ponds/"+pondId+"/classes/"+classCurie;
+        return "/datasets/"+datasetId+"/classes/"+classCurie;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PondClassId that = (PondClassId) o;
-        if (!pondId.equals(that.pondId)) return false;
+        DatasetClassId that = (DatasetClassId) o;
+        if (!datasetId.equals(that.datasetId)) return false;
         return classCurie.equals(that.classCurie);
     }
 
     @Override
     public int hashCode() {
-        int result = pondId.hashCode();
+        int result = datasetId.hashCode();
         result = 31 * result + classCurie.hashCode();
         return result;
     }

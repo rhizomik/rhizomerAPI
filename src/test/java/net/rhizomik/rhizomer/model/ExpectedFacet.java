@@ -21,13 +21,13 @@ public class ExpectedFacet {
 
     public ExpectedFacet() {}
 
-    public ExpectedFacet(Facet pondFacet) {
-        this.uri = pondFacet.getId().toString();
-        this.label = pondFacet.getLabel();
-        this.uses = pondFacet.getUses();
-        this.differentValues = pondFacet.getDifferentValues();
-        this.ranges = pondFacet.getRanges().stream().collect(Collectors.joining(", "));
-        this.relation = pondFacet.isRelation();
+    public ExpectedFacet(Facet datasetFacet) {
+        this.uri = datasetFacet.getId().toString();
+        this.label = datasetFacet.getLabel();
+        this.uses = datasetFacet.getUses();
+        this.differentValues = datasetFacet.getDifferentValues();
+        this.ranges = datasetFacet.getRanges().stream().collect(Collectors.joining(", "));
+        this.relation = datasetFacet.isRelation();
     }
 
     @JsonIgnore

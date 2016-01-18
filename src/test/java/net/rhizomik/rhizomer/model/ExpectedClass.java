@@ -15,11 +15,11 @@ public class ExpectedClass {
 
     public ExpectedClass() {}
 
-    public ExpectedClass(Class pondClass) {
-        this.id = pondClass.getId().toString();
-        this.uri = pondClass.getUri().toString();
-        this.label = pondClass.getLabel();
-        this.instanceCount = pondClass.getInstanceCount();
+    public ExpectedClass(Class datasetClass) {
+        this.id = datasetClass.getId().toString();
+        this.uri = datasetClass.getUri().toString();
+        this.label = datasetClass.getLabel();
+        this.instanceCount = datasetClass.getInstanceCount();
     }
 
     public String getUri() {

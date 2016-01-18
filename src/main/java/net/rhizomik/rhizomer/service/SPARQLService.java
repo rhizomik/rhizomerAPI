@@ -6,8 +6,8 @@ import com.hp.hpl.jena.update.UpdateExecutionFactory;
 import com.hp.hpl.jena.update.UpdateFactory;
 import com.hp.hpl.jena.update.UpdateProcessor;
 import com.hp.hpl.jena.update.UpdateRequest;
-import net.rhizomik.rhizomer.model.Pond;
-import net.rhizomik.rhizomer.model.Queries;
+import net.rhizomik.rhizomer.model.*;
+import net.rhizomik.rhizomer.model.Dataset;
 import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -87,32 +87,32 @@ public class SPARQLService {
         }
     }
 
-    public void clearGraph(URL sparqlEndPoint, URI pondOntologiesGraph) {
-        UpdateRequest clearGraph = Queries.getClearGraph(pondOntologiesGraph.toString());
+    public void clearGraph(URL sparqlEndPoint, URI datasetOntologiesGraph) {
+        UpdateRequest clearGraph = Queries.getClearGraph(datasetOntologiesGraph.toString());
         queryUpdate(sparqlEndPoint, clearGraph);
     }
 
-    public void inferTypes(Pond pond) {
-        List<String> targetGraphs = pond.getPondGraphs();
-        targetGraphs.add(pond.getPondOntologiesGraph().toString());
-        UpdateRequest createGraph = Queries.getCreateGraph(pond.getPondInferenceGraph().toString());
-        queryUpdate(pond.getSparqlEndPoint(), createGraph);
-        UpdateRequest update = Queries.getUpdateInferTypes(targetGraphs, pond.getPondInferenceGraph().toString());
-        queryUpdate(pond.getSparqlEndPoint(), update);
+    public void inferTypes(Dataset dataset) {
+        List<String> targetGraphs = dataset.getDatasetGraphs();
+        targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
+        UpdateRequest createGraph = Queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
+        queryUpdate(dataset.getSparqlEndPoint(), createGraph);
+        UpdateRequest update = Queries.getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
+        queryUpdate(dataset.getSparqlEndPoint(), update);
     }
 
-    public void inferTypesConstruct(Pond pond) {
-        UpdateRequest createGraph = Queries.getCreateGraph(pond.getPondInferenceGraph().toString());
-        queryUpdate(pond.getSparqlEndPoint(), createGraph);
-        List<String> targetGraphs = pond.getPondGraphs();
-        targetGraphs.add(pond.getPondOntologiesGraph().toString());
-        Model inferredModel = queryConstruct(pond.getSparqlEndPoint(), Queries.getQueryInferTypes(), targetGraphs);
-        /*File inferenceOut = new File(pond.getId() + "-inference.ttl");
+    public void inferTypesConstruct(net.rhizomik.rhizomer.model.Dataset dataset) {
+        UpdateRequest createGraph = Queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
+        queryUpdate(dataset.getSparqlEndPoint(), createGraph);
+        List<String> targetGraphs = dataset.getDatasetGraphs();
+        targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
+        Model inferredModel = queryConstruct(dataset.getSparqlEndPoint(), Queries.getQueryInferTypes(), targetGraphs);
+        /*File inferenceOut = new File(dataset.getId() + "-inference.ttl");
         try {
             RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage());
         }*/
-        loadModel(pond.getSparqlEndPoint(), pond.getPondInferenceGraph().toString(), inferredModel);
+        loadModel(dataset.getSparqlEndPoint(), dataset.getDatasetInferenceGraph().toString(), inferredModel);
     }
 }

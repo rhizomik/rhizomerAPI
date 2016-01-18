@@ -28,31 +28,31 @@ public class AnalizeDataset {
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
 
-    public void detectPondClasses(Pond pond){
-        if (pond.isInferenceEnabled())
-            sparqlService.inferTypes(pond);
+    public void detectDatasetClasses(Dataset dataset){
+        if (dataset.isInferenceEnabled())
+            sparqlService.inferTypes(dataset);
 
-        ResultSet result = sparqlService.querySelect(pond.getSparqlEndPoint(), Queries.getQueryClasses(pond.getQueryType()),
-                                              pond.getPondGraphs(), null);
+        ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(), Queries.getQueryClasses(dataset.getQueryType()),
+                                              dataset.getDatasetGraphs(), null);
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
             Resource r = soln.getResource("?class");
             int count = soln.getLiteral("?n").getInt();
             try {
-                Class detectedClass = new Class(pond, new URI(r.getURI()), r.getLocalName(), count);
-                pond.addClass(classRepository.save(detectedClass));
-                logger.info("Added detected Class {} to Pond {}", detectedClass.getId().getClassCurie(), pond.getId());
+                Class detectedClass = new Class(dataset, new URI(r.getURI()), r.getLocalName(), count);
+                dataset.addClass(classRepository.save(detectedClass));
+                logger.info("Added detected Class {} to Dataset {}", detectedClass.getId().getClassCurie(), dataset.getId());
             } catch (URISyntaxException e) {
                 logger.error("URI syntax error: {}", r.getURI());
             }
         }
     }
 
-    public void detectClassFacets(Class pondClass) {
-        ResultSet result = sparqlService.querySelect(pondClass.getPond().getSparqlEndPoint(),
-                Queries.getQueryClassFacets(pondClass.getUri().toString(), pondClass.getPond().getQueryType(),
-                        pondClass.getPond().getSampleSize(), pondClass.getInstanceCount(), pondClass.getPond().getCoverage()),
-                        pondClass.getPond().getPondGraphs(), null);
+    public void detectClassFacets(Class datasetClass) {
+        ResultSet result = sparqlService.querySelect(datasetClass.getDataset().getSparqlEndPoint(),
+                Queries.getQueryClassFacets(datasetClass.getUri().toString(), datasetClass.getDataset().getQueryType(),
+                        datasetClass.getDataset().getSampleSize(), datasetClass.getInstanceCount(), datasetClass.getDataset().getCoverage()),
+                        datasetClass.getDataset().getDatasetGraphs(), null);
 
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
@@ -71,10 +71,10 @@ public class AnalizeDataset {
                 else
                     allLiteralBoolean = allLiteral.getBoolean();
                 try {
-                    Facet detectedFacet = new Facet(pondClass, new URI(r.getURI()), r.getLocalName(), uses, values, ranges, allLiteralBoolean);
-                    pondClass.addFacet(facetRepository.save(detectedFacet));
-                    logger.info("Added detected Facet {} to Class {} in Pond",
-                            detectedFacet.getId().getFacetCurie(), pondClass.getId().getClassCurie(), pondClass.getPond().getId());
+                    Facet detectedFacet = new Facet(datasetClass, new URI(r.getURI()), r.getLocalName(), uses, values, ranges, allLiteralBoolean);
+                    datasetClass.addFacet(facetRepository.save(detectedFacet));
+                    logger.info("Added detected Facet {} to Class {} in Dataset",
+                            detectedFacet.getId().getFacetCurie(), datasetClass.getId().getClassCurie(), datasetClass.getDataset().getId());
 
                 } catch (URISyntaxException e) {
                     logger.error("URI syntax error: {}", r.getURI());

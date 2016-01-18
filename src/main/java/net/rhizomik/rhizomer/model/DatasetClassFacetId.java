@@ -10,31 +10,31 @@ import java.net.URI;
  * Created by http://rhizomik.net/~roberto/
  */
 @Embeddable
-public class PondClassFacetId implements Serializable {
-    PondClassId pondClassId;
+public class DatasetClassFacetId implements Serializable {
+    DatasetClassId datasetClassId;
     String facetCurie;
 
-    public PondClassFacetId() {}
+    public DatasetClassFacetId() {}
 
-    public PondClassFacetId(String idStr) {
+    public DatasetClassFacetId(String idStr) {
         String[] idComponents = idStr.split("/facets/");
-        this.pondClassId = new PondClassId(idComponents[0]);
+        this.datasetClassId = new DatasetClassId(idComponents[0]);
         this.facetCurie = idComponents[1];
     }
 
-    public PondClassFacetId(Pond pond, URI classUri, URI facetUri) {
-        this.pondClassId = new PondClassId(pond, classUri);
+    public DatasetClassFacetId(Dataset dataset, URI classUri, URI facetUri) {
+        this.datasetClassId = new DatasetClassId(dataset, classUri);
         this.facetCurie = new Curie(facetUri).toString();
     }
 
-    public PondClassFacetId(PondClassId pondClassId, Curie facetCurie) {
-        this.pondClassId = pondClassId;
+    public DatasetClassFacetId(DatasetClassId datasetClassId, Curie facetCurie) {
+        this.datasetClassId = datasetClassId;
         this.facetCurie = facetCurie.toString();
     }
 
-    public PondClassId getPondClassId() { return pondClassId; }
+    public DatasetClassId getDatasetClassId() { return datasetClassId; }
 
-    public void setPondClassId(PondClassId pondClassId) { this.pondClassId = pondClassId; }
+    public void setDatasetClassId(DatasetClassId datasetClassId) { this.datasetClassId = datasetClassId; }
 
     public String getFacetCurie() { return facetCurie; }
 
@@ -43,21 +43,21 @@ public class PondClassFacetId implements Serializable {
     @Override
     @JsonValue
     public String toString() {
-        return "/ponds/"+getPondClassId().getPondId()+"/classes/"+getPondClassId().getClassCurie()+"/facets/"+getFacetCurie();
+        return "/datasets/"+getDatasetClassId().getDatasetId()+"/classes/"+getDatasetClassId().getClassCurie()+"/facets/"+getFacetCurie();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PondClassFacetId that = (PondClassFacetId) o;
-        if (!pondClassId.equals(that.pondClassId)) return false;
+        DatasetClassFacetId that = (DatasetClassFacetId) o;
+        if (!datasetClassId.equals(that.datasetClassId)) return false;
         return facetCurie.equals(that.facetCurie);
     }
 
     @Override
     public int hashCode() {
-        int result = pondClassId.hashCode();
+        int result = datasetClassId.hashCode();
         result = 31 * result + facetCurie.hashCode();
         return result;
     }
