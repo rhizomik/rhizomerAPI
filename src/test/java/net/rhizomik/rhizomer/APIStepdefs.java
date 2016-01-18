@@ -20,6 +20,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationContextLoader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -64,10 +65,20 @@ public class APIStepdefs {
     @Autowired private SPARQLService sparqlService;
 
     @Configuration
+    @Profile("LOCAL_SERVER_TESTING")
     static class SPARQLServiceMockConfig {
         @Bean
         public SPARQLService sparqlService() {
             return SPARQLServiceMockFactory.build();
+        }
+    }
+
+    @Configuration
+    @Profile("REMOTE_SERVER_TESTING")
+    static class SPARQLServiceConfig {
+        @Bean
+        public SPARQLService sparqlService() {
+            return new SPARQLService();
         }
     }
 
