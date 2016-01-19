@@ -1,10 +1,10 @@
 package net.rhizomik.rhizomer.model;
 
-import com.hp.hpl.jena.query.ParameterizedSparqlString;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.update.UpdateFactory;
-import com.hp.hpl.jena.update.UpdateRequest;
+import org.apache.jena.query.ParameterizedSparqlString;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -172,14 +172,14 @@ public class Queries {
     public static Query classFacetsComplete(String classUri, int sampleSize) {  // TODO: consider also subclasses?
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-            "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (GROUP_CONCAT(DISTINCT ?range ; separator=\", \") AS ?ranges) (MIN(?isLiteral) as ?allLiteral) \n" +
-            "WHERE { \n" +
-            "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
-            "\t ?instance ?property ?object \n" +
-            "\t OPTIONAL { ?object a ?type }\n" +
-            "\t BIND(IF(bound(?type), ?type, IF(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
-            "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-            "} GROUP BY ?property");
+                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
+                "WHERE { \n" +
+                "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
+                "\t ?instance ?property ?object \n" +
+                "\t OPTIONAL { ?object a ?type }\n" +
+                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), if(datatype(?object)=\"\", datatype(?object), xsd:string), rdfs:Resource)) AS ?range) \n" +
+                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+                "} GROUP BY ?property ?range");
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
     }
@@ -187,15 +187,15 @@ public class Queries {
     public static Query classFacetsComplete(String classUri, int sampleSize, int classCount, double coverage) {  // TODO: consider also subclasses?
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (GROUP_CONCAT(DISTINCT ?range ; separator=\", \") AS ?ranges) (MIN(?isLiteral) as ?allLiteral) \n" +
+                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
                 "WHERE { \n" +
                 "\t { { SELECT ?instance WHERE { ?instance a ?class } OFFSET 0 "+"LIMIT "+sampleSize+" } \n" +
                 addSamples(classCount, sampleSize, coverage) + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t OPTIONAL { ?object a ?type }\n" +
-                "\t BIND(IF(bound(?type), ?type, IF(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
+                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), if(datatype(?object)=\"\", datatype(?object), xsd:string), rdfs:Resource)) AS ?range) \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "} GROUP BY ?property");
+                "} GROUP BY ?property ?range");
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
     }

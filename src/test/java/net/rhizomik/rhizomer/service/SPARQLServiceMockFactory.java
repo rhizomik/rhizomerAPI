@@ -1,10 +1,10 @@
 package net.rhizomik.rhizomer.service;
 
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.update.UpdateAction;
-import com.hp.hpl.jena.update.UpdateRequest;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.update.UpdateAction;
+import org.apache.jena.update.UpdateRequest;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.Queries;
 import org.apache.jena.riot.RDFDataMgr;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 public class SPARQLServiceMockFactory {
     private static final Logger logger = LoggerFactory.getLogger(SPARQLServiceMockFactory.class);
 
-    private static com.hp.hpl.jena.query.Dataset dataset = DatasetFactory.createMem();
+    private static org.apache.jena.query.Dataset dataset = DatasetFactory.createMem();
 
     public static void addData(String graph, String dataFile) {
         Model model = RDFDataMgr.loadModel(dataFile);

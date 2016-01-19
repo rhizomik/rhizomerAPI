@@ -1,9 +1,9 @@
 package net.rhizomik.rhizomer.service;
 
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Resource;
 import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.repository.ClassRepository;

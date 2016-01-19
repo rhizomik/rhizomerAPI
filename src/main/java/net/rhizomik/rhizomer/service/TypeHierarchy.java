@@ -4,9 +4,9 @@ package net.rhizomik.rhizomer.service;
  * Created by http://rhizomik.net/~roberto/
  */
 
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 import java.util.*;
 

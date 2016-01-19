@@ -1,7 +1,7 @@
 package net.rhizomik.rhizomer.service;
 
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 
 import java.io.File;
 import java.sql.*;
