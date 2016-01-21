@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,41 +27,31 @@ public class Facet {
     @MapsId("datasetClassId")
     @JsonBackReference
     private Class domain;
-    private int uses;
-    private int differentValues;
-    @ElementCollection
-    private List<String> ranges = new ArrayList<>();
-    private boolean allLiteral;
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "facet")
+    private List<Range> ranges = new ArrayList<>();
 
     public Facet() {
         this.id = new DatasetClassFacetId();
     }
 
-    public Facet(Class domain, String curie, String label, int uses, int differentValues, String[] rangesCuries, boolean allLiteral)
+    public Facet(Class domain, String curie, String label)
             throws URISyntaxException {
-        this(domain, Curie.toUri(curie), label, uses, differentValues, rangesCuries, allLiteral);
+        this(domain, Curie.toUri(curie), label);
     }
 
-    public Facet(String curie, String label, int uses, int differentValues, String[] rangesCuries, boolean allLiteral)
-            throws URISyntaxException {
-        this(null, Curie.toUri(curie), label, uses, differentValues, rangesCuries, allLiteral);
+    public Facet(String curie, String label) {
+        this.uri = Curie.curieToUriStr(curie);
+        this.label = label;
     }
 
-    public Facet(Class domain, URI uri, String label, int uses, int differentValues, String[] rangesCuries, boolean allLiteral) {
+    public Facet(Class domain, URI uri, String label) {
         this.id = new DatasetClassFacetId(domain.getDataset(), domain.getUri(), uri);
         this.uri = uri.toString();
         this.label = label;
         this.domain = domain;
-        this.uses = uses;
-        this.differentValues = differentValues;
-        this.ranges = Arrays.asList(rangesCuries);
-        this.allLiteral = allLiteral;
-        logger.info("\t Created facet {} with rangesCuries: {}", uri, rangesCuries);
     }
 
-    public boolean isRelation() { return !allLiteral; }
-
-    public void setRelation(boolean isRelation) { this.allLiteral = !isRelation; }
+    public boolean isRelation() { return ranges.stream().allMatch(Range::isRelation); }
 
     public DatasetClassFacetId getId() { return id; }
 
@@ -81,10 +70,13 @@ public class Facet {
 
     public void setLabel(String label) { this.label = label; }
 
-    public List<String> getRanges() { return ranges; }
+    @JsonIgnore
+    public List<Range> getRanges() { return ranges; }
+
+    public void addRange(Range range) { ranges.add(range); }
 
     public String getRange() {
-        return ranges.size() > 0 ? ranges.get(0) : null; //TODO: compute supertype if multiple rangesCuries
+        return ranges.size() > 0 ? ranges.get(0).getUri().toString() : ""; //TODO: compute supertype if multiple rangesCuries
     }
 
     public Class getDomain() { return domain; }
@@ -92,14 +84,15 @@ public class Facet {
     public void setDomain(Class domain) {
         this.domain = domain;
         this.id.setDatasetClassId(domain.getId());
+        this.ranges.forEach(range -> range.setFacet(this));
     }
 
-    public int getUses() { return uses; }
+    public int getUses() { return ranges.stream().mapToInt(Range::getUses).sum(); }
 
-    public int getDifferentValues() { return differentValues; }
+    public int getDifferentValues() { return ranges.stream().mapToInt(Range::getDifferentValues).sum(); }
 
     @JsonIgnore
-    public boolean getAllLiteral() { return allLiteral; }
+    public boolean getAllLiteral() { return ranges.stream().allMatch(Range::getAllLiteral); }
 
     @Override
     public String toString() {
@@ -107,9 +100,10 @@ public class Facet {
                 "id=" + getId() +
                 ", label='" + label + '\'' +
                 ", domain=" + domain.getId() +
-                ", uses=" + uses +
-                ", differentValues=" + differentValues +
-                ", rangesCuries=" + ranges +
+                ", uses=" + getUses() +
+                ", differentValues=" + getDifferentValues() +
+                ", isRelation=" + isRelation() +
+                ", rangesCuries=" + ranges.toString() +
                 '}';
     }
 }

@@ -7,6 +7,7 @@ Feature: Remove dataset
 
   Background: Existing dataset with classes and facets
     Given There is a dataset with id "apollo13r"
+    And The query type for dataset "apollo13r" is set to "FULL"
     And The dataset "apollo13r" has a mock server
     And The dataset "apollo13r" server stores data
       | data                            | graph                                  |

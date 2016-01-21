@@ -1,13 +1,14 @@
 package net.rhizomik.rhizomer.service;
 
+import net.rhizomik.rhizomer.model.Class;
+import net.rhizomik.rhizomer.model.*;
+import net.rhizomik.rhizomer.repository.ClassRepository;
+import net.rhizomik.rhizomer.repository.FacetRepository;
+import net.rhizomik.rhizomer.repository.RangeRepository;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Resource;
-import net.rhizomik.rhizomer.model.*;
-import net.rhizomik.rhizomer.model.Class;
-import net.rhizomik.rhizomer.repository.ClassRepository;
-import net.rhizomik.rhizomer.repository.FacetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.regex.Pattern;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -27,6 +27,7 @@ public class AnalizeDataset {
     @Autowired private SPARQLService sparqlService;
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
+    @Autowired private RangeRepository rangeRepository;
 
     public void detectDatasetClasses(Dataset dataset){
         if (dataset.isInferenceEnabled())
@@ -57,13 +58,10 @@ public class AnalizeDataset {
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
             if (soln.contains("?property")) {
-                Resource r = soln.getResource("?property");
+                Resource property = soln.getResource("?property");
+                Resource range = soln.getResource("?range");
                 int uses = soln.getLiteral("?uses").getInt();
                 int values = soln.getLiteral("?values").getInt();
-                String[] ranges = {};
-                if (soln.contains("?ranges"))
-                    ranges = Pattern.compile(",").splitAsStream(soln.getLiteral("?ranges").getString())
-                                                    .map(Curie::uriStrToCurie).toArray(String[]::new);
                 boolean allLiteralBoolean;
                 Literal allLiteral = soln.getLiteral("?allLiteral");
                 if(allLiteral.getDatatypeURI().equals("http://www.w3.org/2001/XMLSchema#integer"))
@@ -71,13 +69,27 @@ public class AnalizeDataset {
                 else
                     allLiteralBoolean = allLiteral.getBoolean();
                 try {
-                    Facet detectedFacet = new Facet(datasetClass, new URI(r.getURI()), r.getLocalName(), uses, values, ranges, allLiteralBoolean);
-                    datasetClass.addFacet(facetRepository.save(detectedFacet));
-                    logger.info("Added detected Facet {} to Class {} in Dataset",
-                            detectedFacet.getId().getFacetCurie(), datasetClass.getId().getClassCurie(), datasetClass.getDataset().getId());
-
+                    Facet detectedFacet;
+                    URI propertyUri = new URI(property.getURI());
+                    DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClass.getId(), propertyUri);
+                    if (facetRepository.exists(datasetClassFacetId))
+                        detectedFacet = facetRepository.findOne(datasetClassFacetId);
+                    else {
+                        detectedFacet = facetRepository.save(new Facet(datasetClass, propertyUri, property.getLocalName()));
+                        datasetClass.addFacet(detectedFacet);
+                        logger.info("Added detected Facet {} to Class {} in Dataset",
+                                detectedFacet.getId().getFacetCurie(), datasetClass.getId().getClassCurie(),
+                                datasetClass.getDataset().getId());
+                    }
+                    URI rangeUri = new URI(range.getURI());
+                    Range detectedRange = new Range(detectedFacet, rangeUri, range.getLocalName(), uses, values, allLiteralBoolean);
+                    detectedFacet.addRange(rangeRepository.save(detectedRange));
+                    facetRepository.save(detectedFacet);
+                    logger.info("Added detected Range {} to Facet {} for Class {} in Dataset",
+                            detectedRange.getId().getRangeCurie(), detectedFacet.getId().getFacetCurie(),
+                            datasetClass.getId().getClassCurie(), datasetClass.getDataset().getId());
                 } catch (URISyntaxException e) {
-                    logger.error("URI syntax error: {}", r.getURI());
+                    logger.error("URI syntax error: {}", property.getURI());
                 }
             }
         }

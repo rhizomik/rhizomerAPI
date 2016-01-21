@@ -32,12 +32,12 @@ Feature: Detect dataset structure considering inference
     Given I create a class in dataset "apollo13i" with URI "http://xmlns.com/foaf/0.1/Person", label "Person" and instance count 2
     When I extract the facets for class "foaf:Person" in dataset "apollo13i"
     Then The retrieved facets are
-      | uri                                             | label     | uses    | differentValues | ranges            | relation   |
+      | uri                                             | label     | uses    | differentValues | range             | relation   |
       | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
       | http://purl.org/net/schemas/space/performed     | performed | 2       | 2               | space:MissionRole | true       |
       | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type      | 2       | 1               | rdfs:Resource     | true       |
       | http://www.w3.org/2002/07/owl#sameAs            | sameAs    | 1       | 1               | rdfs:Resource     | true       |
     And exists a facet with id "/datasets/apollo13i/classes/foaf:Person/facets/foaf:name"
     And The retrieved facet is
-      | uri                                             | label     | uses    | differentValues | ranges            | relation   |
+      | uri                                             | label     | uses    | differentValues | range             | relation   |
       | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |

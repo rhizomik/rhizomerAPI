@@ -30,16 +30,14 @@ Feature: Detect dataset structure in remote server
       | http://rhizomik.net/ontologies/PlantHealthThreats#Vector                | Vector                | 21            |
     And exists a class with id "/datasets/pht/classes/uniprot_1:Taxon"
 
-#  Scenario: The extracted facets for an existing class are those instantiated in the dataset
-#    Given I create a class in dataset "pht" with URI "http://rhizomik.net/ontologies/PlantHealthThreats#Symptom", label "Symptom" and instance count 107
-#    When I extract the facets for class "rhizomik:Symptom" in dataset "pht"
-#    Then The retrieved facets are
-#      | uri                                             | label     | uses    | differentValues | ranges            | relation   |
-#      | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
-#      | http://purl.org/net/schemas/space/performed     | performed | 2       | 2               | space:MissionRole | true       |
-#      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type      | 2       | 1               | rdfs:Resource     | true       |
-#      | http://www.w3.org/2002/07/owl#sameAs            | sameAs    | 1       | 1               | rdfs:Resource     | true       |
-#    And exists a facet with id "/datasets/pht/classes/rhizomik:Symptom/facets/foaf:name"
-#    And The retrieved facet is
-#      | uri                                             | label     | uses    | differentValues | ranges            | relation   |
-#      | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
+  Scenario: The extracted facets for an existing class are those instantiated in the dataset
+    Given I create a class in dataset "pht" with URI "http://rhizomik.net/ontologies/PlantHealthThreats#Symptom", label "Symptom" and instance count 107
+    When I extract the facets for class "rhizomik:Symptom" in dataset "pht"
+    Then The retrieved facets are
+      | uri                                             | label     | uses    | differentValues | range             | relation   |
+      | http://www.w3.org/2000/01/rdf-schema#label      | label     | 162     | 162             | xsd:string        | false      |
+      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type      | 107     | 1               | rdfs:Resource     | true       |
+    And exists a facet with id "/datasets/pht/classes/rhizomik:Symptom/facets/rdfs:label"
+    And The retrieved facet is
+      | uri                                             | label     | uses    | differentValues | range             | relation   |
+      | http://www.w3.org/2000/01/rdf-schema#label      | label     | 162     | 162             | xsd:string        | false      |

@@ -9,6 +9,7 @@ import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
+import net.rhizomik.rhizomer.repository.RangeRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class FacetController {
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
+    @Autowired private RangeRepository rangeRepository;
     @Autowired private AnalizeDataset analiseDataset;
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets", method = RequestMethod.GET)

@@ -2,10 +2,6 @@ package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.net.URI;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 /**
  * Created by http://rhizomik.net/~roberto/
  */
@@ -16,7 +12,6 @@ public class ExpectedFacet {
     public int uses;
     public int differentValues;
     public String range;
-    private String ranges;
     public boolean relation;
 
     public ExpectedFacet() {}
@@ -26,23 +21,23 @@ public class ExpectedFacet {
         this.label = datasetFacet.getLabel();
         this.uses = datasetFacet.getUses();
         this.differentValues = datasetFacet.getDifferentValues();
-        this.ranges = datasetFacet.getRanges().stream().collect(Collectors.joining(", "));
+        this.range = datasetFacet.getRange();
         this.relation = datasetFacet.isRelation();
     }
 
     @JsonIgnore
     public String getId() { return id; }
 
-    public String[] getRanges() {
-        return ranges.split(", ");
+    public String getRange() {
+        return range;
     }
 
-    public void setRanges(String[] rangesCuries) {
-        this.ranges = Arrays.stream(rangesCuries).collect(Collectors.joining(", "));
-    }
-
-    public void setRangesUris(URI[] ranges) {
-        this.ranges = Arrays.stream(ranges).map(range -> new Curie(range).toString()).collect(Collectors.joining(", "));
+    public void setRange(String range) {
+        try {
+            this.range = Curie.uriStrToCurie(range);
+        } catch (Exception e) {
+            this.range = "";
+        }
     }
 
     @Override
@@ -52,7 +47,7 @@ public class ExpectedFacet {
                 ", label='" + label + '\'' +
                 ", uses=" + uses +
                 ", differentValues=" + differentValues +
-                ", ranges='" + ranges + '\'' +
+                ", range='" + range + '\'' +
                 ", relation=" + relation +
                 '}';
     }
@@ -69,7 +64,7 @@ public class ExpectedFacet {
         if (relation != that.relation) return false;
         if (!uri.equals(that.uri)) return false;
         if (label != null ? !label.equals(that.label) : that.label != null) return false;
-        return !(ranges != null ? !ranges.equals(that.ranges) : that.ranges != null);
+        return !(range != null ? !range.equals(that.range) : that.range != null);
 
     }
 
@@ -79,7 +74,7 @@ public class ExpectedFacet {
         result = 31 * result + (label != null ? label.hashCode() : 0);
         result = 31 * result + uses;
         result = 31 * result + differentValues;
-        result = 31 * result + (ranges != null ? ranges.hashCode() : 0);
+        result = 31 * result + (range != null ? range.hashCode() : 0);
         result = 31 * result + (relation ? 1 : 0);
         return result;
     }

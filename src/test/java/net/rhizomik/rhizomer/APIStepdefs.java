@@ -10,6 +10,8 @@ import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
+import net.rhizomik.rhizomer.repository.FacetRepository;
+import net.rhizomik.rhizomer.repository.RangeRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
 import org.junit.runner.RunWith;
@@ -62,6 +64,8 @@ public class APIStepdefs {
     @Autowired private WebApplicationContext wac;
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private ClassRepository classRepository;
+    @Autowired private FacetRepository facetRepository;
+    @Autowired private RangeRepository rangeRepository;
     @Autowired private SPARQLService sparqlService;
 
     @Configuration
@@ -130,6 +134,19 @@ public class APIStepdefs {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON));
+    }
+
+    @And("^I create ranges for facet \"([^\"]*)\" of class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
+    public void iCreateRangesForFacetOfClassInDataset(String facetCurie, String classCurie, String datasetId, List<Range> ranges) throws Throwable {
+        for (Range range: ranges) {
+            String json = mapper.writeValueAsString(range);
+            this.result = mockMvc.perform(post("/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges",
+                                            datasetId, classCurie, facetCurie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(json)
+                    .accept(MediaType.APPLICATION_JSON));
+            this.result.andExpect(status().isCreated());
+        }
     }
 
     @Then("^the response status is (\\d+)$")

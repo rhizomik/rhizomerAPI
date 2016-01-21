@@ -32,6 +32,11 @@ public class DatasetClassFacetId implements Serializable {
         this.facetCurie = facetCurie.toString();
     }
 
+    public DatasetClassFacetId(DatasetClassId datasetClassId, URI facetUri) {
+        this.datasetClassId = datasetClassId;
+        this.facetCurie = new Curie(facetUri).toString();
+    }
+
     public DatasetClassId getDatasetClassId() { return datasetClassId; }
 
     public void setDatasetClassId(DatasetClassId datasetClassId) { this.datasetClassId = datasetClassId; }
