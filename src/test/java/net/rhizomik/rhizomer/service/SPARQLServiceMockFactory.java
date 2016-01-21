@@ -36,6 +36,14 @@ public class SPARQLServiceMockFactory {
     public static SPARQLService build() {
         SPARQLService mock = Mockito.mock(SPARQLService.class);
 
+        when(mock.querySelect(isA(URL.class), isA(Query.class)))
+                .thenAnswer(invocationOnMock -> {
+                    Query query = (Query) invocationOnMock.getArguments()[1];
+                    logger.info("Sending to {} query: \n{}", "mockServer", query);
+                    QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
+                    return qexec.execSelect();
+                });
+
         when(mock.querySelect(isA(URL.class), isA(Query.class), anyList(), anyList()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = (Query) invocationOnMock.getArguments()[1];

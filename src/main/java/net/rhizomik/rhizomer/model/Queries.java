@@ -112,6 +112,12 @@ public class Queries {
                 "WHERE { ?s ?p ?o }");
     }
 
+    public static Query getQueryGraphs() {
+        return QueryFactory.create(
+                "SELECT DISTINCT ?graph \n" +
+                "WHERE { GRAPH ?graph { ?s ?p ?o } }");
+    }
+
     public static Query getQueryCountType(String type) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +

@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -93,5 +96,18 @@ public class AnalizeDataset {
                 }
             }
         }
+    }
+
+    public List<URI> listServerGraphs(URL sparqlEndPoint) {
+        ResultSet result = sparqlService.querySelect(sparqlEndPoint, Queries.getQueryGraphs());
+        List<URI> graphs = new ArrayList<>();
+        while (result.hasNext()) {
+            QuerySolution soln = result.nextSolution();
+            if (soln.contains("?graph")) {
+                Resource graph = soln.getResource("?graph");
+                graphs.add(URI.create(graph.getURI()));
+            }
+        }
+        return graphs;
     }
 }

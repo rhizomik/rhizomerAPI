@@ -10,8 +10,6 @@ import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
-import net.rhizomik.rhizomer.repository.FacetRepository;
-import net.rhizomik.rhizomer.repository.RangeRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
 import org.junit.runner.RunWith;
@@ -64,8 +62,6 @@ public class APIStepdefs {
     @Autowired private WebApplicationContext wac;
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private ClassRepository classRepository;
-    @Autowired private FacetRepository facetRepository;
-    @Autowired private RangeRepository rangeRepository;
     @Autowired private SPARQLService sparqlService;
 
     @Configuration
@@ -266,6 +262,20 @@ public class APIStepdefs {
                 .content(datasetJson)
                 .accept(MediaType.APPLICATION_JSON));
         this.result.andExpect(jsonPath("$.sparqlEndPoint", is(sparqlEndPoint.toString())));
+    }
+
+    @When("^I list the graphs in dataset \"([^\"]*)\" server$")
+    public void iListTheGraphsInDatasetServer(String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/server/graphs", datasetId)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Then("^The retrieved graphs are$")
+    public void theRetrievedGraphsAre(List<URI> expectedGraphs) throws Throwable {
+        String json = this.result.andReturn().getResponse().getContentAsString();
+        List<URI> actualGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, URI.class));
+        assertThat(actualGraphs, containsInAnyOrder(expectedGraphs.toArray()));
     }
 
     @When("^I add ontologies to the dataset \"([^\"]*)\"$")

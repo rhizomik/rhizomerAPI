@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,25 +30,25 @@ public class SPARQLService {
     private static final Logger logger = LoggerFactory.getLogger(SPARQLService.class);
 
     public ResultSet querySelect(URL sparqlEndpoint, Query query) {
-        return this.querySelect(sparqlEndpoint, query, null, null);
+        return this.querySelect(sparqlEndpoint, query, new ArrayList<>(), new ArrayList<>());
     }
 
     public ResultSet querySelect(URL sparqlEndpoint, Query query, List<String> graphs, List<String> ontologies) {
         graphs.forEach(query::addGraphURI);
-        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, query);
+        logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, ontologies);
         return ResultSetFactory.copyResults(q.execSelect());
     }
 
     public Model queryConstruct(URL sparqlEndpoint, Query query, List<String> graphs) {
         graphs.forEach(query::addGraphURI);
-        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, query);
+        logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, null);
         return q.execConstruct();
     }
 
     public void queryUpdate(URL sparqlEndpoint, UpdateRequest update) {
-        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
+        logger.info("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
         UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, sparqlEndpoint.toString());
         try {
             processor.execute();
@@ -79,7 +80,7 @@ public class SPARQLService {
         RDFDataMgr.write(out, model, Lang.NTRIPLES);
         String insertString = "INSERT DATA { GRAPH <" + graph + "> { " + out.toString() + " } } ";
         UpdateRequest update = UpdateFactory.create(insertString);
-        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
+        logger.info("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
         UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, sparqlEndpoint.toString());
         try {
             processor.execute();
