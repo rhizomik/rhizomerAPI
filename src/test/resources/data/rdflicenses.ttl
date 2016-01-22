@@ -1,0 +1,2524 @@
+@prefix :      <http://purl.org/NET/rdflicense/> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix ms:    <http://purl.org/NET/ms-rights#> .
+@prefix l4lod: <http://ns.inria.fr/l4lod/> .
+@prefix xml:   <http://www.w3.org/XML/1998/namespace> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix provo: <http://purl.org/net/provenance/ns#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix ldr:   <http://purl.org/NET/ldr/ns#> .
+@prefix cc:    <http://creativecommons.org/ns#> .
+@prefix odrl:  <http://www.w3.org/ns/odrl/2/> .
+
+:cc-by-sa3.0br  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Brazil" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/br/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Brazil> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/por> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/br> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:APACHE2.0  a            odrl:Policy ;
+        rdfs:label       "Apache License" ;
+        rdfs:legalcode   <http://www.apache.org/licenses/LICENSE-2.0.txt> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "The Apache Group" ;
+        dct:source       <http://www.apache.org/licenses/LICENSE-2.0> ;
+        odrl:permission  [ odrl:action  "patentFree" ;
+                           odrl:action  cc:Reproduction , cc:DerivativeWorks , cc:Distribution ;
+                           odrl:duty    [ odrl:action  cc:ShareAlike , cc:Attribution ]
+                         ] .
+
+:cc-by-sa3.0it  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Italy" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/it/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Italy> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/ita> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/it> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nd3.0ie  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Ireland" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/ie/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Ireland> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/ie> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-nc-sa4.0  a        odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-SA" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode> ;
+        dct:alternative   "CC BY-NC-SA" ;
+        dct:hasVersion    "4.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-sa/4.0/> ;
+        dct:title         "Creative Commons - Attribution-NonCommercial-ShareAlike 4.0 International - CC BY-NC-SA 4.0"@en ;
+        odrl:permission   [ odrl:action  ldr:extraction , cc:DerivativeWorks , cc:Reproduction , ldr:reutilization ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:CommercialUse ] ;
+        foaf:logo         <http://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png> .
+
+:cc-by3.0at  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Austria" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/at/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Austria> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/deu> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/at> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by2.0ca  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Canada" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/ca/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Canada> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/ca> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:againstdrm2.0  a        odrl:Policy ;
+        rdfs:label       "Against DRM" ;
+        dct:alternative  "AGAINSTDRM" ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "freecreations.org" ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                         ] ;
+        foaf:logo        <http://www.freecreations.org/images/red_logo.png> .
+
+:cc-by2.0cl  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Chile" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/cl/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Chile> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/cl> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:gpl3.0  a               odrl:Policy ;
+        rdfs:label       "GNU General Public License" ;
+        rdfs:seeAlso     <http://gnu.org/licenses/gpl-3.0.html> ;
+        dct:creator      <http://fsf.org/> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <http://gnu.org/licenses/gpl-3.0.html> ;
+        owl:sameAs       <hhttp://www.gnu.org/licenses/gpl-3.0.rdf> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:Notice , cc:Copyleft ]
+                         ] ;
+        foaf:logo        <http://www.gnu.org/graphics/gplv3-127x51.png> .
+
+:cc-by-nd3.0gr  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Greece" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/gr/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Greece> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/ell> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/gr> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-sa4.0  a          odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/4.0/legalcode> ;
+        dct:alternative  "CC BY-SA" ;
+        dct:hasVersion   "4.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/4.0/> ;
+        dct:title        "Creative Commons - Attribution-ShareAlike 4.0 International - CC BY-SA 4.0"@en ;
+        odrl:permission  [ odrl:action  cc:Distribution , ldr:extraction , cc:DerivativeWorks , cc:Reproduction , ldr:reutilization ;
+                           odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                         ] ;
+        foaf:logo        <http://i.creativecommons.org/l/by-sa/4.0/80x15.png> .
+
+:cc-by-sa3.0ro  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Romania" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/ro/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Romania> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/ron> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/ro> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:OL1.0  a                odrl:Policy ;
+        rdfs:label       "License Ouverte"@fr ;
+        rdfs:seeAlso     <http://wiki.data.gouv.fr/images/0/05/Open_Licence.pdf> ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:publisher    "EtaLab" ;
+        dct:source       <http://wiki.data.gouv.fr/images/0/05/Open_Licence.pdf> ;
+        dct:title        "OL" ;
+        odrl:permission  [ odrl:action  odrl:commercialize , cc:Distribution , cc:DerivativeWorks , cc:Reproduction , odrl:modify , odrl:copy ;
+                           odrl:duty    [ odrl:action  cc:Attribution ]
+                         ] ;
+        foaf:logo        <https://www.etalab.gouv.fr/wp-content/uploads/2011/10/licence-ouverte-open-licence.gif> .
+
+:cc-by-nc-nd3.0fr  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND 3.0 France" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/fr/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/France> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/fr> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by-nc-nd3.0pt  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Portugal" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/pt/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Portugal> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/por> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/pt> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by2.0be  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Belgium" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/be/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Belgium> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/fra> ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/be> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:BOOST1.0  a             odrl:Policy ;
+        rdfs:label       "BOOST Software License 1.0" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "OSI" ;
+        dct:source       <http://opensource.org/licenses/BSL-1.0> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:ShareAlike
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction
+                         ] .
+
+:lgpl3.0  a              odrl:Policy ;
+        rdfs:label       "GNU Lesser General Public License"@en ;
+        rdfs:seeAlso     <https://www.gnu.org/licenses/lgpl.htm> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <https://www.gnu.org/licenses/lgpl.html> ;
+        dct:title        "LGPL" ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:Notice , cc:LesserCopyleft , cc:Attribution ]
+                         ] .
+
+:afl3.0  a               odrl:Policy ;
+        rdfs:label       "Academic Free License"@en ;
+        dct:alternative  "AFL" ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:source       <http://opensource.org/licenses/academic.php> ;
+        dct:title        "Academic Free License 3.0" ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:Notice , cc:Attribution , cc:Copyleft ]
+                         ] .
+
+:ukogl1.0  a             odrl:Policy ;
+        rdfs:label       "Open Government Licence" ;
+        rdfs:seeAlso     <http://www.nationalarchives.gov.uk/doc/open-government-licence/version/1/> ;
+        cc:jurisdiction  <http://dbpedia.org/page/United_Kingdom> ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "The National Archives" ;
+        dct:source       <http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/re-use-and-licensing/ukglf/> ;
+        skos:related     <http://purl.org/NET/rdflicense/cc-by/4.0> ;
+        odrl:permission  [ odrl:action  cc:Distribution , ldr:extraction , cc:Reproduction , cc:DerivativeWorks , ldr:reutilization ;
+                           odrl:duty    [ odrl:action  odrl:attachPolicy , cc:Attribution ]
+                         ] .
+
+:cc-by-nc3.0  a           odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc/3.0/legalcode> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc/3.0/> ;
+        odrl:permission   [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:CommercialUse ] .
+
+:cc-by-nc-nd3.0  a        odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/legalcode> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/> ;
+        odrl:permission   [ odrl:action  cc:Reproduction ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:DerivativeWorks , cc:CommercialUse ] .
+
+:cc-by3.0us  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 United States" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/us/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/United_States> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/us> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by2.0fr  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 France" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/fr/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/France> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/fra> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/fr> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by2.0pt  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Portugal" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/pt/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Portugal> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/por> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/pt> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction
+                         ] .
+
+:allrightsreserved  a     odrl:Policy ;
+        rdfs:comment      "This license does not disclose any of the IPR and database rights"@en ;
+        rdfs:label        "All rights reserved"@en ;
+        dct:publisher     " None" ;
+        odrl:prohibition  [ odrl:action  ldr:IPRRight , ldr:DatabaseRight ] .
+
+:cc-by-nc-nd3.0at  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND 3.0 Austria" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/at/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Austria> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/deu> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/at> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by3.0ch  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Switzerland" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/ch/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Switzerland> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/ch> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:NDL1.0  a                odrl:Policy ;
+        rdfs:label        "Web NDL Authority License" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/jpn> ;
+        dct:publisher     "Web NDL Authority" ;
+        dct:source        <http://iss.ndl.go.jp/ndla/use/> ;
+        odrl:permission   [ odrl:action  cc:Distribution , odrl:Reproduction ] ;
+        odrl:prohibition  [ odrl:action  odrl:commercialize ] .
+
+:cc-by2.0at  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Austria" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/at/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Austria> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/deu> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/at> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:MICROSOFT1.0  a          odrl:Policy ;
+        rdfs:label        "Microsoft Reference Source License" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Microsoft" ;
+        dct:source        <http://referencesource.microsoft.com/referencesourcelicensing.aspx> ;
+        odrl:permission   [ odrl:action  odrl:read ] ;
+        odrl:prohibition  [ odrl:action  cc:Distribution , odrl:modify ] .
+
+:cc-by-sa3.0es  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Spain" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/es/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Spain> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/es> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:ShareAlike , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction
+                         ] .
+
+:cc-by2.5ch  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 Switzerland" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/ch/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Switzerland> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/fra> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/ch> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by3.0nl  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Netherlands" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/nl/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Netherlands> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/nld> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/nl> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:CRYPTIX1.0  a           odrl:Policy ;
+        rdfs:label       "Cryptix General License" ;
+        rdfs:seeAlso     <http://cryptix.org/LICENSE.TXT> ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "The Cryptix Foundation Limited" ;
+        dct:source       <http://cryptix.org/LICENSE.TXT> ;
+        odrl:permission  [ odrl:action  cc:Distribution , odrl:modify ;
+                           odrl:duty    [ odrl:action  odrl:attachPolicy , cc:ShareAlike ]
+                         ] .
+
+:gfdl1.3  a              odrl:Policy ;
+        rdfs:label       "GNU Free Documentation License"@en ;
+        rdfs:seeAlso     <https://gnu.org/licenses/fdl.html> ;
+        dct:hasVersion   "1.3" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <https://gnu.org/licenses/fdl.html> ;
+        dct:title        "GFDL" ;
+        odrl:permission  [ odrl:action       odrl:commercialize , cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:constraint   [ odrl:count     100 ;
+                                               odrl:operator  odrl:lteq
+                                             ] ;
+                           odrl:duty         [ odrl:action  "logChanges" ;
+                                     odrl:action  cc:ShareAlike , cc:Attribution ] ;
+                           odrl:prohibition  [ odrl:action  "noDRM" ]
+                         ] ;
+        odrl:permission  [ odrl:action       odrl:commercialize , cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty         [ odrl:action  "logChanges" ;
+                                     odrl:action  cc:SourceCode , cc:ShareAlike , cc:Attribution ] ;
+                           odrl:prohibition  [ odrl:action  "noDRM" ]
+                         ] .
+
+:cc-by3.0au  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Australia" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/au/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Australia> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/au> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by3.0ve  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Venezuela" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/ve/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Venezuela> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/ve> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction
+                         ] .
+
+:ms-c-nored-ff  a           odrl:Policy ;
+        rdfs:label          "META-SHARE Commercial NoRedistribution For-A-Fee" ;
+        rdfs:seeAlso        <http://www.meta-net.eu/meta-share/meta-share-licenses/Tabular%20Presentation%20of%20No%20redistribution%20Licences.pdf> ;
+        ms:conditionsOfUse  ms:languageEngineeringResearch , ms:noRedistribution , cc:Attribution , cc:CommercialUse ;
+        ms:licenseCategory  ms:PUB ;
+        dct:alternative     "MS C-NoReD-FF" ;
+        dct:hasVersion      "1.0" ;
+        dct:language        <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher       "Meta-Share" ;
+        dct:source          <http://www.meta-net.eu/meta-share/meta-share-licenses/META-SHARE%20Commercial%20%20NoRedistribution_v0%207.pdf> ;
+        dct:title           "META-SHARE Commercial NoRedistribution For-A-Fee" ;
+        odrl:permission     [ odrl:action      odrl:aggregate , odrl:extract , cc:DerivativeWorks , cc:Reproduction , cc:CommercialUse ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:spatial   "only at assignee's site"
+                                               ] ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:purpose   ms:languageEngineeringResearch
+                                               ] ;
+                              odrl:duty        [ odrl:action  cc:Attribution ] ;
+                              odrl:duty        [ odrl:action  odrl:pay ;
+                                                 odrl:target  :resource
+                                               ]
+                            ] ;
+        odrl:prohibition    [ odrl:action  cc:Distribution ] .
+
+:cc-by2.5in  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 India" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/dk/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/India> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/in> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction
+                         ] .
+
+:cc-by2.5se  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 Sweden" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/se/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Sweden> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/swe> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/se> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-sa3.0ec  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Ecuador" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/ec/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Ecuador> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/esp> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/ec> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by3.0cn  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 China" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/cn/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/China> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/zho> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/cn> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by2.5pe  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 Peru" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/pe/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Peru> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/esp> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/pe> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nc-nd3.0ch  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Switzerland" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/ch/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Switzerland> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/ch> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:COMMON1.0  a            odrl:Policy ;
+        rdfs:label       "Common Public License" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "IBM" ;
+        dct:source       <http://opensource.org/licenses/cpl1.0.php> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:ShareAlike
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks , odrl:sell
+                         ] .
+
+:cc-by-sa3.0ie  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Ireland" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/ie/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Ireland> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/ie> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by3.0de  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Germany" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/de/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Germany> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/deu> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/de> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nc-nd3.0nl  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Netherlands" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/nl/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Netherlands> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/nld> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/nl> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:EUC1.0  a               odrl:Policy ;
+        rdfs:label       "European Commission Copyright" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "European Commission" ;
+        odrl:permission  [ odrl:action  cc:Reproduction ;
+                           odrl:duty    [ odrl:action  cc:Attribution ]
+                         ] .
+
+:cc-by3.0eg  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Egypt" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/eg/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Egypt> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/arz> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/eg> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nd3.0cl  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Chile" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/cl/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Chile> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/cl> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-nc-nd3.0au  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Australia" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/au/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Australia> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/au> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:W3C1.0  a               odrl:Policy ;
+        rdfs:label       "W3C Software Notice and License" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "W3C" ;
+        dct:source       <http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:ShareAlike
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , odrl:modify , odrl:copy
+                         ] .
+
+:cc-by-sa3.0gr  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Greece" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/gr/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Greece> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/ell> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/gr> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nc-nd3.0ve  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Venezuela" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/ve/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Venezuela> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/ve> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:ECLIPSE1.0  a           odrl:Policy ;
+        rdfs:label       "Eclipse Public License" ;
+        dct:creator      <http://www.eclipse.org/org/foundation/> ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Eclipse" ;
+        dct:source       <https://www.eclipse.org/legal/epl-v10.html> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction , odrl:sell ;
+                           odrl:duty    [ odrl:action  cc:ShareAlike ]
+                         ] .
+
+:cc-by3.0br  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Brazil" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/br/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Brazil> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/por> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/br> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by2.5bg  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 Bulgaria" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/bg/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Bulgaria> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/bul> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/bg> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by3.0  a             odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/legalcode> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                         ] .
+
+:cc-by3.0it  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Italy" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/it/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Italy> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/ita> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/it> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by2.0nl  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Netherlands" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/nl/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Netherlands> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/nld> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/nl> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nd2.0  a           odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-ND" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/2.0/legalcode> ;
+        dct:hasVersion    "2.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/2.0/> ;
+        odrl:permission   [ odrl:action  cc:Reproduction ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:DerivativeWorks ] .
+
+:cc-by2.0au  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Australia" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/au/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Australia> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/au> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:BSD3.0  a               odrl:Policy ;
+        rdfs:label       "BSD License 3-clause" ;
+        dct:hasVersion   "4.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "University of California at Berkeley" ;
+        dct:source       <http://www.linfo.org/bsdlicense.html> ;
+        odrl:permission  [ odrl:action       cc:Distribution , odrl:modify ;
+                           odrl:duty         [ odrl:action  cc:Notice , cc:ShareAlike ] ;
+                           odrl:prohibition  [ odrl:action  "Endorsement" ]
+                         ] .
+
+:cc-by-nc-nd3.0cn  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND China" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/cn/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/China> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/zho> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/cn> ;
+        odrl:permission   [ odrl:action  cc:Distribution , cc:Reproduction ;
+                            odrl:duty    [ odrl:action  odrl:attachPolicy , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  odrl:commercialize ] .
+
+:clarin_aca_by  a                 odrl:Policy ;
+        rdfs:label                "CLARIN ACAdemic BY" ;
+        ms:conditionsOfUse        cc:Attribution , ms:academicUser ;
+        ms:licenseClarinCategory  ms:ACA ;
+        dct:alternative           "CLARIN ACA BY" ;
+        dct:hasVersion            "1.0" ;
+        dct:language              <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher             "Clarin" ;
+        odrl:permission           [ odrl:action      odrl:aggregate , odrl:extract , cc:Reproduction ;
+                                    odrl:constraint  [ odrl:industry  ms:publicInstitution ;
+                                                       odrl:operator  odrl:eq
+                                                     ] ;
+                                    odrl:duty        [ odrl:action  cc:Attribution ]
+                                  ] .
+
+:PDM1.0  a               odrl:Policy ;
+        rdfs:label       "Public Domain Mark" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/publicdomain/mark/1.0/> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction ] .
+
+:cc-by-nc-nd3.0de  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Germany" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/de/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Germany> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/deu> ;
+        dct:publisher     "Creative Commons" ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by2.5dk  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 Denmark" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/dk/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Denmark> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/dan> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/dk> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction
+                         ] .
+
+:cc-by3.0ro  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Thailand" , "Creative Commons CC-BY 3.0 Romania" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/th/legalcode> , <http://creativecommons.org/licenses/by/3.0/ro/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Romania> , <http://dbpedia.org/page/Thailand> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/tha> , <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/th> , <http://creativecommons.org/licenses/by/3.0/ro> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nd3.0fr  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 France" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/fr/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/France> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/fr> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-nd3.0pt  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Portugal" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/pt/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Portugal> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/por> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/pt> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by2.0jp  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Japan" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/jp/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Japan> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/jpn> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/jp> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+<http://purl.org/ms-lod/rdflicense/elra-var>
+        a                   odrl:Policy ;
+        rdfs:label          "LANGUAGE RESOURCES VALUE-ADDED-RESELLER AGREEMENT" ;
+        rdfs:seeAlso        <http://www.elda.org/en/services-around-lrs/distribution/licensing/> ;
+        ms:conditionsOfUse  ms:noRedistribution , cc:Attribution , ms:forAFee , ms:languageEngineeringResearch , ms:spatialConstraint ;
+        ms:licenseCategory  ms:RES ;
+        dct:alternative     "ELRA-VAR" ;
+        dct:language        <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher       "Elra" ;
+        dct:source          <http://www.elda.org/media/filer_public/2014/08/01/var_140312.pdf> ;
+        odrl:permission     [ odrl:action      cc:DerivativeWorks , cc:Reproduction , odrl:modify , odrl:translate ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:purpose   ms:languageEngineeringResearch
+                                               ] ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:spatial   "only at assignee's site"
+                                               ] ;
+                              odrl:duty        [ odrl:action           cc:Attribution ;
+                                                 odrl:attributedParty  ms:distributionRightsHolder
+                                               ] ;
+                              odrl:duty        [ odrl:action  odrl:compensate ]
+                            ] ;
+        odrl:prohibition    [ odrl:action  cc:Distribution ] .
+
+:cc-by2.0de  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Germany" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/de/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Germany> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/deu> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/de> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction
+                         ] .
+
+:APACHE1.0  a            odrl:Policy ;
+        rdfs:label       "Apache License" ;
+        rdfs:legalcode   <http://www.apache.org/licenses/LICENSE-1.0.txt> ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "The Apache Group" ;
+        dct:source       <http://www.apache.org/licenses/LICENSE-1.0> ;
+        odrl:permission  [ odrl:action  "patentFree" ;
+                           odrl:action  cc:Reproduction , cc:DerivativeWorks , cc:Distribution ;
+                           odrl:duty    [ odrl:action  cc:ShareAlike , cc:Attribution ]
+                         ] .
+
+:cc-by-nc-nd3.0br  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Brazil" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/br/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Brazil> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/por> ;
+        dct:publisher     "Creative Commons" ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by-nc-nd3.0it  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Italy" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/it/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Italy> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/ita> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/it> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by2.0kr  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Korea" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/kr/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Korea> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/kor> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/kr> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nd3.0at  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Austria" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/at/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Austria> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/deu> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/at> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:ms-c-nored  a              odrl:Policy ;
+        rdfs:label          "META-SHARE Commercial NoRedistribution" ;
+        rdfs:seeAlso        <http://www.meta-net.eu/meta-share/meta-share-licenses/Tabular%20Presentation%20of%20No%20redistribution%20Licences.pdf> ;
+        ms:conditionsOfUse  cc:CommercialUse , cc:Attribution , ms:noRedistribution , ms:languageEngineeringResearch ;
+        ms:licenseCategory  ms:PUB ;
+        dct:alternative     "MS C-NoReD" ;
+        dct:hasVersion      "1.0" ;
+        dct:language        <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher       "Meta-Share" ;
+        dct:source          <http://www.meta-net.eu/meta-share/meta-share-licenses/META-SHARE%20Commercial%20%20NoRedistribution_v0%207.pdf> ;
+        dct:title           "META-SHARE Commercial NoRedistribution" ;
+        odrl:permission     [ odrl:action      odrl:aggregate , odrl:extract , cc:DerivativeWorks , cc:Reproduction , cc:CommercialUse ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:spatial   "only at assignee's site"
+                                               ] ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:purpose   ms:languageEngineeringResearch
+                                               ] ;
+                              odrl:duty        [ odrl:action  cc:Attribution ]
+                            ] ;
+        odrl:prohibition    [ odrl:action  cc:Distribution ] .
+
+:cc-by-nc-sa3.0  a        odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-SA" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-sa/3.0/> ;
+        odrl:permission   [ odrl:action  cc:DerivativeWorks , cc:Reproduction ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:CommercialUse ] .
+
+:CDDL1.0  a              odrl:Policy ;
+        rdfs:label       "Common Development and Distribution License" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Sun Microsystems" ;
+        dct:source       <http://opensource.org/licenses/CDDL-1.0> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction , odrl:modify ;
+                           odrl:duty    [ odrl:action  cc:ShareAlike ]
+                         ] .
+
+:cc-by2.5cz  a           odrl:Policy ;
+        rdfs:label       "Uve??te p??vod 3.0 ??esk?? republika"@cz , "Creative Commons CC-BY 2.5 Czech Republic" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/cz/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Czech_Republic> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/cze> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/dz> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by2.0br  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Brazil" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/br/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Brazil> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/por> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/br> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:gpl2.0  a               odrl:Policy ;
+        rdfs:label       "GNU General Public License" ;
+        rdfs:seeAlso     <http://gnu.org/licenses/gpl-2.0.html> ;
+        dct:creator      <http://fsf.org/> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <http://gnu.org/licenses/gpl-2.0.html> ;
+        owl:sameAs       <http://www.gnu.org/licenses/gpl-2.0.rdf> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:Notice , cc:Copyleft ]
+                         ] ;
+        foaf:logo        <http://www.gnu.org/graphics/gplv3-127x51.png> .
+
+:cc-by2.0it  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Italy" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/it/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Italy> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/ita> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/it> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nd4.0  a           odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-ND" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nd/4.0/legalcode> ;
+        dct:alternative   "CC BY-ND" ;
+        dct:hasVersion    "4.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nd/4.0/> ;
+        dct:title         "Creative Commons - Attribution-NoDerivatives 4.0 International - CC BY-ND 4.0"@en ;
+        odrl:permission   [ odrl:action  ldr:extraction , cc:Reproduction , ldr:reutilization ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:DerivativeWorks ] ;
+        foaf:logo         <http://i.creativecommons.org/l/by-nd/2.0/88x31.png> .
+
+:cc-by-sa3.0  a          odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/legalcode> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                         ] .
+
+:cc-by-nc-nd3.0ro  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Romania" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/ro/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Romania> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/ron> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/ro> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by3.0es  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Spain" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/es/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Spain> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/es> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                         ] .
+
+:EUPL1.1  a              odrl:Policy ;
+        rdfs:label       "European Union Public License" ;
+        cc:jurisdiction  <http://dbpedia.org/page/Belgium> ;
+        dct:hasVersion   "1.1" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "European Commission" ;
+        dct:source       <https://joinup.ec.europa.eu/software/page/eupl/licence-eupl> ;
+        odrl:permission  [ odrl:action  cc:Distribution , odrl:lease , cc:DerivativeWorks , cc:Reproduction , odrl:sell ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:ShareAlike , cc:Attribution ]
+                         ] .
+
+:cc-by3.0lu  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Luxemburg" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/lu/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Luxemburg> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/lu> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nd2.0be  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 2.0 Belgium" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/2.0/be/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Belgium> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/2.0/be> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:lgpl2.0  a              odrl:Policy ;
+        rdfs:label       "GNU Library General Public License"@en ;
+        rdfs:seeAlso     <https://www.gnu.org/licenses/lgpl.htm> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <https://www.gnu.org/licenses/lgpl.html> ;
+        dct:title        "LGPL" ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:Notice , cc:LesserCopyleft , cc:Attribution ]
+                         ] .
+
+:cc-by3.0pl  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Poland" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/pl/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Poland> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/pol> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/pl> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nc2.0  a           odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc/2.0/legalcode> ;
+        dct:hasVersion    "2.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc/2.0/> ;
+        odrl:permission   [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:CommercialUse ] .
+
+:fal1.3  a               odrl:Policy ;
+        rdfs:label       "Free Art License"@en ;
+        dct:hasVersion   "1.3" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "artlibre.org" ;
+        dct:source       <http://artlibre.org/licence/lal/en/> ;
+        dct:title        "GFDL" ;
+        odrl:permission  [ odrl:action  odrl:commercialize , cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty    [ odrl:action  cc:ShareAlike , cc:Attribution ]
+                         ] ;
+        foaf:logo        <https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Licence_Art_Libre.svg/367px-Licence_Art_Libre.svg.png> .
+
+:cc-by-nc-nd2.0  a        odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/2.0/legalcode> ;
+        dct:hasVersion    "2.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/2.0/> ;
+        odrl:permission   [ odrl:action  cc:Reproduction ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:DerivativeWorks , cc:CommercialUse ] .
+
+:ORACLE1.0  a            odrl:Policy ;
+        rdfs:label       "Oracle Berkely DB License" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Oracle" ;
+        dct:source       <http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/oslicense-093458.html> ;
+        odrl:permission  [ odrl:action  cc:Distribution , odrl:modify , odrl:copy ;
+                           odrl:duty    [ odrl:action  odrl:attachPolicy , cc:ShareAlike ]
+                         ] .
+
+<http://purl.org/ms-lod/rdflicense/elra-end-user>
+        a                   odrl:Policy ;
+        rdfs:label          "LANGUAGE RESOURCES END-USER AGREEMENT" ;
+        rdfs:seeAlso        <http://www.elda.org/en/services-around-lrs/distribution/licensing/> ;
+        ms:conditionsOfUse  ms:noRedistribution , ms:spatialConstraint , cc:Attribution , ms:forAFee , ms:languageEngineeringResearch , ms:noDerivatives ;
+        ms:licenseCategory  ms:RES ;
+        dct:alternative     "ELRA-END-USER" ;
+        dct:language        <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher       "Elra" ;
+        odrl:permission     [ odrl:action      cc:Reproduction , odrl:modify , odrl:translate ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:spatial   "only at assignee's site"
+                                               ] ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:purpose   ms:languageEngineeringResearch
+                                               ] ;
+                              odrl:duty        [ odrl:action           cc:Attribution ;
+                                                 odrl:attributedParty  ms:distributionRightsHolder
+                                               ] ;
+                              odrl:duty        [ odrl:action  odrl:compensate ]
+                            ] ;
+        odrl:prohibition    [ odrl:action  cc:Distribution , cc:DerivativeWorks ] .
+
+:cc-by-sa3.0cl  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Chile" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/cl/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Chile> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/cl> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by3.0ec  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Ecuador" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/ec/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Ecuador> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/ec> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nd3.0ch  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Switzerland" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/ch/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Switzerland> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/ch> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:ARTISTIC2.0  a           odrl:Policy ;
+        rdfs:label        "Artistic License 2.0" ;
+        dct:hasVersion    "2.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Perl Foundation" ;
+        dct:source        <http://opensource.org/licenses/Artistic-2.0> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  cc:ShareAlike
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  odrl:modify
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  cc:Distribution
+                          ] .
+
+:cc-by3.0ie  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Ireland" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/ie/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Ireland> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/ie> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nc-nd3.0es  a     odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-NC-ND Spain" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nc-nd/3.0/es/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Spain> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nc-nd/3.0/es> ;
+        odrl:permission  [ odrl:action       cc:Distribution , cc:Reproduction ;
+                           odrl:duty         [ odrl:action  cc:Notice , cc:Attribution ] ;
+                           odrl:prohibition  [ odrl:action  odrl:commercialize ]
+                         ] .
+
+:cc-by-nd3.0nl  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Netherlands" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/nl/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Netherlands> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/nld> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/nl> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-nd3.0au  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Australia" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/au/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Australia> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/au> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-nd3.0ve  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Venezuela" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/ve/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Venezuela> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/ve> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by2.0es  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 Spain" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/es/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Spain> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/es> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by3.0gr  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Greece" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/gr/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Greece> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/ell> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/gr> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:MOZILLA2.0  a                odrl:Policy ;
+        rdfs:label            "Mozilla Public License" ;
+        l4lod:licensingTerms  <http://www.mozilla.org/MPL/2.0/> ;
+        dct:creator           <http://www.mozilla.org/> ;
+        dct:hasVersion        "2.0" ;
+        dct:language          <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher         "Mozilla" ;
+        dct:source            <https://www.mozilla.org/MPL/2.0/> ;
+        dct:title             "MPL" ;
+        odrl:permission       [ odrl:action  cc:Reproduction , odrl:modify , cc:Distribution , odrl:sell ] .
+
+:cc-by-sa3.0fr  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 France" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/fr/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/France> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/fr> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-sa3.0pt  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Portugal" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/pt/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Portugal> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/por> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/pt> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:ukogl2.0  a             odrl:Policy ;
+        rdfs:label       "Open Government Licence" ;
+        rdfs:seeAlso     <http://www.nationalarchives.gov.uk/doc/open-government-licence/version/1/> ;
+        cc:jurisdiction  <http://dbpedia.org/page/United_Kingdom> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "The National Archives" ;
+        dct:source       <http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/re-use-and-licensing/ukglf/> ;
+        skos:related     <http://purl.org/NET/rdflicense/cc-by/4.0> ;
+        odrl:permission  [ odrl:action  cc:Distribution , ldr:extraction , cc:Reproduction , cc:DerivativeWorks , ldr:reutilization ;
+                           odrl:duty    [ odrl:action  odrl:attachPolicy , cc:Attribution ]
+                         ] .
+
+:cc-by-nc4.0  a           odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc/4.0/legalcode> ;
+        dct:alternative   "CC BY-NC" ;
+        dct:hasVersion    "4.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc/4.0/> ;
+        dct:title         "Creative Commons - Attribution-NonCommercial 4.0 International - CC BY-NC 4.0"@en ;
+        odrl:permission   [ odrl:action  cc:Distribution , ldr:extraction , cc:Reproduction , cc:DerivativeWorks , ldr:reutilization ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:CommercialUse ] ;
+        foaf:logo         <http://i.creativecommons.org/l/by-nc/2.0/88x31.png> .
+
+:cc-by-nd3.0cn  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 China" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/cn/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/China> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/zho> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/cn> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-nc-nd3.0ec  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Ecuador" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/ec/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Ecuador> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/esp> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/ec> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by2.5ar  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 Argentina" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/ar/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Argentina> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/esp> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/mx> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:MIT1.0  a               odrl:Policy ;
+        rdfs:label       "MIT License" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "MIT" ;
+        dct:source       <http://opensource.org/licenses/MIT> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction , odrl:modify , odrl:sell ;
+                           odrl:duty    [ odrl:action  cc:Notice ]
+                         ] .
+
+:cc-by-nc-nd4.0  a        odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode> ;
+        dct:alternative   "CC BY-NC-ND" ;
+        dct:hasVersion    "4.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/4.0/> ;
+        dct:title         "Creative Commons - Attribution-NonCommercial-NoDerivatives 4.0 International - CC BY-NC-ND 4.0"@en ;
+        odrl:permission   [ odrl:action  ldr:extraction , cc:Reproduction , ldr:reutilization ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:DerivativeWorks , cc:CommercialUse ] ;
+        foaf:logo         <http://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png> .
+
+:cc-by-nd3.0de  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Germany" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/de/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Germany> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/deu> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/de> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-nc-nd3.0ie  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Ireland" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/ie/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Ireland> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/ie> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:ukogl-nc2.0  a           odrl:Policy ;
+        rdfs:label        "Open Government Licence Non-Commercial" ;
+        rdfs:seeAlso      <http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/> ;
+        cc:jurisdiction   <http://dbpedia.org/page/United_Kingdom> ;
+        dct:hasVersion    "2.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "The National Archives" ;
+        dct:source        <http://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/> ;
+        odrl:permission   [ odrl:action  cc:Distribution , ldr:extraction , cc:Reproduction , cc:DerivativeWorks , ldr:reutilization ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:CommercialUse ] .
+
+:IBM1.0  a               odrl:Policy ;
+        rdfs:label       "IBM Public License" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "IBM" ;
+        dct:source       <http://opensource.org/licenses/IPL-1.0> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:ShareAlike
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks , odrl:sell
+                         ] .
+
+:agpl3.0  a              odrl:Policy ;
+        rdfs:label       "GNU Affero General Public License"@en ;
+        rdfs:seeAlso     <http://www.gnu.org/licenses/agpl-3.0.html> ;
+        dct:alternative  "AGPL" ;
+        dct:creator      <http://fsf.org/> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <http://www.gnu.org/licenses/agpl-3.0.html> ;
+        dct:title        "GNU Affero General Public License 3.0" ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:Notice , cc:Attribution , cc:Copyleft ]
+                         ] ;
+        foaf:logo        <http://www.gnu.org/graphics/agplv3-88x31.png> .
+
+:lgpl2.1  a              odrl:Policy ;
+        rdfs:label       "GNU Lesser General Public License"@en ;
+        rdfs:seeAlso     <https://www.gnu.org/licenses/lgpl.htm> ;
+        dct:hasVersion   "2.1" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <https://www.gnu.org/licenses/lgpl.html> ;
+        dct:title        "LGPL" ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:Notice , cc:LesserCopyleft , cc:Attribution ]
+                         ] .
+
+:cc-by-sa3.0at  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Austria" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/at/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Austria> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/deu> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/at> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:odbc-by1.0  a           odrl:Policy ;
+        rdfs:label       "Open Data Commons Attribution License" ;
+        rdfs:seeAlso     <http://www.opendatacommons.org/wp-content/uploads/2010/01/odc_by_1.0_public_text.txt> ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Open Data Commons" ;
+        dct:source       <http://opendatacommons.org/licenses/odc-by/> ;
+        odrl:permission  [ odrl:action  cc:Distribution , ldr:extraction , cc:Reproduction , cc:DerivativeWorks , ldr:reutilization ;
+                           odrl:duty    [ odrl:action  cc:Attribution ]
+                         ] .
+
+:odbl1.0  a              odrl:Policy ;
+        rdfs:label       "Open Data Commons Open Database License" ;
+        rdfs:seeAlso     <http://www.opendatacommons.org/wp-content/uploads/2009/06/odbl-10.txt> ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Open Data Commons" ;
+        dct:source       <http://opendatacommons.org/licenses/odbl/> ;
+        odrl:permission  [ odrl:action  cc:Distribution , ldr:extraction , cc:Reproduction , cc:DerivativeWorks , ldr:reutilization ;
+                           odrl:duty    [ odrl:action  cc:ShareAlike , cc:Attribution ]
+                         ] .
+
+:cc-by2.5mx  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 Mexico" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/mx/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Mexico> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/esp> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/mx> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nc-nd3.0gr  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Greece" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/gr/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Greece> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/ell> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/gr> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by-nd3.0br  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Brazil" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/br/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Brazil> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/por> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/br> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:publicdomain  a         odrl:Policy ;
+        rdfs:comment     "This statement can be applied to material truly in the public domain (because rights have expired, forfeited or are innaplicable). This text cannot be deemed as a license -namely, public domain works do not need to be licensed." ;
+        rdfs:label       "Public domain" ;
+        dct:publisher    " None" ;
+        dct:source       <http://en.wikipedia.org/wiki/Public_domain> ;
+        odrl:permission  [ odrl:action  ldr:IPRRight , ldr:DatabaseRight ] .
+
+:cc-by3.0nz  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 New Zealand" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/nz/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/New_Zealand> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/nzl> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/nz> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-nd3.0it  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Italy" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/it/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Italy> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/ita> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/it> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:COLORIURIS1.0  a        odrl:Policy ;
+        rdfs:label       "ColorIURIS Copyright" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "ColorIURIS" ;
+        dct:source       <http://www.coloriuris.net/en:avisos_legales#copyright_and_industrial_property> ;
+        odrl:permission  [ odrl:action       cc:Distribution , cc:Reproduction , odrl:copy ;
+                           odrl:prohibition  [ odrl:action  odrl:commercialize ]
+                         ] .
+
+:cc-by2.0  a             odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/legalcode> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                         ] .
+
+:BSD2.0  a               odrl:Policy ;
+        rdfs:label       "2-clause BSD License" ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "The FreeBSD Project" ;
+        dct:source       <http://www.linfo.org/bsdlicense.html> ;
+        odrl:permission  [ odrl:action  cc:Distribution , odrl:modify ;
+                           odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike ]
+                         ] .
+
+:cc-by2.0uk  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.0 England & Wales" , "Creative Commons CC-BY 2.0 South Africa" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.0/uk/legalcode> , <http://creativecommons.org/licenses/by/2.0/za/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/England> , <http://dbpedia.org/page/South_Africa> , <http://dbpedia.org/page/Wales> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.0/uk> , <http://creativecommons.org/licenses/by/2.0/za> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:OGL1.0  a                odrl:Policy ;
+        rdfs:label        "UK NonCommercial Government License" ;
+        dct:hasVersion    "1.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "The National Archives" ;
+        dct:source        <http://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/non-commercial-government-licence.htm> ;
+        odrl:permission   [ odrl:action  cc:Distribution , cc:DerivativeWorks , odrl:copy ;
+                            odrl:duty    [ odrl:action  odrl:attachPolicy , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by-nd2.5dk  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 2.5 Denmark" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/2.5/dk/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Denmark> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/dan> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/2.5/dk> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-nd3.0ro  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Romania" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/ro/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Romania> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/ro> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:GOVTRACK1.0  a           odrl:Policy ;
+        rdfs:label        "Govtrack License" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "GovTrack" ;
+        dct:source        <https://www.govtrack.us/developers/license> ;
+        odrl:permission   [ odrl:action  cc:Reproduction , odrl:copy ;
+                            odrl:duty    [ odrl:action  cc:ShareAlike , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  odrl:commercialize , cc:Distribution ] .
+
+:ms-commons-byncnd  a       odrl:Policy ;
+        rdfs:label          "META-SHARE Commons BYNCND" ;
+        rdfs:seeAlso        <http://www.meta-net.eu/meta-share/meta-share-licenses/Tabular%20presentation%20of%20MS%20Commons%20Licences.pdf> ;
+        ms:conditionsOfUse  cc:Attribution , ms:academic-nonCommercialUse , ms:onlyMSMembers , ms:languageEngineeringResearch , ms:noDerivatives ;
+        ms:licenseCategory  ms:ACA ;
+        dct:alternative     "MS Commons BYNCND" ;
+        dct:hasVersion      "1.0" ;
+        dct:language        <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher       "Meta-Share" ;
+        odrl:permission     [ odrl:action      odrl:aggregate , odrl:extract , cc:Reproduction ;
+                              odrl:assignee    <http://example.com/MetaShareMembers> ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:purpose   ms:languageEngineeringResearch
+                                               ] ;
+                              odrl:constraint  [ a              odrl:Constraint ;
+                                                 odrl:operator  odrl:eq ;
+                                                 odrl:spatial   "only at assignee's site"
+                                               ] ;
+                              odrl:duty        [ odrl:action  cc:Attribution ]
+                            ] ;
+        odrl:prohibition    [ odrl:action  cc:DerivativeWorks , cc:CommercialUse ] .
+
+:gfdl1.1  a              odrl:Policy ;
+        rdfs:label       "GNU Free Documentation License"@en ;
+        rdfs:seeAlso     <https://gnu.org/licenses/fdl.html> ;
+        dct:hasVersion   "1.1" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <https://gnu.org/licenses/fdl.html> ;
+        dct:title        "GFDL" ;
+        odrl:permission  [ odrl:action       odrl:commercialize , cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:constraint   [ odrl:count     100 ;
+                                               odrl:operator  odrl:lteq
+                                             ] ;
+                           odrl:duty         [ odrl:action  "logChanges" ;
+                                     odrl:action  cc:ShareAlike , cc:Attribution ] ;
+                           odrl:prohibition  [ odrl:action  "noDRM" ]
+                         ] ;
+        odrl:permission  [ odrl:action       odrl:commercialize , cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty         [ odrl:action  "logChanges" ;
+                                     odrl:action  cc:SourceCode , cc:ShareAlike , cc:Attribution ] ;
+                           odrl:prohibition  [ odrl:action  "noDRM" ]
+                         ] .
+
+:cc-by-sa3.0ch  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Switzerland" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/ch/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Switzerland> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/ch> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-sa3.0nl  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Netherlands" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/nl/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Netherlands> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/nld> ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/nl> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by2.5hu  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 Hungary" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/hu/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Hungary> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/mag> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/hu> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction
+                         ] .
+
+:cc-by-nc-sa2.0  a        odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-SA" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode> ;
+        dct:hasVersion    "2.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-sa/2.0/> ;
+        odrl:permission   [ odrl:action  cc:DerivativeWorks , cc:Reproduction ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:CommercialUse ] .
+
+:cc-by-sa3.0au  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Australia" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/au/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Australia> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/au> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by2.5il  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 2.5 Israel" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/2.5/il/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Israel> ;
+        dct:hasVersion   "2.5" ;
+        dct:language     <http://www.lexvo.org/page/iso629-2/isr> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/2.5/il> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:DerivativeWorks , cc:Reproduction
+                         ] .
+
+:cc-by3.0cl  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Chile" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/cl/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Chile> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/cl> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:cc-by-sa3.0ve  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Venezuela" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/ve/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Venezuela> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/ve> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:gpl1.0  a               odrl:Policy ;
+        rdfs:label       "GNU General Public License" ;
+        rdfs:seeAlso     <http://gnu.org/licenses/gpl-1.0.html> ;
+        dct:creator      <http://fsf.org/> ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <http://gnu.org/licenses/gpl-1.0.html> ;
+        owl:sameAs       <http://www.gnu.org/licenses/gpl-1.0.rdf> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:Notice , cc:Copyleft ]
+                         ] ;
+        foaf:logo        <http://www.gnu.org/graphics/gplv3-127x51.png> .
+
+:cc-by4.0  a             odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/4.0/legalcode> ;
+        dct:alternative  "CC BY" ;
+        dct:hasVersion   "4.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/4.0/> ;
+        dct:title        "Creative Commons - Attribution 4.0 International - CC BY 4.0"@en ;
+        odrl:permission  [ odrl:action  cc:DerivativeWorks , cc:Distribution , cc:Reproduction , ldr:extraction , ldr:reutilization ;
+                           odrl:duty    [ odrl:action  cc:Attribution , cc:Notice ]
+                         ] ;
+        foaf:logo        <http://i.creativecommons.org/l/by/4.0/88x31.png> .
+
+:cc-by-nd3.0  a           odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-ND" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/legalcode> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/> ;
+        odrl:permission   [ odrl:action  cc:Reproduction ;
+                            odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ odrl:action  cc:DerivativeWorks ] .
+
+:cc-by-nd3.0es  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Spain" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/es/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Spain> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/es> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:cc-by-sa2.0  a          odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/2.0/legalcode> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/2.0/> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ]
+                         ] .
+
+:BSD4.0  a               odrl:Policy ;
+        rdfs:label       "BSD License 4-clause" ;
+        dct:hasVersion   "4.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "University of California at Berkeley" ;
+        dct:source       <http://www.linfo.org/bsdlicense.html> ;
+        odrl:permission  [ odrl:action       cc:Distribution , odrl:modify ;
+                           odrl:duty         [ odrl:action  cc:Notice , cc:ShareAlike , cc:Attribution ] ;
+                           odrl:prohibition  [ odrl:action  "Endorsement" ]
+                         ] .
+
+:cc-by-sa3.0cn  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 China" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/cn/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/China> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/zho> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/cn> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:FREEBSD1.0  a           odrl:Policy ;
+        rdfs:label       "Free BSD Documentation License" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "The FreeBSD Project" ;
+        dct:source       <http://www.freebsd.org/copyright/freebsd-doc-license.html> ;
+        odrl:permission  [ odrl:action  cc:Distribution , odrl:modify ;
+                           odrl:duty    [ odrl:action  odrl:attachPolicy , cc:ShareAlike ]
+                         ] .
+
+:cc-by-sa3.0de  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-SA 3.0 Germany" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-sa/3.0/de/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Germany> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/deu> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by-sa/3.0/de> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  cc:ShareAlike , odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:OS3.0  a                odrl:Policy ;
+        rdfs:label       "OS Open Data License" ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Ordnance Survey" ;
+        dct:source       <http://www.ordnancesurvey.co.uk/business-and-government/licensing/using-creating-data-with-os-products/os-opendata.html> ;
+        odrl:permission  [ odrl:action  odrl:commercialize , cc:Distribution , cc:DerivativeWorks , cc:Reproduction ;
+                           odrl:duty    [ odrl:action  cc:Attribution ]
+                         ] .
+
+:cc-zero1.0  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC0" ;
+        rdfs:seeAlso     <http://creativecommons.org/publicdomain/zero/1.0/legalcode> ;
+        dct:alternative  "CC0" ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/publicdomain/zero/1.0/> ;
+        dct:title        "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication"@en ;
+        odrl:permission  [ odrl:action  cc:Distribution , ldr:extraction , cc:Reproduction , cc:DerivativeWorks , ldr:reutilization ] ;
+        foaf:logo        <http://i.creativecommons.org/p/zero/1.0/88x31.png> .
+
+:cc-by3.0fr  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 France" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/fr/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/France> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/fra> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/fr> ;
+        dct:title        "CC-BY 3.0 France" ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:Notice , cc:Attribution ]
+                         ] .
+
+:cc-by3.0pt  a           odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY 3.0 Portugal" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by/3.0/pt/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Portugal> ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/por> ;
+        dct:publisher    "Creative Commons" ;
+        dct:source       <http://creativecommons.org/licenses/by/3.0/pt> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks
+                         ] .
+
+:simple2.0  a            odrl:Policy ;
+        rdfs:label       "Simple Public License" ;
+        rdfs:seeAlso     <http://opensource.org/licenses/SimPL-2.0> ;
+        dct:creator      <http://fsf.org/> ;
+        dct:hasVersion   "2.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Free Software Foundation" ;
+        dct:source       <http://opensource.org/licenses/SimPL-2.0> ;
+        odrl:permission  [ odrl:action  cc:Distribution , cc:Reproduction , cc:DerivativeWorks ;
+                           odrl:duty    [ odrl:action  cc:SourceCode , cc:Notice , cc:Copyleft ]
+                         ] .
+
+:cc-by-nc-nd3.0cl  a      odrl:Policy ;
+        rdfs:label        "Creative Commons CC-BY-NC-ND Chile" ;
+        rdfs:seeAlso      <http://creativecommons.org/licenses/by-nc-nd/3.0/cl/legalcode> ;
+        cc:jurisdiction   <http://dbpedia.org/page/Chile> ;
+        dct:hasVersion    "3.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/spa> ;
+        dct:publisher     "Creative Commons" ;
+        dct:source        <http://creativecommons.org/licenses/by-nc-nd/3.0/cl> ;
+        odrl:duty         [ a            odrl:Duty ;
+                            odrl:action  odrl:attachPolicy , cc:Attribution
+                          ] ;
+        odrl:permission   [ a            odrl:Permission ;
+                            odrl:action  cc:Distribution , cc:Reproduction
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] .
+
+:cc-by-nd3.0ec  a        odrl:Policy ;
+        rdfs:label       "Creative Commons CC-BY-ND 3.0 Ecuador" ;
+        rdfs:seeAlso     <http://creativecommons.org/licenses/by-nd/3.0/ec/legalcode> ;
+        cc:jurisdiction  <http://dbpedia.org/page/Ecuador> ;
+        dct:hasVersion   "3.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:source       <http://creativecommons.org/licenses/by-nd/3.0/ec> ;
+        odrl:duty        [ a            odrl:Duty ;
+                           odrl:action  odrl:attachPolicy , cc:Attribution
+                         ] ;
+        odrl:permission  [ a            odrl:Permission ;
+                           odrl:action  cc:Distribution , cc:Reproduction
+                         ] .
+
+:odbc-pddl1.0  a         odrl:Policy ;
+        rdfs:label       "Open Data Commons Public Domain Dedication and License" ;
+        rdfs:seeAlso     <http://www.opendatacommons.org/wp-content/uploads/2010/01/odc_pddl_1.0_public_text.txt> ;
+        dct:hasVersion   "1.0" ;
+        dct:language     <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher    "Open Data Commons" ;
+        dct:source       <http://opendatacommons.org/licenses/pddl/> ;
+        odrl:permission  [ odrl:action  cc:Distribution , ldr:extraction , cc:Reproduction , cc:DerivativeWorks , ldr:reutilization ] .
+
+:ogl-nc1.0  a             odrl:Policy ;
+        rdfs:label        "UK NonCommercial Government License" ;
+        dct:hasVersion    "1.0" ;
+        dct:language      <http://www.lexvo.org/page/iso639-3/eng> ;
+        dct:publisher     "The National Archives" ;
+        dct:source        <http://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/non-commercial-government-licence.htm> ;
+        odrl:permission   [ odrl:action  cc:Distribution , cc:DerivativeWorks , odrl:copy ;
+                            odrl:duty    [ odrl:action  odrl:attachPolicy , cc:Attribution ]
+                          ] ;
+        odrl:prohibition  [ a            odrl:Prohibition ;
+                            odrl:action  odrl:commercialize
+                          ] ;
+        foaf:logo         <http://www.nationalarchives.gov.uk/wp-content/uploads/2014/01/ogl-symbol-41px-retina-black.png> .
+
