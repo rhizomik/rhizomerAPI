@@ -375,6 +375,16 @@ public class APIStepdefs {
                 .andExpect(status().isOk());
     }
 
+    @When("^I set the dataset \"([^\"]*)\" classes to$")
+    public void iClearDatasetClasses(String datasetId, List<Class> newClasses) throws Throwable {
+        String json = mapper.writeValueAsString(newClasses);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/classes", datasetId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
     @Then("^The retrieved classes are$")
     public void theRetrievedClassesAre(List<ExpectedClass> expectedClasses) throws Throwable {
         String json = this.result.andReturn().getResponse().getContentAsString();

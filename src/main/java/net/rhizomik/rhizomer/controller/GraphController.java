@@ -6,7 +6,6 @@ package net.rhizomik.rhizomer.controller;
 import com.google.common.base.Preconditions;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
-import net.rhizomik.rhizomer.service.AnalizeDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,6 @@ public class GraphController {
     final Logger logger = LoggerFactory.getLogger(GraphController.class);
 
     @Autowired private DatasetRepository datasetRepository;
-    @Autowired private AnalizeDataset analizeDataset;
-
 
     @RequestMapping(value = "/datasets/{datasetId}/graphs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
@@ -32,8 +29,7 @@ public class GraphController {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
         addGraphs.forEach(graph -> dataset.addDatasetGraph(graph));
-        logger.info("Added graphs {} to Dataset {}, recomputing classes...", addGraphs.toString(), datasetId);
-        analizeDataset.recomputeDatasetClasses(dataset); //TODO: consider just recomputing classes for the new graphs
+        logger.info("Added graphs {} to Dataset {}", addGraphs.toString(), datasetId);
         return datasetRepository.save(dataset).getDatasetGraphs();
     }
 
@@ -50,8 +46,7 @@ public class GraphController {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
         dataset.setDatasetGraphs(updatedGraphs);
-        logger.info("Updated Dataset {} graphs to {}, recomputing classes", datasetId, updatedGraphs.toString());
-        analizeDataset.recomputeDatasetClasses(dataset);
+        logger.info("Updated Dataset {} graphs to {}", datasetId, updatedGraphs.toString());
         return datasetRepository.save(dataset).getDatasetGraphs();
     }
 }

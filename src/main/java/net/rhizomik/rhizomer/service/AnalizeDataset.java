@@ -52,16 +52,6 @@ public class AnalizeDataset {
         }
     }
 
-    public  void recomputeDatasetClasses(Dataset dataset) {
-        if (!dataset.getClasses().isEmpty() && dataset.getSparqlEndPoint()!=null ) {
-            dataset.getClasses().forEach(aClass -> {
-                classRepository.delete(aClass);
-                dataset.removeClass(aClass);
-            });
-            detectDatasetClasses(dataset);
-        }
-    }
-
     public void detectClassFacets(Class datasetClass) {
         ResultSet result = sparqlService.querySelect(datasetClass.getDataset().getSparqlEndPoint(),
                 Queries.getQueryClassFacets(datasetClass.getUri().toString(), datasetClass.getDataset().getQueryType(),

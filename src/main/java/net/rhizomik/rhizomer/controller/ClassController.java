@@ -61,4 +61,20 @@ public class ClassController {
         logger.info("Creating Class: {}", newClass.toString());
         return classRepository.save(newClass);
     }
+
+    @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.PUT)
+    public @ResponseBody List<Class> updateDatasetClasses(@Valid @RequestBody List<Class> newClasses, @PathVariable String datasetId) throws Exception {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
+        dataset.getClasses().forEach(aClass -> {
+            classRepository.delete(aClass);
+            dataset.removeClass(aClass);
+        });
+        newClasses.forEach(newClass -> {
+            newClass.setDataset(dataset);
+            classRepository.save(newClass);
+        });
+        logger.info("Updated Dataset {} classes to {}", datasetId, newClasses.toString());
+        return datasetRepository.save(dataset).getClasses();
+    }
 }

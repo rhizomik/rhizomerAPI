@@ -89,11 +89,13 @@ Feature: Detect dataset structure
       | uri                                             | label       | uses | differentValues | range            | relation   |
       | http://www.w3.org/ns/odrl/2/prohibition	        | prohibition | 41	 | 41	           | odrl:Prohibition | true       |
 
-  Scenario: Recompute classes after changing the dataset graph to another of the server graphs
+  Scenario: Recompute classes after changing the dataset graph and clearing dataset classes
     Given I extract the classes from dataset "mixed"
     And The following data graphs are set for dataset "mixed"
       | http://test.com/rdflicense                      |
-    When I extract the classes from dataset "mixed"
+    When I set the dataset "mixed" classes to
+      | uri                                             | label       | instanceCount |
+    And I extract the classes from dataset "mixed"
     Then The retrieved classes are
       | uri                                             | label       | instanceCount |
       | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
