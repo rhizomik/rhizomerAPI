@@ -58,13 +58,13 @@ public class Dataset {
     public void setId(String id) { this.id = id; }
 
     @JsonIgnore
-    public List<Class> getClasses() {
-        return classes;
-    }
+    public List<Class> getClasses() { return new ArrayList<>(classes); }
 
     public void setClasses(List<Class> classes) { this.classes = classes; }
 
     public void addClass(Class aClass) { classes.add(aClass); }
+
+    public void removeClass(Class aClass) { classes.remove(aClass); }
 
     @JsonIgnore
     public List<String> getDatasetGraphs() {

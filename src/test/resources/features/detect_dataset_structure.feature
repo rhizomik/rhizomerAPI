@@ -88,3 +88,18 @@ Feature: Detect dataset structure
     And The retrieved facet is
       | uri                                             | label       | uses | differentValues | range            | relation   |
       | http://www.w3.org/ns/odrl/2/prohibition	        | prohibition | 41	 | 41	           | odrl:Prohibition | true       |
+
+  Scenario: Recompute classes after changing the dataset graph to another of the server graphs
+    Given I extract the classes from dataset "mixed"
+    And The following data graphs are set for dataset "mixed"
+      | http://test.com/rdflicense                      |
+    When I extract the classes from dataset "mixed"
+    Then The retrieved classes are
+      | uri                                             | label       | instanceCount |
+      | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
+      | http://www.w3.org/ns/odrl/2/Constraint          | Constraint  | 10            |
+      | http://www.w3.org/ns/odrl/2/Prohibition         | Prohibition | 18            |
+      | http://www.w3.org/ns/odrl/2/Policy              | Policy      | 175           |
+      | http://www.w3.org/ns/odrl/2/Permission          | Permission  | 104           |
+      | http://www.w3.org/ns/odrl/2/Duty                | Duty        | 104           |
+    And exists a class with id "/datasets/mixed/classes/odrl:Policy"
