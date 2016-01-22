@@ -26,11 +26,15 @@ import static org.mockito.Mockito.*;
 public class SPARQLServiceMockFactory {
     private static final Logger logger = LoggerFactory.getLogger(SPARQLServiceMockFactory.class);
 
-    private static org.apache.jena.query.Dataset dataset = DatasetFactory.createMem();
+    private static org.apache.jena.query.Dataset dataset = DatasetFactory.create();
 
     public static void addData(String graph, String dataFile) {
         Model model = RDFDataMgr.loadModel(dataFile);
         dataset.addNamedModel(graph, model);
+    }
+
+    public static void clearDataset() {
+        dataset = DatasetFactory.create();
     }
 
     public static SPARQLService build() {
@@ -105,7 +109,7 @@ public class SPARQLServiceMockFactory {
         doAnswer(invocationOnMock -> {
             URI graph = (URI) invocationOnMock.getArguments()[1];
             Model blankModel = ModelFactory.createDefaultModel();
-            dataset.addNamedModel(graph.toString(), blankModel);
+            dataset.replaceNamedModel(graph.toString(), blankModel);
             return null;
         }).when(mock).clearGraph(isA(URL.class), isA(URI.class));
 

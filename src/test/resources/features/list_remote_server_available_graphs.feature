@@ -6,7 +6,7 @@ Feature: List remote server available graphs
   I want to list all the data graphs in the server
 
   Background: Existing dataset in remote server
-    Given There is a dataset with id "rdflicense"
+    Given There is a new dataset with id "rdflicense"
     And The dataset "rdflicense" server is set to "http://linkeddata4.dia.fi.upm.es:8907/sparql"
 
   Scenario: The available graphs for the dataset server are those stored

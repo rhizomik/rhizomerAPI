@@ -6,7 +6,7 @@ Feature: Create classes in a dataset
   I want to identify the classes in it
 
   Background: Existing dataset
-    Given There is a dataset with id "vegetables"
+    Given There is a new dataset with id "vegetables"
 
   Scenario: manually define a class
     When I create a class in dataset "vegetables" with URI "http://examples.org#Potato", label "Potato" and instance count 1

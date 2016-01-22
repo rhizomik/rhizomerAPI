@@ -89,8 +89,10 @@ public class APIStepdefs {
                 .build();
     }
 
-    @Given("^There is a dataset with id \"([^\"]*)\"$")
+    @Given("^There is a new dataset with id \"([^\"]*)\"$")
     public void aDatasetWithId(String datasetId) throws Throwable {
+        if (datasetRepository.exists(datasetId))
+            datasetRepository.delete(datasetId);
         datasetRepository.save(new Dataset(datasetId));
     }
 
@@ -207,6 +209,7 @@ public class APIStepdefs {
     @Given("^The dataset \"([^\"]*)\" has a mock server$")
     public void theDatasetHasAMockServer(String datasetId) throws Throwable {
         Dataset dataset = datasetRepository.findOne(datasetId);
+        SPARQLServiceMockFactory.clearDataset();
         dataset.setSparqlEndPoint(new URL("http://sparql/mock"));
         datasetRepository.save(dataset);
     }
