@@ -2,6 +2,7 @@ package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -76,7 +78,16 @@ public class Facet {
     public void addRange(Range range) { ranges.add(range); }
 
     public String getRange() {
-        return ranges.size() > 0 ? ranges.get(0).getUri().toString() : ""; //TODO: compute supertype if multiple rangesCuries
+        List<Range> selectedRanges = ranges.stream().sorted((r1, r2) -> Integer.compare(r1.getUses(), r2.getUses()))
+                .limit(2).collect(Collectors.toList());
+        if (selectedRanges.size() == 0)
+            return "";
+        else if (selectedRanges.size() == 1)
+            return selectedRanges.get(0).getUri().toString();
+        else if (!selectedRanges.get(0).getUri().equals(URI.create(RDFS.Resource.getURI())))
+            return selectedRanges.get(0).getUri().toString();
+        else
+            return selectedRanges.get(1).getUri().toString();
     }
 
     public Class getDomain() { return domain; }
