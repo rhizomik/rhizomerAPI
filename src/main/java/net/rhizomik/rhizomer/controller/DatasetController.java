@@ -23,6 +23,12 @@ public class DatasetController {
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private SPARQLService sparqlService;
 
+    @RequestMapping(value = "/datasets", method = RequestMethod.GET)
+    public @ResponseBody
+    Iterable<Dataset> listDatasets() throws Exception {
+        return datasetRepository.findAll();
+    }
+
     @RequestMapping(value = "/datasets", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
