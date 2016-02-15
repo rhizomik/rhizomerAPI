@@ -25,7 +25,7 @@ public class Dataset {
     private String id;
     private URL sparqlEndPoint;
     private Queries.QueryType queryType = Queries.QueryType.FULL;
-    private boolean inferenceEnabled = true;
+    private boolean inferenceEnabled = false;
     private int sampleSize = 0;
     private double coverage = 0.0;
 
