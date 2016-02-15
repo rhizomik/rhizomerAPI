@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EyeApplication {
+public class RhizomerAPIApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EyeApplication.class, args);
+        SpringApplication.run(RhizomerAPIApplication.class, args);
     }
 }

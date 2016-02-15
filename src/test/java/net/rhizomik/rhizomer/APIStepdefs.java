@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by http://rhizomik.net/~roberto/
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { EyeApplication.class, APIStepdefs.SPARQLServiceMockConfig.class },
+@ContextConfiguration(classes = { RhizomerAPIApplication.class, APIStepdefs.SPARQLServiceMockConfig.class },
         loader = SpringApplicationContextLoader.class)
 @WebAppConfiguration
 @IntegrationTest
