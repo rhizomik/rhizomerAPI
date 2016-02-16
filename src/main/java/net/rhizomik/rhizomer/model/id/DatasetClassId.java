@@ -1,6 +1,8 @@
-package net.rhizomik.rhizomer.model;
+package net.rhizomik.rhizomer.model.id;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import net.rhizomik.rhizomer.model.Curie;
+import net.rhizomik.rhizomer.model.Dataset;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;

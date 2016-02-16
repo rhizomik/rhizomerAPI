@@ -2,6 +2,7 @@ package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

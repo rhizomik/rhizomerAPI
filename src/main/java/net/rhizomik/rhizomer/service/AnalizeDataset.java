@@ -2,6 +2,7 @@ package net.rhizomik.rhizomer.service;
 
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.*;
+import net.rhizomik.rhizomer.model.id.DatasetClassFacetId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.RangeRepository;

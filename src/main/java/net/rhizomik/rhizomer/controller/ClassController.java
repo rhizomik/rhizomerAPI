@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.Curie;
 import net.rhizomik.rhizomer.model.Dataset;
-import net.rhizomik.rhizomer.model.DatasetClassId;
+import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;

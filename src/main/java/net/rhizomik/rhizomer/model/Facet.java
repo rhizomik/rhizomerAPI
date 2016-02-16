@@ -2,6 +2,7 @@ package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.rhizomik.rhizomer.model.id.DatasetClassFacetId;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,6 @@ public class Facet {
     private String uri;
     private String label;
     @ManyToOne
-    @MapsId("datasetClassId")
     @JsonBackReference
     private Class domain;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "facet")

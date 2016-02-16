@@ -1,6 +1,8 @@
-package net.rhizomik.rhizomer.model;
+package net.rhizomik.rhizomer.model.id;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import net.rhizomik.rhizomer.model.Curie;
+import net.rhizomik.rhizomer.model.Dataset;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
@@ -38,7 +40,9 @@ public class DatasetClassFacetRangeId implements Serializable {
 
     public String getRangeCurie() { return rangeCurie; }
 
-    public void setRangeCurie(URI rangeUri) { this.rangeCurie = new Curie(rangeUri).toString(); }
+    public void setRangeCurie(String rangeCurie) { this.rangeCurie = rangeCurie; }
+
+    public void setRange(URI rangeUri) { this.rangeCurie = new Curie(rangeUri).toString(); }
 
     @Override
     @JsonValue
