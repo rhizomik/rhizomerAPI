@@ -1,12 +1,12 @@
 package net.rhizomik.rhizomer.repository;
 
 import net.rhizomik.rhizomer.model.Class;
-import net.rhizomik.rhizomer.model.DatasetClassId;
+import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-@RepositoryRestResource
+@Repository
 public interface ClassRepository extends PagingAndSortingRepository<Class, DatasetClassId> {}
