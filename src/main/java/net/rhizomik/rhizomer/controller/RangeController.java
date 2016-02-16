@@ -6,11 +6,12 @@ package net.rhizomik.rhizomer.controller;
 import com.google.common.base.Preconditions;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.*;
+import net.rhizomik.rhizomer.model.id.DatasetClassFacetId;
+import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.RangeRepository;
-import net.rhizomik.rhizomer.service.SPARQLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,12 @@ public class RangeController {
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
     @Autowired private RangeRepository rangeRepository;
-    @Autowired private SPARQLService sparqlService;
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody Range addRange(@Valid @RequestBody Range newRange, @PathVariable String datasetId,
-                                               @PathVariable String classCurie, @PathVariable String facetCurie) throws Exception {
+    @ResponseBody
+    public Range addRange(@Valid @RequestBody Range newRange, @PathVariable String datasetId,
+                                        @PathVariable String classCurie, @PathVariable String facetCurie) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Preconditions.checkNotNull(dataset, "Dataset with id %s not found", datasetId);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));

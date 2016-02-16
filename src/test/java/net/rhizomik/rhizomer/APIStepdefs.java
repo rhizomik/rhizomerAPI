@@ -132,14 +132,16 @@ public class APIStepdefs {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON));
+        this.result.andExpect(status().isCreated());
+
     }
 
     @And("^I create ranges for facet \"([^\"]*)\" of class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
-    public void iCreateRangesForFacetOfClassInDataset(String facetCurie, String classCurie, String datasetId, List<Range> ranges) throws Throwable {
-        for (Range range: ranges) {
+    public void iCreateRangesForFacetOfClassInDataset(String facetCurie, String classCurie, String datasetId, List<ExpectedRange> ranges) throws Throwable {
+        for (ExpectedRange range: ranges) {
             String json = mapper.writeValueAsString(range);
             this.result = mockMvc.perform(post("/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges",
-                                            datasetId, classCurie, facetCurie)
+                                    datasetId, classCurie, facetCurie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(json)
                     .accept(MediaType.APPLICATION_JSON));

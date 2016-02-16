@@ -2,6 +2,7 @@ package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.rhizomik.rhizomer.model.id.DatasetClassFacetRangeId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ public class Range {
 
     public Range(String curie, String label, int uses, int differentValues, boolean allLiteral) {
         this();
-        this.id.rangeCurie = curie;
+        this.id.setRangeCurie(curie);
         this.uri = Curie.curieToUriStr(curie);
         this.label = label;
         this.uses = uses;
@@ -62,7 +63,7 @@ public class Range {
 
     public boolean isRelation() { return !allLiteral; }
 
-    public void setRelation(boolean isRelation) { this.allLiteral = !isRelation; }
+    public void setIsRelation(boolean isRelation) { this.allLiteral = !isRelation; }
 
     public DatasetClassFacetRangeId getId() { return id; }
 
@@ -76,10 +77,10 @@ public class Range {
         this.uri = uri.toString();
         if (this.id == null) {
             this.id = new DatasetClassFacetRangeId();
-            this.id.setRangeCurie(uri);
+            this.id.setRange(uri);
         }
         else
-            this.id.setRangeCurie(uri);
+            this.id.setRange(uri);
     }
 
     public String getLabel() { return label; }
@@ -100,8 +101,12 @@ public class Range {
 
     public int getDifferentValues() { return differentValues; }
 
+    public void setDifferentValues(int differentValues) { this.differentValues = differentValues; }
+
     @JsonIgnore
     public boolean getAllLiteral() { return allLiteral; }
+
+    public void setAllLiteral(boolean allLiteral) { this.allLiteral = allLiteral; }
 
     @Override
     public String toString() {
