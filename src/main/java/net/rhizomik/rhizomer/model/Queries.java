@@ -206,7 +206,7 @@ public class Queries {
         return pQuery.asQuery();
     }
 
-    protected static String addSamples(int classCount, int sampleSize, double coverage) {
+    public static String addSamples(int classCount, int sampleSize, double coverage) {
         String selectsUnion = "";
         int samplesCount = (int)Math.floor((classCount * coverage)/sampleSize);
         int offset = (int) Math.ceil((double) classCount/samplesCount);
@@ -221,18 +221,21 @@ public class Queries {
     // TODO: consider omitting the following classes, properties and namespaces
 
     private static String[] omitPropertiesArray = {
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://cambridgesemantics.com/ontologies/2008/07/OntologyService#"
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
     };
 
     private static String[] omitClassesArray = {
             "http://www.w3.org/2002/07/owl#",
-            "http://cambridgesemantics.com/ontologies/2008/07/OntologyService",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "http://www.w3.org/2000/01/rdf-schema#",
             "http://www.w3.org/2001/XMLSchema#"
     };
 
-    public static Set<String> omitProperties = new HashSet<>(Arrays.asList(omitPropertiesArray));
-    public static Set<String> omitClasses = new HashSet<>(Arrays.asList(omitClassesArray));
+    public static Set<String> getOmitProperties() {
+        return new HashSet<>(Arrays.asList(omitPropertiesArray));
+    }
+
+    public static Set<String> getOmitClasses() {
+        return new HashSet<>(Arrays.asList(omitClassesArray));
+    }
 }
