@@ -68,6 +68,8 @@ public class Facet {
         this.id.setFacetCurie(uri);
     }
 
+    public String getCurie() { return id.getFacetCurie(); }
+
     public String getLabel() { return label; }
 
     public void setLabel(String label) { this.label = label; }

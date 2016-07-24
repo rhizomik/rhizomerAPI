@@ -83,6 +83,8 @@ public class Range {
             this.id.setRange(uri);
     }
 
+    public String getCurie() { return id.getRangeCurie(); }
+
     public String getLabel() { return label; }
 
     public void setLabel(String label) { this.label = label; }
@@ -110,7 +112,7 @@ public class Range {
 
     @Override
     public String toString() {
-        return "Facet{" +
+        return "Range{" +
                 "id=" + getId() +
                 ", label='" + label + '\'' +
                 ", facet=" + facet.getId() +

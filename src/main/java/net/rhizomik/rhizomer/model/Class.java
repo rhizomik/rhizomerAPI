@@ -66,6 +66,8 @@ public class Class {
         this.id = id;
     }
 
+    public String getCurie() { return id.getClassCurie(); }
+
     public URI getUri() {
         try { return new URI(uri); }
         catch (URISyntaxException e) { e.printStackTrace(); }
