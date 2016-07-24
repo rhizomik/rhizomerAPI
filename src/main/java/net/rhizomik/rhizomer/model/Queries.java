@@ -26,9 +26,9 @@ public class Queries {
 
     public static Query getQueryClasses(QueryType queryType){
         switch (queryType) {
-            case SIMPLE: return Queries.classesFull;
-            case FULL: return Queries.classesFull;
-            default: return Queries.classesSimple;
+            case SIMPLE: return Queries.classesFull();
+            case FULL: return Queries.classesFull();
+            default: return Queries.classesSimple();
         }
     }
 
@@ -128,20 +128,22 @@ public class Queries {
     }
 
     // Does not bother about class count or untyped resources
-    public static final Query classesSimple = QueryFactory.create(prefixes +
-            "SELECT DISTINCT ?class (0 AS ?n) \n" +
-            "WHERE { \n" +
-            "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
-            "}"
-    );
+    public static final Query classesSimple() {
+        return QueryFactory.create(prefixes +
+                "SELECT DISTINCT ?class (0 AS ?n) \n" +
+                "WHERE { \n" +
+                "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
+                "}");
+    }
 
-    public static final Query classesFull = QueryFactory.create(prefixes +
-            "SELECT ?class (COUNT(DISTINCT ?instance) as ?n) \n" +
-            "WHERE { \n" +
-            "\t { ?instance a ?class . FILTER ( !isBlank(?class) ) } UNION \n" +
-            "\t { ?instance ?p ?o . FILTER(NOT EXISTS {?instance a ?c} ) BIND(rdfs:Resource AS ?class) } \n" +
-            "} GROUP BY ?class"
-    );
+    public static final Query classesFull() {
+        return QueryFactory.create(prefixes +
+                "SELECT ?class (COUNT(DISTINCT ?instance) as ?n) \n" +
+                "WHERE { \n" +
+                "\t { ?instance a ?class . FILTER ( !isBlank(?class) ) } UNION \n" +
+                "\t { ?instance ?p ?o . FILTER(NOT EXISTS {?instance a ?c} ) BIND(rdfs:Resource AS ?class) } \n" +
+                "} GROUP BY ?class");
+    }
 
     // Does not collect all potential ranges or checking all are literal to decide if allLiteral, just picks one of each
     public static Query classFacetsSimplified(String classUri, int sampleSize) {
