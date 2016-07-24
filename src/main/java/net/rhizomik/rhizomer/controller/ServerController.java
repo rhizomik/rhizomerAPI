@@ -30,7 +30,7 @@ public class ServerController {
     public @ResponseBody
     List<URI> retrieveServerGraphs(@PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
         logger.info("Retrieve Dataset {} Server {} graphs", datasetId, dataset.getSparqlEndPoint().toString());
         return analizeDataset.listServerGraphs(dataset.getSparqlEndPoint());
     }

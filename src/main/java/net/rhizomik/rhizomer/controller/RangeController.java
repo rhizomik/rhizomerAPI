@@ -36,13 +36,13 @@ public class RangeController {
     public Range addRange(@Valid @RequestBody Range newRange, @PathVariable String datasetId,
                                         @PathVariable String classCurie, @PathVariable String facetCurie) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id %s not found", datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
         Class datasetClass = classRepository.findOne(datasetClassId);
-        Preconditions.checkNotNull(datasetClass, "Class with id %s not found", datasetClassId);
+        Preconditions.checkNotNull(datasetClass, "Class with id '%s' not found", datasetClassId);
         DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClassId, new Curie(facetCurie));
         Facet classFacet = facetRepository.findOne(datasetClassFacetId);
-        Preconditions.checkNotNull(classFacet, "Facet with id %s not found", datasetClassFacetId);
+        Preconditions.checkNotNull(classFacet, "Facet with id '%s' not found", datasetClassFacetId);
         newRange.setFacet(classFacet);
         logger.info("Creating Range: {}", newRange.toString());
         return rangeRepository.save(newRange);

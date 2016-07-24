@@ -33,7 +33,8 @@ public class DatasetController {
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
     Dataset createDataset(@Valid @RequestBody Dataset newDataset) throws Exception {
-        Preconditions.checkState(!datasetRepository.exists(newDataset.getId()), "Dataset with id {} already exists", newDataset.getId());
+        Preconditions.checkState(!datasetRepository.exists(newDataset.getId()),
+                "Dataset with id '%s' already exists", newDataset.getId());
         logger.info("Creating Dataset: {}", newDataset.getId());
         return datasetRepository.save(newDataset);
     }
@@ -42,7 +43,7 @@ public class DatasetController {
     public @ResponseBody
     Dataset retrieveDataset(@PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
         logger.info("Retrieved Dataset {}", datasetId);
         return dataset;
     }
@@ -51,7 +52,7 @@ public class DatasetController {
     public @ResponseBody
     Dataset updateDataset(@Valid @RequestBody Dataset updatedDataset, @PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
         logger.info("Updating Dataset: {}", datasetId);
         dataset.setSparqlEndPoint(updatedDataset.getSparqlEndPoint());
         dataset.setQueryType(updatedDataset.getQueryType());
@@ -65,7 +66,7 @@ public class DatasetController {
     @ResponseBody
     public void deleteDataset(@PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id {} not found", datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
         logger.info("Deleting Dataset {}", datasetId);
         datasetRepository.delete(dataset);
     }
