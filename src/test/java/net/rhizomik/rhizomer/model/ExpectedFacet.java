@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ExpectedFacet {
     public String id;
     public String uri;
+    public String curie;
     public String label;
     public int uses;
     public int differentValues;
@@ -18,6 +19,7 @@ public class ExpectedFacet {
 
     public ExpectedFacet(Facet datasetFacet) {
         this.uri = datasetFacet.getId().toString();
+        this.curie = id.split("/")[4];
         this.label = datasetFacet.getLabel();
         this.uses = datasetFacet.getUses();
         this.differentValues = datasetFacet.getDifferentValues();

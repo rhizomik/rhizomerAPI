@@ -10,6 +10,7 @@ public class ExpectedClass {
     public String id;
     public String uri;
     public String label;
+    public String curie;
     public int instanceCount = 0;
     public List<ExpectedFacet> facets = new ArrayList<>();
 
@@ -18,6 +19,7 @@ public class ExpectedClass {
     public ExpectedClass(Class datasetClass) {
         this.id = datasetClass.getId().toString();
         this.uri = datasetClass.getUri().toString();
+        this.curie = id.split("/")[4];
         this.label = datasetClass.getLabel();
         this.instanceCount = datasetClass.getInstanceCount();
     }

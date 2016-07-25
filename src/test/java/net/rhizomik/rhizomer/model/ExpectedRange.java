@@ -9,6 +9,7 @@ public class ExpectedRange {
     public String id;
     public String uri;
     public String label;
+    public String curie;
     public int uses;
     public int differentValues;
     public boolean isRelation;
@@ -17,6 +18,7 @@ public class ExpectedRange {
 
     public ExpectedRange(Range datasetRange) {
         this.uri = datasetRange.getId().toString();
+        this.curie = id.split("/")[4];
         this.label = datasetRange.getLabel();
         this.uses = datasetRange.getUses();
         this.differentValues = datasetRange.getDifferentValues();
