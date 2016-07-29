@@ -186,7 +186,7 @@ public class Queries {
                 "\t ?instance ?property ?object \n" +
                 "\t OPTIONAL { ?object a ?type }\n" +
                 "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), if(datatype(?object)=\"\", datatype(?object), xsd:string), rdfs:Resource)) AS ?range) \n" +
-                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+                "\t BIND(if(isLiteral(?object), 1, 0) AS ?isLiteral) \n" +
                 "} GROUP BY ?property ?range");
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
@@ -202,7 +202,7 @@ public class Queries {
                 "\t ?instance ?property ?object \n" +
                 "\t OPTIONAL { ?object a ?type }\n" +
                 "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), if(datatype(?object)=\"\", datatype(?object), xsd:string), rdfs:Resource)) AS ?range) \n" +
-                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+                "\t BIND(if(isLiteral(?object), 1, 0) AS ?isLiteral) \n" +
                 "} GROUP BY ?property ?range");
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
