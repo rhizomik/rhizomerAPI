@@ -66,12 +66,8 @@ public class AnalizeDataset {
                 Resource range = soln.getResource("?range");
                 int uses = soln.getLiteral("?uses").getInt();
                 int values = soln.getLiteral("?values").getInt();
-                boolean allLiteralBoolean;
                 Literal allLiteral = soln.getLiteral("?allLiteral");
-                if(allLiteral.getDatatypeURI().equals("http://www.w3.org/2001/XMLSchema#integer"))
-                    allLiteralBoolean = (allLiteral.getInt() != 0);
-                else
-                    allLiteralBoolean = allLiteral.getBoolean();
+                boolean allLiteralBoolean = (allLiteral.getInt() != 0);
                 try {
                     Facet detectedFacet;
                     URI propertyUri = new URI(property.getURI());
