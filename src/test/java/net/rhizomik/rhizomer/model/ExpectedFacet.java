@@ -10,7 +10,7 @@ public class ExpectedFacet {
     public String uri;
     public String curie;
     public String label;
-    public int uses;
+    public int timesUsed;
     public int differentValues;
     public String range;
     public boolean relation;
@@ -21,7 +21,7 @@ public class ExpectedFacet {
         this.uri = datasetFacet.getId().toString();
         this.curie = id.split("/")[4];
         this.label = datasetFacet.getLabel();
-        this.uses = datasetFacet.getUses();
+        this.timesUsed = datasetFacet.getTimesUsed();
         this.differentValues = datasetFacet.getDifferentValues();
         this.range = datasetFacet.getRange();
         this.relation = datasetFacet.isRelation();
@@ -47,7 +47,7 @@ public class ExpectedFacet {
         return "ExpectedFacet{" +
                 "uri='" + uri + '\'' +
                 ", label='" + label + '\'' +
-                ", uses=" + uses +
+                ", timesUsed=" + timesUsed +
                 ", differentValues=" + differentValues +
                 ", range='" + range + '\'' +
                 ", relation=" + relation +
@@ -61,7 +61,7 @@ public class ExpectedFacet {
 
         ExpectedFacet that = (ExpectedFacet) o;
 
-        if (uses != that.uses) return false;
+        if (timesUsed != that.timesUsed) return false;
         if (differentValues != that.differentValues) return false;
         if (relation != that.relation) return false;
         if (!uri.equals(that.uri)) return false;
@@ -74,7 +74,7 @@ public class ExpectedFacet {
     public int hashCode() {
         int result = uri.hashCode();
         result = 31 * result + (label != null ? label.hashCode() : 0);
-        result = 31 * result + uses;
+        result = 31 * result + timesUsed;
         result = 31 * result + differentValues;
         result = 31 * result + (range != null ? range.hashCode() : 0);
         result = 31 * result + (relation ? 1 : 0);

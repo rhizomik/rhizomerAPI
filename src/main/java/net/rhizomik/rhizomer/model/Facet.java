@@ -80,7 +80,7 @@ public class Facet {
     public void addRange(Range range) { ranges.add(range); }
 
     public String getRange() {
-        List<Range> selectedRanges = ranges.stream().sorted((r1, r2) -> Integer.compare(r1.getUses(), r2.getUses()))
+        List<Range> selectedRanges = ranges.stream().sorted((r1, r2) -> Integer.compare(r1.getTimesUsed(), r2.getTimesUsed()))
                 .limit(2).collect(Collectors.toList());
         if (selectedRanges.size() == 0)
             return "";
@@ -100,7 +100,7 @@ public class Facet {
         this.ranges.forEach(range -> range.setFacet(this));
     }
 
-    public int getUses() { return ranges.stream().mapToInt(Range::getUses).sum(); }
+    public int getTimesUsed() { return ranges.stream().mapToInt(Range::getTimesUsed).sum(); }
 
     public int getDifferentValues() { return ranges.stream().mapToInt(Range::getDifferentValues).sum(); }
 
@@ -113,7 +113,7 @@ public class Facet {
                 "id=" + getId() +
                 ", label='" + label + '\'' +
                 ", domain=" + domain.getId() +
-                ", uses=" + getUses() +
+                ", timesUsed=" + getTimesUsed() +
                 ", differentValues=" + getDifferentValues() +
                 ", isRelation=" + isRelation() +
                 ", rangesCuries=" + ranges.toString() +

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -16,6 +17,7 @@ import java.net.URISyntaxException;
  * Created by http://rhizomik.net/~roberto/
  */
 @Entity
+@Table(name = "`range`")
 public class Range {
     private static final Logger logger = LoggerFactory.getLogger(Range.class);
 
@@ -27,7 +29,7 @@ public class Range {
     @ManyToOne
     @JsonBackReference
     private Facet facet;
-    private int uses;
+    private int timesUsed;
     private int differentValues;
     private boolean allLiteral;
 
@@ -35,27 +37,27 @@ public class Range {
         this.id = new DatasetClassFacetRangeId();
     }
 
-    public Range(Facet facet, String curie, String label, int uses, int differentValues, boolean allLiteral)
+    public Range(Facet facet, String curie, String label, int timesUsed, int differentValues, boolean allLiteral)
             throws URISyntaxException {
-        this(facet, Curie.toUri(curie), label, uses, differentValues, allLiteral);
+        this(facet, Curie.toUri(curie), label, timesUsed, differentValues, allLiteral);
     }
 
-    public Range(String curie, String label, int uses, int differentValues, boolean allLiteral) {
+    public Range(String curie, String label, int timesUsed, int differentValues, boolean allLiteral) {
         this();
         this.id.setRangeCurie(curie);
         this.uri = Curie.curieToUriStr(curie);
         this.label = label;
-        this.uses = uses;
+        this.timesUsed = timesUsed;
         this.differentValues = differentValues;
         this.allLiteral = allLiteral;
     }
 
-    public Range(Facet facet, URI rangeUri, String label, int uses, int differentValues, boolean allLiteral) {
+    public Range(Facet facet, URI rangeUri, String label, int timesUsed, int differentValues, boolean allLiteral) {
         this.id = new DatasetClassFacetRangeId(facet.getDomain().getDataset(), facet.getDomain().getUri(), facet.getUri(), rangeUri);
         this.uri = rangeUri.toString();
         this.label = label;
         this.facet = facet;
-        this.uses = uses;
+        this.timesUsed = timesUsed;
         this.differentValues = differentValues;
         this.allLiteral = allLiteral;
         logger.info("\t Created Range {} for Facet {}", this.getId(), facet.getId());
@@ -99,7 +101,7 @@ public class Range {
             this.id.setDatasetClassFacetId(facet.getId());
     }
 
-    public int getUses() { return uses; }
+    public int getTimesUsed() { return timesUsed; }
 
     public int getDifferentValues() { return differentValues; }
 
@@ -116,7 +118,7 @@ public class Range {
                 "id=" + getId() +
                 ", label='" + label + '\'' +
                 ", facet=" + facet.getId() +
-                ", uses=" + uses +
+                ", timesUsed=" + timesUsed +
                 ", differentValues=" + differentValues +
                 '}';
     }

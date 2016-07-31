@@ -30,14 +30,14 @@ Feature: Detect dataset structure
     Given I create a class in dataset "mixed" with URI "http://xmlns.com/foaf/0.1/Person", label "Person" and instance count 2
     When I extract the facets for class "foaf:Person" in dataset "mixed"
     Then The retrieved facets are
-      | uri                                             | label     | uses    | differentValues | range             | relation   |
+      | uri                                             | label     | timesUsed | differentValues | range             | relation   |
       | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
       | http://purl.org/net/schemas/space/performed     | performed | 2       | 2               | space:MissionRole | true       |
       | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type      | 2       | 1               | rdfs:Resource     | true       |
       | http://www.w3.org/2002/07/owl#sameAs            | sameAs    | 1       | 1               | rdfs:Resource     | true       |
     And exists a facet with id "/datasets/mixed/classes/foaf:Person/facets/foaf:name"
     And The retrieved facet is
-      | uri                                             | label     | uses    | differentValues | range             | relation   |
+      | uri                                             | label     | timesUsed | differentValues | range             | relation   |
       | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
 
   Scenario: Change the dataset graph to another of the server graphs and extract classes
@@ -60,7 +60,7 @@ Feature: Detect dataset structure
     And I create a class in dataset "mixed" with URI "http://www.w3.org/ns/odrl/2/Policy", label "Policy" and instance count 175
     When I extract the facets for class "odrl:Policy" in dataset "mixed"
     Then The retrieved facets are
-      | uri                                                 | label             | uses  | differentValues | range   | relation   |
+      | uri                                                 | label             | timesUsed | differentValues | range   | relation   |
       | http://www.w3.org/ns/odrl/2/prohibition	            |	prohibition	    |	41	|	41	|	odrl:Prohibition|	true	|
       | http://purl.org/dc/terms/publisher	                |	publisher	    |	168	|	30	|	xsd:string	    |	false	|
       | http://ns.inria.fr/l4lod/licensingTerms	            |	licensingTerms	|	1	|	1	|	rdfs:Resource	|	true	|
@@ -86,7 +86,7 @@ Feature: Detect dataset structure
       | http://purl.org/NET/ms-rights#licenseCategory	    |	licenseCategory	|	5	|	3	|	rdfs:Resource	|	true	|
     And exists a facet with id "/datasets/mixed/classes/odrl:Policy/facets/odrl:prohibition"
     And The retrieved facet is
-      | uri                                             | label       | uses | differentValues | range            | relation   |
+      | uri                                             | label       | timesUsed | differentValues | range            | relation   |
       | http://www.w3.org/ns/odrl/2/prohibition	        | prohibition | 41	 | 41	           | odrl:Prohibition | true       |
 
   Scenario: Recompute classes after changing the dataset graph and clearing dataset classes
