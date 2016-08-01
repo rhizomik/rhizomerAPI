@@ -60,7 +60,7 @@ public class Dataset {
     @JsonIgnore
     public List<Class> getClasses() { return new ArrayList<>(classes); }
 
-    public void setClasses(List<Class> classes) { this.classes = classes; }
+    public void setClasses(List<Class> classes) { this.classes.clear(); this.classes.addAll(classes); }
 
     public void addClass(Class aClass) { classes.add(aClass); }
 

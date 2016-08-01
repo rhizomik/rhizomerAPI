@@ -136,6 +136,16 @@ public class APIStepdefs {
 
     }
 
+    @When("^I set the facets for class \"([^\"]*)\" in dataset \"([^\"]*)\" to$")
+    public void iSetTheFacetsForClassInDatasetTo(String classCurie, String datasetId,  List<ExpectedFacet> facets) throws Throwable {
+        //graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
+        String facetsJson = mapper.writeValueAsString(facets);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/classes/{classCurie}/facets", datasetId, classCurie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(facetsJson)
+                .accept(MediaType.APPLICATION_JSON));
+    }
+
     @And("^I create ranges for facet \"([^\"]*)\" of class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
     public void iCreateRangesForFacetOfClassInDataset(String facetCurie, String classCurie, String datasetId, List<ExpectedRange> ranges) throws Throwable {
         for (ExpectedRange range: ranges) {

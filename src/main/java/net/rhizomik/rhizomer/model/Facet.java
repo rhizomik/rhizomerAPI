@@ -82,8 +82,12 @@ public class Facet {
     public String getRange() {
         List<Range> selectedRanges = ranges.stream().sorted((r1, r2) -> Integer.compare(r1.getTimesUsed(), r2.getTimesUsed()))
                 .limit(2).collect(Collectors.toList());
-        if (selectedRanges.size() == 0)
-            return "";
+        if (selectedRanges.size() == 0) {
+            if (isRelation())
+                return Curie.curieToUriStr("rdfs:Resource");
+            else
+                return Curie.curieToUriStr("xsd:string");
+        }
         else if (selectedRanges.size() == 1)
             return selectedRanges.get(0).getUri().toString();
         else if (!selectedRanges.get(0).getUri().equals(URI.create(RDFS.Resource.getURI())))

@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 
 @RepositoryRestController
@@ -75,5 +76,25 @@ public class FacetController {
         newFacet.setDomain(datasetClass);
         logger.info("Creating Facet: {}", newFacet.toString());
         return facetRepository.save(newFacet);
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets", method = RequestMethod.PUT)
+    public @ResponseBody List<Facet> updateClassFacets(@Valid @RequestBody List<Facet> newFacets, @PathVariable String datasetId, @PathVariable String classCurie) throws Exception {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
+        DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
+        Class datasetClass = classRepository.findOne(datasetClassId);
+        Preconditions.checkNotNull(datasetClass, "Class with id '%s' not found", datasetClassId);
+        datasetClass.getFacets().forEach(aFacet -> facetRepository.delete(aFacet));
+        datasetClass.setFacets(Collections.emptyList());
+
+        newFacets.forEach(newFacet -> {
+            newFacet.setDomain(datasetClass);
+            datasetClass.addFacet(facetRepository.save(newFacet));
+        });
+
+        logger.info("Updated Dataset {} class {} facets to {}",
+                datasetClass.getDataset().getId(), datasetClass.getCurie(), newFacets.toString());
+        return classRepository.save(datasetClass).getFacets();
     }
 }

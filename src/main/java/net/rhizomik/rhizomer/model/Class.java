@@ -56,9 +56,11 @@ public class Class {
 
     public List<Facet> getFacets() { return facets; }
 
-    public void setFacets(List<Facet> facets) { this.facets = facets; }
+    public void setFacets(List<Facet> facets) { this.facets.clear(); this.facets.addAll(facets); }
 
     public void addFacet(Facet facet) { facets.add(facet); }
+
+    public void removeFacet(Facet aFacet) { facets.remove(aFacet); }
 
     public DatasetClassId getId() { return id; }
 
