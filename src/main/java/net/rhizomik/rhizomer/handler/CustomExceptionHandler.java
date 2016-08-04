@@ -1,6 +1,6 @@
 package net.rhizomik.rhizomer.handler;
 
-import com.google.common.io.CharStreams;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -104,7 +104,7 @@ public class CustomExceptionHandler {
 
         public ErrorInfo(HttpStatus status, HttpServletRequest request, Exception e) {
             String requestContent = "";
-            try { requestContent = CharStreams.toString(request.getReader());
+            try { requestContent = IOUtils.toString(request.getReader());
             } catch (Exception ioe) { logger.error(ioe.getMessage()); }
             this.status = status.value();
             this.error = status.getReasonPhrase();

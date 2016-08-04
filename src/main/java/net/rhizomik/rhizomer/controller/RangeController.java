@@ -3,7 +3,6 @@ package net.rhizomik.rhizomer.controller;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-import com.google.common.base.Preconditions;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.model.id.DatasetClassFacetId;
@@ -12,6 +11,7 @@ import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.RangeRepository;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +36,13 @@ public class RangeController {
     public Range addRange(@Valid @RequestBody Range newRange, @PathVariable String datasetId,
                                         @PathVariable String classCurie, @PathVariable String facetCurie) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
         Class datasetClass = classRepository.findOne(datasetClassId);
-        Preconditions.checkNotNull(datasetClass, "Class with id '%s' not found", datasetClassId);
+        Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
         DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClassId, new Curie(facetCurie));
         Facet classFacet = facetRepository.findOne(datasetClassFacetId);
-        Preconditions.checkNotNull(classFacet, "Facet with id '%s' not found", datasetClassFacetId);
+        Validate.notNull(classFacet, "Facet with id '%s' not found", datasetClassFacetId);
         newRange.setFacet(classFacet);
         logger.info("Creating Range: {}", newRange.toString());
         return rangeRepository.save(newRange);

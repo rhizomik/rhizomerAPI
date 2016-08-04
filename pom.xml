@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.3.6.RELEASE</version>
+		<version>1.4.0.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -117,5 +117,12 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>spring-repo</id>
+			<name>Spring Repository</name>
+			<url>http://repo.spring.io/release</url>
+		</repository>
+	</repositories>
 
 </project>

@@ -16,14 +16,13 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -46,11 +45,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @ContextConfiguration(classes = { RhizomerAPIApplication.class, APIStepdefs.SPARQLServiceMockConfig.class },
-        loader = SpringApplicationContextLoader.class)
+        loader = SpringBootContextLoader.class)
 @WebAppConfiguration
-@IntegrationTest
 public class APIStepdefs {
     private static final Logger logger = LoggerFactory.getLogger(APIStepdefs.class);
 

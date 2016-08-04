@@ -3,7 +3,6 @@ package net.rhizomik.rhizomer.controller;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-import com.google.common.base.Preconditions;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.Curie;
 import net.rhizomik.rhizomer.model.Dataset;
@@ -11,6 +10,7 @@ import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class ClassController {
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.GET)
     public @ResponseBody List<Class> listDatasetClass(@PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         logger.info("Retrieving classes in Dataset {}", datasetId);
         if (dataset.getClasses().isEmpty() && dataset.getSparqlEndPoint()!=null )
             analiseDataset.detectDatasetClasses(dataset);
@@ -42,9 +42,9 @@ public class ClassController {
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}", method = RequestMethod.GET)
     public @ResponseBody Class retrieveDatasetClass(@PathVariable String datasetId, @PathVariable String classCurie) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         Class datasetClass = classRepository.findOne(new DatasetClassId(dataset, new Curie(classCurie)));
-        Preconditions.checkNotNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
+        Validate.notNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
         logger.info("Retrieved Class {} in Dataset {}", classCurie, datasetId);
         return datasetClass;
     }
@@ -54,8 +54,8 @@ public class ClassController {
     @ResponseBody
     public Class createDatasetClass(@Valid @RequestBody Class newClass, @PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
-        Preconditions.checkState(!classRepository.exists(new DatasetClassId(dataset, new Curie(newClass.getUri()))),
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Validate.validState(!classRepository.exists(new DatasetClassId(dataset, new Curie(newClass.getUri()))),
                 "Class with URI '%s' already exists in Dataset '%s'", newClass.getUri(), datasetId);
         newClass.setDataset(dataset);
         logger.info("Creating Class: {}", newClass.toString());
@@ -65,7 +65,7 @@ public class ClassController {
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.PUT)
     public @ResponseBody List<Class> updateDatasetClasses(@Valid @RequestBody List<Class> newClasses, @PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         dataset.getClasses().forEach(aClass -> {
             classRepository.delete(aClass);
             dataset.removeClass(aClass);

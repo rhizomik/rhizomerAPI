@@ -3,10 +3,10 @@ package net.rhizomik.rhizomer.controller;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-import com.google.common.base.Preconditions;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class DatasetController {
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
     Dataset createDataset(@Valid @RequestBody Dataset newDataset) throws Exception {
-        Preconditions.checkState(!datasetRepository.exists(newDataset.getId()),
+        Validate.isTrue(!datasetRepository.exists(newDataset.getId()),
                 "Dataset with id '%s' already exists", newDataset.getId());
         logger.info("Creating Dataset: {}", newDataset.getId());
         return datasetRepository.save(newDataset);
@@ -43,7 +43,7 @@ public class DatasetController {
     public @ResponseBody
     Dataset retrieveDataset(@PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         logger.info("Retrieved Dataset {}", datasetId);
         return dataset;
     }
@@ -52,7 +52,7 @@ public class DatasetController {
     public @ResponseBody
     Dataset updateDataset(@Valid @RequestBody Dataset updatedDataset, @PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         logger.info("Updating Dataset: {}", datasetId);
         dataset.setSparqlEndPoint(updatedDataset.getSparqlEndPoint());
         dataset.setQueryType(updatedDataset.getQueryType());
@@ -66,7 +66,7 @@ public class DatasetController {
     @ResponseBody
     public void deleteDataset(@PathVariable String datasetId) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
-        Preconditions.checkNotNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         logger.info("Deleting Dataset {}", datasetId);
         datasetRepository.delete(dataset);
     }
