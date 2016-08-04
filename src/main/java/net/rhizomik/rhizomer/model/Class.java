@@ -1,7 +1,7 @@
 package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class Class {
     private String uri;
     private String label;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "domain")
-    @JsonManagedReference
+    @JsonIgnore
     private List<Facet> facets = new ArrayList<>();
     private int instanceCount;
     @ManyToOne
