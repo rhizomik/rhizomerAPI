@@ -3,10 +3,10 @@ package net.rhizomik.rhizomer.repository;
 import net.rhizomik.rhizomer.model.Range;
 import net.rhizomik.rhizomer.model.id.DatasetClassFacetRangeId;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-@Repository
+@RepositoryRestResource(exported = false)
 public interface RangeRepository extends PagingAndSortingRepository<Range, DatasetClassFacetRangeId> {}
