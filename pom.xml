@@ -5,7 +5,7 @@
 
 	<groupId>net.rhizomik</groupId>
 	<artifactId>rhizomerAPI</artifactId>
-	<version>0.1</version>
+	<version>0.2</version>
 	<packaging>jar</packaging>
 
 	<name>rhizomerAPI</name>
@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.4.0.RELEASE</version>
+		<version>1.5.10.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -40,6 +40,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-data</artifactId>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -64,46 +68,40 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>info.cukes</groupId>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
 			<scope>test</scope>
-			<version>1.2.4</version>
+			<version>2.3.1</version>
 		</dependency>
 		<dependency>
-			<groupId>info.cukes</groupId>
+			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-junit</artifactId>
 			<scope>test</scope>
-			<version>1.2.4</version>
+			<version>2.3.1</version>
 		</dependency>
 		<dependency>
-			<groupId>info.cukes</groupId>
+			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-spring</artifactId>
 			<scope>test</scope>
-			<version>1.2.4</version>
+			<version>2.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 			<scope>test</scope>
-			<version>2.2.0</version>
+			<version>2.4.0</version>
 		</dependency>
 
 		<!-- Semantic Web -->
 		<dependency>
 			<groupId>org.apache.jena</groupId>
 			<artifactId>jena-arq</artifactId>
-			<version>3.0.1</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
-			<version>1.4.01</version>
+			<version>3.6.0</version>
 		</dependency>
 
 	</dependencies>
