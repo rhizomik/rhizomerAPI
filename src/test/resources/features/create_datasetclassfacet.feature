@@ -10,6 +10,7 @@ Feature: Create class facets in a dataset
     And a class in dataset "vegetables" with URI "http://examples.org#Potato", label "Potato" and instance count 1
 
   Scenario: Manually define a class facet
+    Given I login as "user" with password "password"
     When I create facets for class "examples:Potato" in dataset "vegetables"
       | uri                             | label   |
       | http://xmlns.com/foaf/0.1/name  | name    |

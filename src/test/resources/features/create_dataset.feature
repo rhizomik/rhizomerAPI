@@ -6,6 +6,7 @@ Feature: Create server dataset
   I want to create a dataset of graphs from the associated server
 
   Scenario: create dataset with no server or graphs and default values
+    Given I login as "user" with password "password"
     When I create a dataset with id "vegetables"
     Then the response status is 201
     And exists a dataset with id "vegetables"

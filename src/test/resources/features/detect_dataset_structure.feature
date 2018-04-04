@@ -6,13 +6,14 @@ Feature: Detect dataset structure
   I want to detect all the classes defined in the dataset and their facets
 
   Background: Existing dataset in local server storing file data
-    Given There is a new dataset with id "mixed"
+    Given I login as "user" with password "password"
+    And There is a new dataset with id "mixed"
     And The dataset "mixed" has a mock server
     And The dataset "mixed" server stores data
       | data                            | graph                                     |
       | data/nasa-apollo13.ttl          | http://rhizomik.net/dataset/apollo13      |
       | data/rdflicenses.ttl            | http://test.com/rdflicense                |
-    When I add the graphs to the dataset "mixed"
+    And I add the graphs to the dataset "mixed"
       | http://rhizomik.net/dataset/apollo13          |
     And The query type for dataset "mixed" is set to "FULL"
     And The inference for dataset "mixed" is set to "false"

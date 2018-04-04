@@ -1,24 +1,29 @@
 package net.rhizomik.rhizomer.service;
 
-import org.apache.jena.query.*;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.update.UpdateAction;
-import org.apache.jena.update.UpdateRequest;
-import net.rhizomik.rhizomer.model.Dataset;
-import net.rhizomik.rhizomer.model.Queries;
-import org.apache.jena.riot.RDFDataMgr;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
-
+import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.model.Queries;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.update.UpdateAction;
+import org.apache.jena.update.UpdateRequest;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by http://rhizomik.net/~roberto/

@@ -1,0 +1,6 @@
+allowed-origins: https://rhizomer.rhizomik.net, http://localhost:4200
+default-password: password
+
+spring:
+  profiles:
+    active: LOCAL_SERVER_TESTING

@@ -6,13 +6,14 @@ Feature: Manage dataset graphs
   I want to manage the set of data graphs associated to a dataset
 
   Background: Existing dataset with local server and one graph with data
-    Given There is a new dataset with id "apollo13"
+    Given I login as "user" with password "password"
+    And There is a new dataset with id "apollo13"
     And The dataset "apollo13" has a mock server
     And The dataset "apollo13" server stores data
       | data                            | graph                                  |
       | data/nasa-apollo13.ttl          | http://rhizomik.net/data/nasa-apollo13 |
       | data/nasa-apollo.ttl            | http://rhizomik.net/data/nasa-apollo   |
-    When I add the graphs to the dataset "apollo13"
+    And I add the graphs to the dataset "apollo13"
       | http://rhizomik.net/data/nasa-apollo13    |
     And The inference for dataset "apollo13" is set to "false"
     And The size of dataset "apollo13" data graphs is 23

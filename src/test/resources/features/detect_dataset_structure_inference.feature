@@ -6,12 +6,13 @@ Feature: Detect dataset structure considering inference
   I want to detect all the classes defined in the dataset and their facets considering inference
 
   Background: Existing dataset in local server storing file data
-    Given There is a new dataset with id "apollo13"
+    Given I login as "user" with password "password"
+    And There is a new dataset with id "apollo13"
     And The dataset "apollo13" has a mock server
     And The dataset "apollo13" server stores data
       | data                            | graph                                  |
       | data/nasa-apollo13.ttl          | http://rhizomik.net/dataset/apollo13     |
-    When I add the graphs to the dataset "apollo13"
+    And I add the graphs to the dataset "apollo13"
       | http://rhizomik.net/dataset/apollo13      |
     And The following ontologies are set for dataset "apollo13"
       | data/nasa-schema.ttl                    |
