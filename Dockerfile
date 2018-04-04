@@ -1,6 +1,7 @@
-FROM anapsix/alpine-java
-VOLUME /tmp
-ADD target/rhizomerAPI-0.1.jar app.jar
-RUN sh -c 'touch /app.jar'
+FROM openjdk:8-jre-alpine
+WORKDIR /home/app
+
+ADD ./target/*.jar ./app.jar
+
 EXPOSE 8080
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+CMD java $JAVA_OPTS -Dspring.profiles.active=$PROFILE -Dserver.port=$PORT -jar app.jar
