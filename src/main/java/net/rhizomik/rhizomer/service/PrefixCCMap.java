@@ -1,5 +1,6 @@
 package net.rhizomik.rhizomer.service;
 
+import java.util.regex.Pattern;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.atlas.lib.Pair;
@@ -119,5 +120,9 @@ public class PrefixCCMap extends PrefixMapStd {
             logger.info("Prefix for URI {} not found in http://prefix.cc", uri);
         }
         return null;
+    }
+
+    public boolean isCurie(String k) {
+        return Pattern.matches("[\\w_][\\w\\d\\.\\-_]+:[\\w\\d\\.\\-_+#']+", k);
     }
 }
