@@ -41,6 +41,7 @@ public class AnalizeDataset {
                                               dataset.getDatasetGraphs(), null);
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
+            if (!soln.contains("?class")) continue;
             Resource r = soln.getResource("?class");
             int count = soln.getLiteral("?n").getInt();
             try {
