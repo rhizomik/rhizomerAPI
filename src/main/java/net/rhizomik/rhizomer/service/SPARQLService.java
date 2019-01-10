@@ -1,26 +1,33 @@
 package net.rhizomik.rhizomer.service;
 
-import org.apache.jena.query.*;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.update.UpdateExecutionFactory;
-import org.apache.jena.update.UpdateFactory;
-import org.apache.jena.update.UpdateProcessor;
-import org.apache.jena.update.UpdateRequest;
-import net.rhizomik.rhizomer.model.*;
-import net.rhizomik.rhizomer.model.Dataset;
-import org.apache.jena.atlas.web.HttpException;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.model.Queries;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateProcessor;
+import org.apache.jena.update.UpdateRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -70,23 +77,25 @@ public class SPARQLService {
         return count;
     }
 
-    public void loadData(URL sparqlEndpoint, String graph, String uri) {
+    public void loadURI(URL sparqlEndpoint, String graph, String uri, String username, String password) {
         Model model = RDFDataMgr.loadModel(uri);
-        loadModel(sparqlEndpoint, graph, model);
+        loadModel(sparqlEndpoint, graph, model, username, password);
     }
 
-    public void loadModel(URL sparqlEndpoint, String graph, Model model) {
+    public void loadModel(URL sparqlEndpoint, String graph, Model model, String username, String password) {
         StringWriter out = new StringWriter();
         RDFDataMgr.write(out, model, Lang.NTRIPLES);
         String insertString = "INSERT DATA { GRAPH <" + graph + "> { " + out.toString() + " } } ";
         UpdateRequest update = UpdateFactory.create(insertString);
-        logger.info("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
-        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, sparqlEndpoint.toString());
-        try {
-            processor.execute();
-        } catch (HttpException e) {
-            logger.error(e.getMessage());
-        }
+        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
+        UpdateProcessor processor;
+        if (username != null || !username.isEmpty())
+            processor = UpdateExecutionFactory.createRemote(
+                update, sparqlEndpoint.toString(), withCreds(username, password));
+        else
+            processor = UpdateExecutionFactory.createRemote(
+                update, sparqlEndpoint.toString());
+        processor.execute();
     }
 
     public void clearGraph(URL sparqlEndPoint, URI datasetOntologiesGraph) {
@@ -115,6 +124,13 @@ public class SPARQLService {
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage());
         }*/
-        loadModel(dataset.getSparqlEndPoint(), dataset.getDatasetInferenceGraph().toString(), inferredModel);
+        loadModel(dataset.getSparqlEndPoint(), dataset.getDatasetInferenceGraph().toString(),
+            inferredModel, dataset.getUsername(), dataset.getPassword());
+    }
+
+    private static HttpClient withCreds(String uname, String password) {
+        BasicCredentialsProvider credsProv = new BasicCredentialsProvider();
+        credsProv.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(uname, password));
+        return HttpClients.custom().setDefaultCredentialsProvider(credsProv).build();
     }
 }

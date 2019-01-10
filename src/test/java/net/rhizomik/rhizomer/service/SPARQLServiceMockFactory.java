@@ -57,11 +57,9 @@ public class SPARQLServiceMockFactory {
                 .thenAnswer(invocationOnMock -> {
                     Query query = (Query) invocationOnMock.getArguments()[1];
                     List<String> graphs = (List<String>) invocationOnMock.getArguments()[2];
-                    Model queryDataset = ModelFactory.createDefaultModel();
-                    graphs.forEach(graph -> queryDataset.add(dataset.getNamedModel(graph)));
                     graphs.forEach(query::addGraphURI);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
-                    QueryExecution qexec = QueryExecutionFactory.create(query, queryDataset);
+                    QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
                     return qexec.execSelect();
                 });
 
@@ -97,19 +95,19 @@ public class SPARQLServiceMockFactory {
             URL sparqlEndPoint = (URL) invocationOnMock.getArguments()[0];
             String graph = (String) invocationOnMock.getArguments()[1];
             String uri = (String) invocationOnMock.getArguments()[2];
+            String username = (String) invocationOnMock.getArguments()[3];
+            String password = (String) invocationOnMock.getArguments()[4];
             Model model = RDFDataMgr.loadModel(uri);
-            mock.loadModel(sparqlEndPoint, graph, model);
+            mock.loadModel(sparqlEndPoint, graph, model, username, password);
             return null;
-        }).when(mock).loadData(isA(URL.class), anyString(), anyString());
+        }).when(mock).loadURI(isA(URL.class), anyString(), anyString(), anyString(), anyString());
 
         doAnswer(invocationOnMock -> {
             String graph = (String) invocationOnMock.getArguments()[1];
             Model model = (Model) invocationOnMock.getArguments()[2];
-            if (dataset.containsNamedModel(graph))
-                model.add(dataset.getNamedModel(graph));
             dataset.addNamedModel(graph, model);
             return null;
-        }).when(mock).loadModel(isA(URL.class), anyString(), any(Model.class));
+        }).when(mock).loadModel(isA(URL.class), anyString(), any(Model.class), anyString(), anyString());
 
         doAnswer(invocationOnMock -> {
             URI graph = (URI) invocationOnMock.getArguments()[1];

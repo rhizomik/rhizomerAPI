@@ -32,7 +32,8 @@ public class OntologiesController {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         ontologies.forEach(ontology -> {
-            sparqlService.loadData(dataset.getSparqlEndPoint(), dataset.getDatasetOntologiesGraph().toString(), ontology);
+            sparqlService.loadURI(dataset.getSparqlEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
+                ontology, dataset.getUsername(), dataset.getPassword());
             dataset.addDatasetOntology(ontology);
         });
         logger.info("Added ontologies {} to Dataset {}", ontologies.toString(), datasetId);
@@ -55,7 +56,8 @@ public class OntologiesController {
         URI datasetOntologiesGraph = dataset.getDatasetOntologiesGraph();
         sparqlService.clearGraph(dataset.getSparqlEndPoint(), datasetOntologiesGraph);
         updatedOntologies.forEach(ontologyUriStr ->
-                sparqlService.loadData(dataset.getSparqlEndPoint(), datasetOntologiesGraph.toString(), ontologyUriStr));
+                sparqlService.loadURI(dataset.getSparqlEndPoint(), datasetOntologiesGraph.toString(),
+                    ontologyUriStr, dataset.getUsername(), dataset.getPassword()));
         logger.info("Updated Dataset {} ontologies", datasetId);
         return datasetRepository.save(dataset).getDatasetOntologies();
     }
