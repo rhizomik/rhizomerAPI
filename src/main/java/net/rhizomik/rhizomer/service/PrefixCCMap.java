@@ -1,17 +1,19 @@
 package net.rhizomik.rhizomer.service;
 
+import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.atlas.lib.Pair;
 import org.apache.jena.riot.system.PrefixMapStd;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import java.net.URISyntaxException;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -104,7 +106,12 @@ public class PrefixCCMap extends PrefixMapStd {
             if (pair.length == 2)
                 return pair[1];
         } catch (RestClientException e) {
-            logger.info("Prefix {} not found in http://prefix.cc \n", prefix);
+            switch (prefix) {
+                case "rdf": return RDF.getURI();
+                case "rdfs": return RDFS.getURI();
+                case "owl": return OWL.getURI();
+                default: logger.info("Prefix {} not found in http://prefix.cc \n", prefix);
+            }
         }
         return null;
     }
