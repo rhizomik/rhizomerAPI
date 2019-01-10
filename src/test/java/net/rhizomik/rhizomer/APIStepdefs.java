@@ -21,6 +21,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -37,6 +38,9 @@ import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +58,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -268,11 +273,26 @@ public class APIStepdefs {
         datasetRepository.save(dataset);
     }
 
-    @And("^The dataset \"([^\"]*)\" server stores data$")
-    public void theDatasetServerStoresData(String datasetId, List<Map<String, String>> graphs) throws Throwable {
-        Dataset dataset = datasetRepository.findOne(datasetId);
+    @And("^The server for dataset \"([^\"]*)\" stores data$")
+    public void theDatasetServerStoresData(String datasetId, List<Map<String, String>> graphs) {
         graphs.forEach(
-            graph -> sparqlService.loadData(dataset.getSparqlEndPoint(), graph.get("graph"), graph.get("data")));
+            graph -> {
+                Model model = RDFDataMgr.loadModel(graph.get("data"));
+                StringWriter out = new StringWriter();
+                RDFDataMgr.write(out, model, Lang.JSONLD);
+                try {
+                    this.result = mockMvc.perform(
+                        post("/datasets/{id}/server?graph={graph}", datasetId, graph.get("graph"))
+                            .contentType("application/ld+json")
+                            .content(out.toString())
+                            .with(authenticate()))
+                        .andDo(MockMvcResultHandlers.print())
+                        .andExpect(status().isOk())
+                        .andExpect(content().string(Long.toString(model.size())));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
     }
 
     @When("^I delete a dataset with id \"([^\"]*)\"$")
@@ -324,6 +344,24 @@ public class APIStepdefs {
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         this.result.andExpect(jsonPath("$.sparqlEndPoint", is(sparqlEndPoint.toString())));
+    }
+
+    @And("^The dataset \"([^\"]*)\" update server is set to \"([^\"]*)\" with username \"([^\"]*)\" and password \"([^\"]*)\"$")
+    public void theDatasetUpdateServerIsSetTo(String datasetId, URL updateEndPoint,
+        String username, String password) throws Throwable {
+        existsADatasetWithId(datasetId);
+        String datasetJson = this.result.andReturn().getResponse().getContentAsString();
+        Dataset dataset = mapper.readValue(datasetJson, Dataset.class);
+        dataset.setUpdateEndPoint(updateEndPoint);
+        dataset.setUsername(username);
+        dataset.setPassword(password);
+        datasetJson = mapper.writeValueAsString(dataset);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}", datasetId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(datasetJson)
+            .accept(MediaType.APPLICATION_JSON)
+            .with(authenticate()));
+        this.result.andExpect(jsonPath("$.updateEndPoint", is(updateEndPoint.toString())));
     }
 
     @When("^I list the graphs in dataset \"([^\"]*)\" server$")

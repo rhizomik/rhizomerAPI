@@ -6,9 +6,10 @@ Feature: List server available graphs
   I want to list all the data graphs in the server
 
   Background: Existing dataset in local server storing file data
-    Given There is a new dataset with id "apollo13"
+    Given I login as "user" with password "password"
+    And There is a new dataset with id "apollo13"
     And The dataset "apollo13" has a mock server
-    And The dataset "apollo13" server stores data
+    And The server for dataset "apollo13" stores data
       | data                            | graph                                     |
       | data/nasa-apollo13.ttl          | http://rhizomik.net/dataset/apollo13      |
       | data/nasa-apollo.ttl            | http://rhizomik.net/dataset/apollo        |

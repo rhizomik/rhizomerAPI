@@ -9,10 +9,12 @@ Feature: Manage dataset graphs
     Given I login as "user" with password "password"
     And There is a new dataset with id "apollo13"
     And The dataset "apollo13" has a mock server
-    And The dataset "apollo13" server stores data
+    And The server for dataset "apollo13" stores data
       | data                            | graph                                  |
       | data/nasa-apollo13.ttl          | http://rhizomik.net/data/nasa-apollo13 |
       | data/nasa-apollo.ttl            | http://rhizomik.net/data/nasa-apollo   |
+    And The following data graphs are set for dataset "apollo13"
+      |                                           |
     And I add the graphs to the dataset "apollo13"
       | http://rhizomik.net/data/nasa-apollo13    |
     And The inference for dataset "apollo13" is set to "false"

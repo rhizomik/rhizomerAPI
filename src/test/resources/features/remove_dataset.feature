@@ -10,11 +10,9 @@ Feature: Remove dataset
     And There is a new dataset with id "apollo13"
     And The query type for dataset "apollo13" is set to "FULL"
     And The dataset "apollo13" has a mock server
-    And The dataset "apollo13" server stores data
-      | data                            | graph                                  |
+    And The server for dataset "apollo13" stores data
+      | data                            | graph                                 |
       | data/nasa-apollo13.ttl          | http://rhizomik.net/dataset/apollo13  |
-    And I add the graphs to the dataset "apollo13"
-      | http://rhizomik.net/dataset/apollo13    |
     And I extract the classes from dataset "apollo13"
     And I extract the facets for class "foaf:Person" in dataset "apollo13"
 

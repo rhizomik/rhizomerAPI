@@ -9,5 +9,5 @@ import cucumber.api.junit.Cucumber;
  */
 
 @RunWith(Cucumber.class)
-@CucumberOptions(plugin={"pretty"}, features="src/test/resources", tags = {"~@remote"})
+@CucumberOptions(plugin={"pretty"}, features="src/test/resources", tags = {"not @remote"})
 public class CucumberTest {}

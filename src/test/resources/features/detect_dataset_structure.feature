@@ -9,11 +9,11 @@ Feature: Detect dataset structure
     Given I login as "user" with password "password"
     And There is a new dataset with id "mixed"
     And The dataset "mixed" has a mock server
-    And The dataset "mixed" server stores data
-      | data                            | graph                                     |
-      | data/nasa-apollo13.ttl          | http://rhizomik.net/dataset/apollo13      |
-      | data/rdflicenses.ttl            | http://test.com/rdflicense                |
-    And I add the graphs to the dataset "mixed"
+    And The server for dataset "mixed" stores data
+      | data                            | graph                                 |
+      | data/nasa-apollo13.ttl          | http://rhizomik.net/dataset/apollo13  |
+      | data/rdflicenses.ttl            | http://test.com/rdflicense            |
+    And The following data graphs are set for dataset "mixed"
       | http://rhizomik.net/dataset/apollo13          |
     And The query type for dataset "mixed" is set to "FULL"
     And The inference for dataset "mixed" is set to "false"
