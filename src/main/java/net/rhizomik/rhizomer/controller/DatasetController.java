@@ -55,6 +55,9 @@ public class DatasetController {
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         logger.info("Updating Dataset: {}", datasetId);
         dataset.setSparqlEndPoint(updatedDataset.getSparqlEndPoint());
+        dataset.setUpdateEndPoint(updatedDataset.getUpdateEndPoint());
+        dataset.setUsername(updatedDataset.getUsername());
+        dataset.setPassword(updatedDataset.getPassword());
         dataset.setQueryType(updatedDataset.getQueryType());
         dataset.setInferenceEnabled(updatedDataset.isInferenceEnabled());
         dataset.setSampleSize(updatedDataset.getSampleSize());

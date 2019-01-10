@@ -1,6 +1,8 @@
 package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import net.rhizomik.rhizomer.model.Queries.QueryType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +26,14 @@ public class Dataset {
     @Id
     private String id;
     private URL sparqlEndPoint;
-    private Queries.QueryType queryType = Queries.QueryType.FULL;
+    private URL updateEndPoint;
+    private QueryType queryType = QueryType.FULL;
     private boolean inferenceEnabled = false;
     private int sampleSize = 0;
     private double coverage = 0.0;
+    private String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
 
     @ElementCollection
     private Set<String> datasetGraphs = new HashSet<>();
@@ -49,6 +55,15 @@ public class Dataset {
     public Dataset(String id, URL sparqlEndPoint, Set<String> graphs, Set<String> ontologies) throws MalformedURLException {
         this.id = id;
         this.sparqlEndPoint = sparqlEndPoint;
+        this.updateEndPoint = sparqlEndPoint;
+        this.datasetGraphs = graphs;
+        this.datasetOntologies = ontologies;
+    }
+
+    public Dataset(String id, URL sparqlEndPoint, URL updateEndPoint, Set<String> graphs, Set<String> ontologies) throws MalformedURLException {
+        this.id = id;
+        this.sparqlEndPoint = sparqlEndPoint;
+        this.updateEndPoint = updateEndPoint;
         this.datasetGraphs = graphs;
         this.datasetOntologies = ontologies;
     }
@@ -89,9 +104,17 @@ public class Dataset {
 
     public void setSparqlEndPoint(URL sparqlEndPoint) { this.sparqlEndPoint = sparqlEndPoint; }
 
-    public Queries.QueryType getQueryType() { return queryType; }
+    public URL getUpdateEndPoint() {
+        if (updateEndPoint == null)
+            return sparqlEndPoint;
+        return updateEndPoint;
+    }
 
-    public void setQueryType(Queries.QueryType queryType) { this.queryType = queryType; }
+    public void setUpdateEndPoint(URL updateEndPoint) { this.updateEndPoint = updateEndPoint; }
+
+    public QueryType getQueryType() { return queryType; }
+
+    public void setQueryType(QueryType queryType) { this.queryType = queryType; }
 
     public boolean isInferenceEnabled() { return inferenceEnabled; }
 
@@ -105,6 +128,16 @@ public class Dataset {
 
     public void setCoverage(double coverage) { this.coverage = coverage; }
 
+    public void setUsername(String username) { this.username = username; }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setPassword(String password) { this.password = password; }
+
+    public String getPassword() { return password; }
+
     @JsonIgnore
     public URI getDatasetUri() {
         URI datasetURI = null;
@@ -117,7 +150,7 @@ public class Dataset {
     }
 
     @JsonIgnore
-    public java.net.URI getDatasetOntologiesGraph() {
+    public URI getDatasetOntologiesGraph() {
         URI datasetOntologiesGraphURI = null;
         try {
             datasetOntologiesGraphURI = new URI(getDatasetUri()+"/ontologies");
@@ -128,7 +161,7 @@ public class Dataset {
     }
 
     @JsonIgnore
-    public java.net.URI getDatasetInferenceGraph() {
+    public URI getDatasetInferenceGraph() {
         URI datasetInferenceGraphURI = null;
         try {
             datasetInferenceGraphURI = new URI(getDatasetUri()+"/inference");
