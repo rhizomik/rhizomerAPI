@@ -1,6 +1,8 @@
 package net.rhizomik.rhizomer.config;
 
+import net.rhizomik.rhizomer.model.Admin;
 import net.rhizomik.rhizomer.model.User;
+import net.rhizomik.rhizomer.repository.AdminRepository;
 import net.rhizomik.rhizomer.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +16,9 @@ public class AuthenticationConfig extends GlobalAuthenticationConfigurerAdapter 
   @Value("${default-password}")
   String defaultPassword;
 
-  @Autowired
-  BasicUserDetailsService basicUserDetailsService;
-
-  @Autowired
-  UserRepository userRepository;
+  @Autowired BasicUserDetailsService basicUserDetailsService;
+  @Autowired AdminRepository adminRepository;
+  @Autowired UserRepository userRepository;
 
   @Override
   public void init(AuthenticationManagerBuilder auth) throws Exception {
@@ -26,6 +26,13 @@ public class AuthenticationConfig extends GlobalAuthenticationConfigurerAdapter 
         .userDetailsService(basicUserDetailsService)
         .passwordEncoder(User.passwordEncoder);
 
+    if (!adminRepository.exists("admin")) {
+      Admin admin = new Admin();
+      admin.setUsername("admin");
+      admin.setPassword(defaultPassword);
+      admin.encodePassword();
+      adminRepository.save(admin);
+    }
     if (!userRepository.exists("user")) {
       User user = new User();
       user.setUsername("user");

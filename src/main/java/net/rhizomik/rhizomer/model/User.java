@@ -30,6 +30,8 @@ public class User implements UserDetails {
   @Length(min=8, max=256)
   private String password;
 
+  public String getId() { return username; }
+
   @Override
   public String getUsername(){
     return username;
