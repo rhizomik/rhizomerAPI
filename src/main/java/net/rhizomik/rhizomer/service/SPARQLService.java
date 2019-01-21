@@ -44,7 +44,9 @@ public class SPARQLService {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, ontologies);
-        return ResultSetFactory.copyResults(q.execSelect());
+        ResultSet result = ResultSetFactory.copyResults(q.execSelect());
+        q.close();
+        return result;
     }
 
     public Model queryConstruct(URL sparqlEndpoint, Query query, List<String> graphs) {
