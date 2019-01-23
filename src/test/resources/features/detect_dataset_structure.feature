@@ -32,14 +32,18 @@ Feature: Detect dataset structure
     When I extract the facets for class "foaf:Person" in dataset "mixed"
     Then The retrieved facets are
       | uri                                             | label     | timesUsed | differentValues | range             | relation   |
-      | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
-      | http://purl.org/net/schemas/space/performed     | performed | 2       | 2               | space:MissionRole | true       |
-      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type      | 2       | 1               | rdfs:Resource     | true       |
-      | http://www.w3.org/2002/07/owl#sameAs            | sameAs    | 1       | 1               | rdfs:Resource     | true       |
+      | http://xmlns.com/foaf/0.1/name                  | name      | 3         | 3               | xsd:string        | false      |
+      | http://purl.org/net/schemas/space/performed     | performed | 2         | 2               | space:MissionRole | true       |
+      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type      | 2         | 1               | rdfs:Resource     | true       |
+      | http://www.w3.org/2002/07/owl#sameAs            | sameAs    | 1         | 1               | rdfs:Resource     | true       |
     And exists a facet with id "/datasets/mixed/classes/foaf:Person/facets/foaf:name"
     And The retrieved facet is
       | uri                                             | label     | timesUsed | differentValues | range             | relation   |
-      | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
+      | http://xmlns.com/foaf/0.1/name                  | name      | 3         | 3               | xsd:string        | false      |
+    And I retrieve facet range "/datasets/mixed/classes/foaf:Person/facets/space:performed/ranges/space:MissionRole" values
+      | value                                                                         | count | curie                     |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander          | 1     | kasabi:commander          |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | 1     | kasabi:lunar-module-pilot |
 
   Scenario: Change the dataset graph to another of the server graphs and extract classes
     Given The following data graphs are set for dataset "mixed"
@@ -88,7 +92,7 @@ Feature: Detect dataset structure
     And exists a facet with id "/datasets/mixed/classes/odrl:Policy/facets/odrl:prohibition"
     And The retrieved facet is
       | uri                                             | label       | timesUsed | differentValues | range            | relation   |
-      | http://www.w3.org/ns/odrl/2/prohibition	        | prohibition | 41	 | 41	           | odrl:Prohibition | true       |
+      | http://www.w3.org/ns/odrl/2/prohibition	        | prohibition | 41	      | 41	            | odrl:Prohibition | true       |
 
   Scenario: Recompute classes after changing the dataset graph and clearing dataset classes
     Given I extract the classes from dataset "mixed"

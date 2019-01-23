@@ -6,9 +6,11 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.atlas.lib.Pair;
 import org.apache.jena.riot.system.PrefixMapStd;
+import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -110,6 +112,8 @@ public class PrefixCCMap extends PrefixMapStd {
                 case "rdf": return RDF.getURI();
                 case "rdfs": return RDFS.getURI();
                 case "owl": return OWL.getURI();
+                case "xsd": return XSD.getURI();
+                case "foaf": return FOAF.getURI();
                 default: logger.info("Prefix {} not found in http://prefix.cc \n", prefix);
             }
         }
@@ -124,7 +128,15 @@ public class PrefixCCMap extends PrefixMapStd {
             if (pair.length == 2)
                 return pair[0];
         } catch (RestClientException e) {
-            logger.info("Prefix for URI {} not found in http://prefix.cc", uri);
+            switch (uri) {
+                case "http://www.w3.org/1999/02/22-rdf-syntax-ns#": return "rdf";
+                case "http://www.w3.org/2000/01/rdf-schema#": return "rdfs";
+                case "http://www.w3.org/2002/07/owl#": return "owl";
+                case "http://www.w3.org/2001/XMLSchema#": return "xsd";
+                case "http://xmlns.com/foaf/0.1/": return "foaf";
+                case "http://purl.org/net/schemas/space/": return "space";
+                default: logger.info("Prefix for URI {} not found in http://prefix.cc", uri);
+            }
         }
         return null;
     }

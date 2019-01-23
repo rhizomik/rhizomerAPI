@@ -33,6 +33,7 @@ import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.ExpectedClass;
 import net.rhizomik.rhizomer.model.ExpectedFacet;
 import net.rhizomik.rhizomer.model.ExpectedRange;
+import net.rhizomik.rhizomer.model.ExpectedRangeValue;
 import net.rhizomik.rhizomer.model.Queries;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
@@ -474,6 +475,17 @@ public class APIStepdefs {
         this.result = mockMvc.perform(get("/datasets/{datasetId}/classes/{classCurie}/facets", datasetId, classCurie)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @When("^I retrieve facet range \"([^\"]*)\" values$")
+    public void iRetrieveFacetRangesValues(String facetRangeId, List<ExpectedRangeValue> expectedRangeValues) throws Throwable {
+        String json = mockMvc.perform(get(facetRangeId + "/values")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        List<ExpectedRangeValue> actualRangeValues = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ExpectedRangeValue.class));
+        assertThat(actualRangeValues, containsInAnyOrder(expectedRangeValues.toArray()));
     }
 
     @When("^I set the dataset \"([^\"]*)\" classes to$")
