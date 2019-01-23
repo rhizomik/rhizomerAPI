@@ -1,7 +1,16 @@
 package net.rhizomik.rhizomer.service;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import net.rhizomik.rhizomer.model.Class;
-import net.rhizomik.rhizomer.model.*;
+import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.model.Facet;
+import net.rhizomik.rhizomer.model.Queries;
+import net.rhizomik.rhizomer.model.Range;
+import net.rhizomik.rhizomer.model.Value;
 import net.rhizomik.rhizomer.model.id.DatasetClassFacetId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
@@ -9,17 +18,12 @@ import net.rhizomik.rhizomer.repository.RangeRepository;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -28,6 +32,7 @@ import java.util.List;
 public class AnalizeDataset {
     final Logger logger = LoggerFactory.getLogger(AnalizeDataset.class);
 
+    @Autowired private PrefixCCMap prefixCCMap;
     @Autowired private SPARQLService sparqlService;
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
@@ -94,6 +99,30 @@ public class AnalizeDataset {
                 }
             }
         }
+    }
+
+    public List<Value> retrieveRangeValues(Dataset dataset, Range facetRange, int page, int size) {
+        URI classUri = facetRange.getFacet().getDomain().getUri();
+        URI facetUri = facetRange.getFacet().getUri();
+        ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
+            Queries.getQueryFacetRageValues(classUri.toString(), facetUri.toString(),
+                facetRange.getUri().toString(), size, size * page, true),
+            dataset.getDatasetGraphs(), null);
+
+        List<Value> rangeValues = new ArrayList<>();
+        while (result.hasNext()) {
+            QuerySolution soln = result.nextSolution();
+            if (soln.contains("?value")) {
+                RDFNode value = soln.get("?value");
+                int count = soln.getLiteral("?count").getInt();
+                String curie = null;
+                try {
+                    curie = prefixCCMap.abbreviate(new URL(value.asResource().getURI()).toString());
+                } catch (Exception e) {}
+                rangeValues.add(new Value(value.toString(), count, curie));
+            }
+        }
+        return rangeValues;
     }
 
     public List<URI> listServerGraphs(URL sparqlEndPoint) {
