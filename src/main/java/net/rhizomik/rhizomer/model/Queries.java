@@ -234,6 +234,20 @@ public class Queries {
         return query;
     }
 
+    public static Query getQueryClassInstances(String classUri, int limit, int offset) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+            "DESCRIBE ?instance \n" +
+            "WHERE { \n" +
+            "\t ?instance a ?class . \n" +
+            "}");
+        pQuery.setIri("class", classUri);
+        Query query = pQuery.asQuery();
+        if (limit > 0) query.setLimit(limit);
+        if (offset > 0) query.setOffset(offset);
+        return query;
+    }
+
     public static String addSamples(int classCount, int sampleSize, double coverage) {
         String selectsUnion = "";
         int samplesCount = (int)Math.floor((classCount * coverage)/sampleSize);

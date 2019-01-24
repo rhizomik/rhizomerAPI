@@ -66,6 +66,13 @@ public class SPARQLService {
         }
     }
 
+    public Model queryDescribe(URL sparqlEndpoint, Query query, List<String> graphs) {
+        graphs.forEach(query::addGraphURI);
+        logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
+        QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, null);
+        return q.execDescribe();
+    }
+
     public int countGraphTriples(URL sparqlEndPoint, String graph) {
         Query countTriples = Queries.getQueryCountTriples();
         countTriples.addGraphURI(graph);

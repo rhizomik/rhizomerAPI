@@ -1,5 +1,6 @@
 package net.rhizomik.rhizomer.service;
 
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -18,8 +19,11 @@ import net.rhizomik.rhizomer.repository.RangeRepository;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,5 +140,13 @@ public class AnalizeDataset {
             }
         }
         return graphs;
+    }
+
+    public void retrieveClassInstances(OutputStream out, Dataset dataset, Class datasetClass, int page, int size, Lang format) {
+        URI classUri = datasetClass.getUri();
+        Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
+            Queries.getQueryClassInstances(classUri.toString(), size, size * page),
+            dataset.getDatasetGraphs());
+        RDFDataMgr.write(out, model, format);
     }
 }
