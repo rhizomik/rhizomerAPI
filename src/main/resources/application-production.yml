@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+    max-active: 10
+    initial-size: 5
+    max-idle: 5
+    min-idle: 1
+    test-while-idle: true
+    test-on-borrow: true
+    validation-query: SELECT 1
+    time-between-eviction-runs-millis: 5000
+    min-evictable-idle-time-millis: 60000
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    root: error
+    org:
+      springframework:
+        web: error
+      hibernate: error
+
+allowed-origins: https://rhizomer.rhizomik.net
