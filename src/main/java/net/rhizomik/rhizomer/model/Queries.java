@@ -1,18 +1,16 @@
 package net.rhizomik.rhizomer.model;
 
-import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.update.UpdateFactory;
-import org.apache.jena.update.UpdateRequest;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.jena.query.ParameterizedSparqlString;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.RDFS;
-import org.apache.jena.vocabulary.XSD;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -187,7 +185,7 @@ public class Queries {
                 "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t OPTIONAL { ?object a ?type }\n" +
-                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), if(datatype(?object)=\"\", datatype(?object), xsd:string), rdfs:Resource)) AS ?range) \n" +
+                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
                 "\t BIND(if(isLiteral(?object), 1, 0) AS ?isLiteral) \n" +
                 "} GROUP BY ?property ?range");
         pQuery.setIri("class", classUri);
@@ -203,27 +201,25 @@ public class Queries {
                 addSamples(classCount, sampleSize, coverage) + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t OPTIONAL { ?object a ?type }\n" +
-                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), if(datatype(?object)=\"\", xsd:string, datatype(?object)), rdfs:Resource)) AS ?range) \n" +
+                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
                 "\t BIND(if(isLiteral(?object), 1, 0) AS ?isLiteral) \n" +
                 "} GROUP BY ?property ?range");
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
     }
 
-    public static Query getQueryFacetRageValues(String classUri, String facetUri, String rangeUri, int limit, int offset, boolean ordered) {
+    public static Query getQueryFacetRageValues(String classUri, String facetUri, String rangeUri, boolean isLiteral, int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "SELECT ?value (COUNT(?value) AS ?count) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . \n" +
             "\t ?instance ?property ?value . \n" +
-            ( rangeUri.equals(XSD.xstring.getURI()) ?
-                "\t FILTER( isLiteral(?value) && ( datatype(?value)=\"\" || datatype(?value)=xsd:string ) )\n" :
-                ( rangeUri.startsWith(XSD.getURI()) ?
-                    "\t FILTER( isLiteral(?value) && datatype(?value)=<" + rangeUri + "> )\n" :
-                    !rangeUri.equals(RDFS.Resource.getURI()) ?
-                        "\t ?value a <" + rangeUri + "> \n" :
-                        "\t OPTIONAL { ?value a ?type } FILTER( !BOUND(?type) && !isLiteral(?value) ) \n" ) ) +
+            ( isLiteral ?
+                "\t FILTER( isLiteral(?value) && datatype(?value)=<" + rangeUri + "> )\n" :
+                !rangeUri.equals(RDFS.Resource.getURI()) ?
+                    "\t ?value a <" + rangeUri + "> \n" :
+                    "\t OPTIONAL { ?value a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !isLiteral(?value) ) \n" ) +
             "} GROUP BY ?value");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);

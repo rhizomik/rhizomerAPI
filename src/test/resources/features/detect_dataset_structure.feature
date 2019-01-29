@@ -77,12 +77,12 @@ Feature: Detect dataset structure
       | http://purl.org/dc/terms/language	                |	language	    |	174	|	33	|	rdfs:Resource	|	true	|
       | http://purl.org/NET/ms-rights#conditionsOfUse	    |	conditionsOfUse	|	26	|	10	|	rdfs:Resource	|	true	|
       | http://purl.org/dc/terms/source	                    |	source	        |	169	|	158	|	rdfs:Resource	|	true	|
-      | http://www.w3.org/2000/01/rdf-schema#label	        |	label	        |	178	|	159	|	xsd:string	    |	false	|
+      | http://www.w3.org/2000/01/rdf-schema#label	        |	label	        |	178	|	159	|	rdf:langString  |	false	|
       | http://www.w3.org/2000/01/rdf-schema#seeAlso	    |	seeAlso	        |	145	|	136	|	rdfs:Resource	|	true	|
       | http://purl.org/dc/terms/creator	                |	creator	        |	7	|	3	|	rdfs:Resource	|	true	|
       | http://www.w3.org/2000/01/rdf-schema#legalcode	    |	legalcode	    |	2	|	2	|	rdfs:Resource	|	true	|
       | http://purl.org/dc/terms/hasVersion	                |	hasVersion	    |	164	|	8	|	xsd:string	    |	false	|
-      | http://purl.org/dc/terms/title	                    |	title	        |	20	|	16	|	xsd:string	    |	false	|
+      | http://purl.org/dc/terms/title	                    |	title	        |	20	|	16	|	rdf:langString  |	false	|
       | http://purl.org/NET/ms-rights#licenseClarinCategory	|	licenseClarinCategory |	1 |	1	|	rdfs:Resource	|	true	|
       | http://creativecommons.org/ns#jurisdiction	        |	jurisdiction	|	108	|	41	|	rdfs:Resource	|	true	|
       | http://xmlns.com/foaf/0.1/logo	                    |	logo	        |	15	|	13	|	rdfs:Resource	|	true	|

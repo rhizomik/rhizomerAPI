@@ -110,7 +110,7 @@ public class AnalizeDataset {
         URI facetUri = facetRange.getFacet().getUri();
         ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
             Queries.getQueryFacetRageValues(classUri.toString(), facetUri.toString(),
-                facetRange.getUri().toString(), size, size * page, true),
+                facetRange.getUri().toString(), facetRange.getAllLiteral(), size, size * page, true),
             dataset.getDatasetGraphs(), null);
 
         List<Value> rangeValues = new ArrayList<>();
