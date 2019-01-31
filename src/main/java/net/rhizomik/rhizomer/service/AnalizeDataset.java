@@ -120,11 +120,15 @@ public class AnalizeDataset {
             if (soln.contains("?value")) {
                 RDFNode value = soln.get("?value");
                 int count = soln.getLiteral("?count").getInt();
+                String uri = null;
+                if (value.isResource())
+                    uri = value.asResource().getURI();
                 String curie = null;
-                try {
-                    curie = prefixCCMap.abbreviate(new URL(value.asResource().getURI()).toString());
-                } catch (Exception e) {}
-                rangeValues.add(new Value(value.toString(), count, curie));
+                if (uri != null)
+                    try {
+                        curie = prefixCCMap.abbreviate(new URL(uri).toString());
+                    } catch (Exception e) {}
+                rangeValues.add(new Value(value.toString(), count, uri, curie));
             }
         }
         return rangeValues;
