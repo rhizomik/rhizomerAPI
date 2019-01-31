@@ -22,10 +22,10 @@ spring:
 
 logging:
   level:
-    root: error
+    root: info
     org:
       springframework:
-        web: error
-      hibernate: error
+        web: info
+      hibernate: info
 
 allowed-origins: https://rhizomer.rhizomik.net

@@ -11,6 +11,7 @@ import org.apache.jena.query.QueryFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.RDFS;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -230,12 +231,23 @@ public class Queries {
         return query;
     }
 
-    public static Query getQueryClassInstances(String classUri, int limit, int offset) {
+    public static Query getQueryClassInstances(String classUri,
+        MultiValueMap<String, String> filters, int limit, int offset) {
+        final StringBuilder filtersPatterns = new StringBuilder();
+        filters.forEach((property, values) -> {
+            String propertyVar = Integer.toUnsignedString(property.hashCode());
+            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " \n";
+            pattern += "\t FILTER(?v" + propertyVar + " IN (" +
+                values.stream().collect(Collectors.joining(", "))
+                +")) . \n";
+            filtersPatterns.append(pattern);
+        });
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "DESCRIBE ?instance \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . \n" +
+            filtersPatterns +
             "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();

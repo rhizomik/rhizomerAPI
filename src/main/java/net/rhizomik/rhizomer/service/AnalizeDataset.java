@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -142,10 +143,11 @@ public class AnalizeDataset {
         return graphs;
     }
 
-    public void retrieveClassInstances(OutputStream out, Dataset dataset, Class datasetClass, int page, int size, Lang format) {
+    public void retrieveClassInstances(OutputStream out, Dataset dataset, Class datasetClass,
+        MultiValueMap<String, String> filters, int page, int size, Lang format) {
         URI classUri = datasetClass.getUri();
         Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
-            Queries.getQueryClassInstances(classUri.toString(), size, size * page),
+            Queries.getQueryClassInstances(classUri.toString(), filters, size, size * page),
             dataset.getDatasetGraphs());
         RDFDataMgr.write(out, model, format);
     }
