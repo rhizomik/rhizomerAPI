@@ -114,9 +114,9 @@ public class Queries {
     }
 
     public static Query getQueryGraphs() {
-        return QueryFactory.create(
+        return QueryFactory.create(prefixes +
                 "SELECT DISTINCT ?graph \n" +
-                "WHERE { GRAPH ?graph { ?s ?p ?o } }");
+                "WHERE { GRAPH ?graph { ?s rdf:type ?o } }");
     }
 
     public static Query getQueryCountType(String type) {
