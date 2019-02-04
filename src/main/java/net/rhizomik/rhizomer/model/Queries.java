@@ -220,16 +220,19 @@ public class Queries {
     public static Query getQueryFacetRageValues(String classUri, String facetUri, String rangeUri, boolean isLiteral, int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-            "SELECT ?value (COUNT(?value) AS ?count) \n" +
+            "SELECT ?value ?label (COUNT(?value) AS ?count) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . \n" +
             "\t ?instance ?property ?value . \n" +
+            "\t OPTIONAL { ?value rdfs:label ?label \n" +
+            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+            "\t OPTIONAL { ?value rdfs:label ?label } \n" +
             ( isLiteral ?
-                "\t FILTER( isLiteral(?value) && datatype(?value)=<" + rangeUri + "> )\n" :
+                "\t FILTER( ISLITERAL(?value) && STR(DATATYPE(?value))=\"" + rangeUri + "\" )\n" :
                 !rangeUri.equals(RDFS.Resource.getURI()) ?
                     "\t ?value a <" + rangeUri + "> \n" :
-                    "\t OPTIONAL { ?value a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !isLiteral(?value) ) \n" ) +
-            "} GROUP BY ?value");
+                    "\t OPTIONAL { ?value a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?value) ) \n" ) +
+            "} GROUP BY ?value ?label");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);
         Query query = pQuery.asQuery();
