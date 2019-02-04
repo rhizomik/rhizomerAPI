@@ -27,9 +27,9 @@ public class Queries {
 
     public static Query getQueryClasses(QueryType queryType){
         switch (queryType) {
-            case SIMPLE: return Queries.classesFull();
+            case SIMPLE: return Queries.classesSimple();
             case FULL: return Queries.classesFull();
-            default: return Queries.classesSimple();
+            default: return Queries.classesCatchUntyped();
         }
     }
 
@@ -138,6 +138,14 @@ public class Queries {
     }
 
     public static final Query classesFull() {
+        return QueryFactory.create(prefixes +
+            "SELECT ?class (COUNT(DISTINCT ?instance) as ?n) \n" +
+            "WHERE { \n" +
+            "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
+            "} GROUP BY ?class");
+    }
+
+    public static final Query classesCatchUntyped() {
         return QueryFactory.create(prefixes +
                 "SELECT ?class (COUNT(DISTINCT ?instance) as ?n) \n" +
                 "WHERE { \n" +
