@@ -24,6 +24,7 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,11 +75,16 @@ public class AnalizeDataset {
             QuerySolution soln = result.nextSolution();
             if (soln.contains("?property")) {
                 Resource property = soln.getResource("?property");
-                Resource range = soln.getResource("?range");
+                String range = XSD.xstring.toString();
+                if (soln.contains("?range"))
+                    range = soln.get("?range").toString();
                 int uses = soln.getLiteral("?uses").getInt();
                 int values = soln.getLiteral("?values").getInt();
-                Literal allLiteral = soln.getLiteral("?allLiteral");
-                boolean allLiteralBoolean = (allLiteral.getInt() != 0);
+                boolean allLiteralBoolean = false;
+                if (soln.contains("?allLiteral")) {
+                    Literal allLiteral = soln.getLiteral("?allLiteral");
+                    allLiteralBoolean = (allLiteral.getInt() != 0);
+                }
                 try {
                     Facet detectedFacet;
                     URI propertyUri = new URI(property.getURI());
@@ -92,8 +98,9 @@ public class AnalizeDataset {
                                 detectedFacet.getId().getFacetCurie(), datasetClass.getId().getClassCurie(),
                                 datasetClass.getDataset().getId());
                     }
-                    URI rangeUri = new URI(range.getURI());
-                    Range detectedRange = new Range(detectedFacet, rangeUri, range.getLocalName(), uses, values, allLiteralBoolean);
+                    URI rangeUri = new URI(range);
+                    String rangeLabel = prefixCCMap.localName(range);
+                    Range detectedRange = new Range(detectedFacet, rangeUri, rangeLabel, uses, values, allLiteralBoolean);
                     detectedFacet.addRange(rangeRepository.save(detectedRange));
                     facetRepository.save(detectedFacet);
                     logger.info("Added detected Range {} to Facet {} for Class {} in Dataset",

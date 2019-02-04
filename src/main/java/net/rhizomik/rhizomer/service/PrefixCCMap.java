@@ -144,4 +144,15 @@ public class PrefixCCMap extends PrefixMapStd {
     public boolean isCurie(String k) {
         return Pattern.matches("[\\w_][\\w\\d\\.\\-_]+:[\\w\\d\\.\\-_+#']+", k);
     }
+
+    public String localName(String uriString) {
+        if (uriString.contains("#"))
+            return uriString.substring(uriString.lastIndexOf('#')+1);
+        else if (uriString.contains("/"))
+            return uriString.substring(uriString.lastIndexOf('/')+1);
+        else if (uriString.contains(":"))
+            return uriString.substring(uriString.lastIndexOf(':')+1);
+        else
+            return uriString;
+    }
 }
