@@ -217,13 +217,25 @@ public class Queries {
         return pQuery.asQuery();
     }
 
-    public static Query getQueryFacetRageValues(String classUri, String facetUri, String rangeUri, boolean isLiteral, int limit, int offset, boolean ordered) {
+    public static Query getQueryFacetRageValues(String classUri, String facetUri, String rangeUri,
+        MultiValueMap<String, String> filters,
+        boolean isLiteral, int limit, int offset, boolean ordered) {
+        final StringBuilder filtersPatterns = new StringBuilder();
+        filters.forEach((property, values) -> {
+            String propertyVar = Integer.toUnsignedString(property.hashCode());
+            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " \n";
+            pattern += "\t FILTER(?v" + propertyVar + " IN (" +
+                values.stream().collect(Collectors.joining(", "))
+                +")) . \n";
+            filtersPatterns.append(pattern);
+        });
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "SELECT ?value ?label (COUNT(?value) AS ?count) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . \n" +
             "\t ?instance ?property ?value . \n" +
+            filtersPatterns +
             "\t OPTIONAL { ?value rdfs:label ?label \n" +
             "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
             "\t OPTIONAL { ?value rdfs:label ?label } \n" +

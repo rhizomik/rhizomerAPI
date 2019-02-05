@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +65,9 @@ public class RangeController {
     @ResponseBody
     public List<Value> getRangeValues(@PathVariable String datasetId, @PathVariable String classCurie,
         @PathVariable String facetCurie, @PathVariable String rangeCurie,
-        @RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="size", defaultValue="10") int size) {
+        @RequestParam MultiValueMap<String, String> filters,
+        @RequestParam(value="page", defaultValue="0") int page,
+        @RequestParam(value="size", defaultValue="10") int size) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
@@ -76,7 +79,7 @@ public class RangeController {
         DatasetClassFacetRangeId datasetClassFacetRangeId = new DatasetClassFacetRangeId(datasetClassFacetId, new Curie(rangeCurie));
         Range facetRange = rangeRepository.findOne(datasetClassFacetRangeId);
         Validate.notNull(facetRange, "Range with id '%s' not found", datasetClassFacetRangeId);
-        return analiseDataset.retrieveRangeValues(dataset, facetRange, page, size);
+        return analiseDataset.retrieveRangeValues(dataset, facetRange, filters, page, size);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges", method = RequestMethod.POST)

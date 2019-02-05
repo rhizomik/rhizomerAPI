@@ -113,12 +113,14 @@ public class AnalizeDataset {
         }
     }
 
-    public List<Value> retrieveRangeValues(Dataset dataset, Range facetRange, int page, int size) {
+    public List<Value> retrieveRangeValues(Dataset dataset, Range facetRange,
+        MultiValueMap<String, String> filters, int page, int size) {
         URI classUri = facetRange.getFacet().getDomain().getUri();
         URI facetUri = facetRange.getFacet().getUri();
         ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
             Queries.getQueryFacetRageValues(classUri.toString(), facetUri.toString(),
-                facetRange.getUri().toString(), facetRange.getAllLiteral(), size, size * page, true),
+                facetRange.getUri().toString(), filters, facetRange.getAllLiteral(),
+                size, size * page, true),
             dataset.getDatasetGraphs(), null);
 
         List<Value> rangeValues = new ArrayList<>();
