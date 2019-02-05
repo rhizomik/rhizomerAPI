@@ -41,9 +41,9 @@ Feature: Detect dataset structure
       | uri                                             | label     | timesUsed | differentValues | range             | relation   |
       | http://xmlns.com/foaf/0.1/name                  | name      | 3         | 3               | xsd:string        | false      |
     And I retrieve facet range "/datasets/mixed/classes/foaf:Person/facets/space:performed/ranges/space:MissionRole" values
-      | value                                                                         | count | curie                     | uri                                                                           |
-      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander          | 1     | kasabi:commander          | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander          |
-      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | 1     | kasabi:lunar-module-pilot | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot |
+      | value                                                                         | count | curie                     | uri                                                                           | label                        |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander          | 1     | kasabi:commander          | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander          | Apollo 13 Mission Commander  |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | 1     | kasabi:lunar-module-pilot | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | Apollo 13 Lunar Module Pilot |
 
   Scenario: Change the dataset graph to another of the server graphs and extract classes
     Given The following data graphs are set for dataset "mixed"
@@ -51,7 +51,8 @@ Feature: Detect dataset structure
     When I extract the classes from dataset "mixed"
     Then The retrieved classes are
       | uri                                             | label       | instanceCount |
-      | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
+    # Only if using Classes query putting untyped resources into rdfs:Resource
+    # | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
       | http://www.w3.org/ns/odrl/2/Constraint          | Constraint  | 10            |
       | http://www.w3.org/ns/odrl/2/Prohibition         | Prohibition | 18            |
       | http://www.w3.org/ns/odrl/2/Policy              | Policy      | 175           |
@@ -103,7 +104,8 @@ Feature: Detect dataset structure
     And I extract the classes from dataset "mixed"
     Then The retrieved classes are
       | uri                                             | label       | instanceCount |
-      | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
+    # Only if using Classes query putting untyped resources into rdfs:Resource
+    # | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
       | http://www.w3.org/ns/odrl/2/Constraint          | Constraint  | 10            |
       | http://www.w3.org/ns/odrl/2/Prohibition         | Prohibition | 18            |
       | http://www.w3.org/ns/odrl/2/Policy              | Policy      | 175           |
