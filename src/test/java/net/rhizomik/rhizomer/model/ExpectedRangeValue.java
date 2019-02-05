@@ -8,6 +8,7 @@ public class ExpectedRangeValue {
     public int count;
     public String uri;
     public String curie;
+    public String label;
 
     public ExpectedRangeValue() {}
 
@@ -19,6 +20,8 @@ public class ExpectedRangeValue {
 
     public String getCurie() { return curie; }
 
+    public String getLabel() { return label; }
+
     public void setValue(String value) { this.value = value; }
 
     public void setCount(int count) { this.count = count; }
@@ -26,6 +29,8 @@ public class ExpectedRangeValue {
     public void setUri(String uri) { this.uri = uri; }
 
     public void setCurie(String curie) { this.curie = curie; }
+
+    public void setLabel(String label) { this.label = label; }
 
     @Override
     public boolean equals(Object o) {
@@ -39,6 +44,7 @@ public class ExpectedRangeValue {
         return count == that.count &&
             uri.equals(that.uri) &&
             curie.equals(that.curie) &&
+            label.equals(that.label) &&
             value.equals(that.value);
     }
 
@@ -49,6 +55,7 @@ public class ExpectedRangeValue {
             ", count=" + count +
             ", uri=" + uri +
             ", curie=" + curie +
+            ", label=" + label +
             '}';
     }
 }
