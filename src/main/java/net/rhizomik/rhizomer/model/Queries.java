@@ -223,10 +223,13 @@ public class Queries {
         final StringBuilder filtersPatterns = new StringBuilder();
         filters.forEach((property, values) -> {
             String propertyVar = Integer.toUnsignedString(property.hashCode());
-            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " \n";
-            pattern += "\t FILTER(?v" + propertyVar + " IN (" +
-                values.stream().collect(Collectors.joining(", "))
-                +")) . \n";
+            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " . \n";
+            values.removeIf(value -> value.equals("null"));
+            if (!values.isEmpty()) {
+                pattern += "\t FILTER(?v" + propertyVar + " IN (" +
+                    values.stream().collect(Collectors.joining(", "))
+                    + ")) . \n";
+            }
             filtersPatterns.append(pattern);
         });
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
@@ -259,10 +262,13 @@ public class Queries {
         final StringBuilder filtersPatterns = new StringBuilder();
         filters.forEach((property, values) -> {
             String propertyVar = Integer.toUnsignedString(property.hashCode());
-            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " \n";
-            pattern += "\t FILTER(?v" + propertyVar + " IN (" +
-                values.stream().collect(Collectors.joining(", "))
-                +")) . \n";
+            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " . \n";
+            values.removeIf(value -> value.equals("null"));
+            if (!values.isEmpty()) {
+                pattern += "\t FILTER(?v" + propertyVar + " IN (" +
+                    values.stream().collect(Collectors.joining(", "))
+                    + ")) . \n";
+            }
             filtersPatterns.append(pattern);
         });
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
