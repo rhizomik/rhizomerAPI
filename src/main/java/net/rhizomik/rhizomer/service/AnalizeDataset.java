@@ -5,7 +5,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.Facet;
@@ -22,8 +24,12 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.JsonLDWriteContext;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.WriterGraphRIOT;
+import org.apache.jena.riot.system.PrefixMap;
+import org.apache.jena.riot.system.RiotLib;
 import org.apache.jena.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,11 +166,16 @@ public class AnalizeDataset {
     }
 
     public void retrieveClassInstances(OutputStream out, Dataset dataset, Class datasetClass,
-        MultiValueMap<String, String> filters, int page, int size, Lang format) {
+        MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
             Queries.getQueryClassInstances(classUri.toString(), filters, size, size * page),
             dataset.getDatasetGraphs());
-        RDFDataMgr.write(out, model, format);
+        WriterGraphRIOT writer = RDFDataMgr.createGraphWriter(format);
+        PrefixMap pm = RiotLib.prefixMap(model.getGraph());
+        JsonLDWriteContext ctx = new JsonLDWriteContext();
+        Map<String, Object> frame = new HashMap<>();
+        ctx.setFrame(frame);
+        writer.write(out, model.getGraph(), pm, null, ctx);
     }
 }

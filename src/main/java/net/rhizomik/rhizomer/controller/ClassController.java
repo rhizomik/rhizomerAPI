@@ -13,7 +13,7 @@ import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
 import org.apache.commons.lang3.Validate;
-import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,7 @@ public class ClassController {
         logger.info("Retrieved Class {} in Dataset {}", classCurie, datasetId);
         StreamingResponseBody stream = outputStream ->
             analiseDataset.retrieveClassInstances(outputStream,
-                dataset, datasetClass, filters, page, size, Lang.JSONLD);
+                dataset, datasetClass, filters, page, size, RDFFormat.JSONLD_FRAME_PRETTY);
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(stream);
