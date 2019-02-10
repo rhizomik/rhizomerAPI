@@ -236,9 +236,13 @@ public class Queries {
         pQuery.setCommandText(prefixes +
             "SELECT ?value ?label (COUNT(?value) AS ?count) \n" +
             "WHERE { \n" +
-            "\t ?instance a ?class . \n" +
-            "\t ?instance ?property ?value . \n" +
+            "\t { SELECT DISTINCT ?instance " +
+            "\t\t WHERE { \n" +
+            "\t\t\t ?instance a ?class . \n" +
             filtersPatterns +
+            "\t\t } \n" +
+            "\t } \n" +
+            "\t ?instance ?property ?value . \n" +
             "\t OPTIONAL { ?value rdfs:label ?label \n" +
             "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
             "\t OPTIONAL { ?value rdfs:label ?label } \n" +
@@ -275,8 +279,12 @@ public class Queries {
         pQuery.setCommandText(prefixes +
             "DESCRIBE ?instance \n" +
             "WHERE { \n" +
-            "\t ?instance a ?class . \n" +
+            "\t { SELECT DISTINCT ?instance " +
+            "\t\t WHERE { \n" +
+            "\t\t\t ?instance a ?class . \n" +
             filtersPatterns +
+            "\t\t } \n" +
+            "\t } \n" +
             "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
