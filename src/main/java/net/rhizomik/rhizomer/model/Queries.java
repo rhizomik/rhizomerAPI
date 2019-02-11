@@ -220,7 +220,7 @@ public class Queries {
     public static Query getQueryFacetRageValues(String classUri, String facetUri, String rangeUri,
         MultiValueMap<String, String> filters,
         boolean isLiteral, int limit, int offset, boolean ordered) {
-        final StringBuilder filtersPatterns = new StringBuilder();
+        StringBuilder filtersPatterns = new StringBuilder();
         filters.forEach((property, values) -> {
             String propertyVar = Integer.toUnsignedString(property.hashCode());
             String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " . \n";
@@ -263,7 +263,7 @@ public class Queries {
 
     public static Query getQueryClassInstances(String classUri,
         MultiValueMap<String, String> filters, int limit, int offset) {
-        final StringBuilder filtersPatterns = new StringBuilder();
+        StringBuilder filtersPatterns = new StringBuilder();
         filters.forEach((property, values) -> {
             String propertyVar = Integer.toUnsignedString(property.hashCode());
             String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " . \n";
@@ -279,7 +279,7 @@ public class Queries {
         pQuery.setCommandText(prefixes +
             "DESCRIBE ?instance \n" +
             "WHERE { \n" +
-            "\t { SELECT DISTINCT ?instance " +
+            "\t { SELECT DISTINCT ?instance \n" +
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n" +
             filtersPatterns +
@@ -290,6 +290,33 @@ public class Queries {
         Query query = pQuery.asQuery();
         if (limit > 0) query.setLimit(limit);
         if (offset > 0) query.setOffset(offset);
+        return query;
+    }
+
+
+    public static Query getQueryClassInstancesCount(String classUri,
+        MultiValueMap<String, String> filters) {
+        StringBuilder filtersPatterns = new StringBuilder();
+        filters.forEach((property, values) -> {
+            String propertyVar = Integer.toUnsignedString(property.hashCode());
+            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " . \n";
+            values.removeIf(value -> value.equals("null"));
+            if (!values.isEmpty()) {
+                pattern += "\t FILTER(?v" + propertyVar + " IN (" +
+                    values.stream().collect(Collectors.joining(", "))
+                    + ")) . \n";
+            }
+            filtersPatterns.append(pattern);
+        });
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+            "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
+            "WHERE { \n" +
+            "\t ?instance a ?class . \n" +
+            filtersPatterns +
+            "}");
+        pQuery.setIri("class", classUri);
+        Query query = pQuery.asQuery();
         return query;
     }
 

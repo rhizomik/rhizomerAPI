@@ -62,7 +62,7 @@ public class ClassController {
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/instances", method = RequestMethod.GET,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StreamingResponseBody> retrieveDatasetClass(
+    public ResponseEntity<StreamingResponseBody> retrieveClassFacetedInstances(
         @PathVariable String datasetId, @PathVariable String classCurie,
         @RequestParam MultiValueMap<String, String> filters,
         @RequestParam(value="page", defaultValue="0") int page,
@@ -78,6 +78,18 @@ public class ClassController {
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(stream);
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/count", method = RequestMethod.GET)
+    public @ResponseBody int retrieveClassFacetedInstancesCount(
+        @PathVariable String datasetId, @PathVariable String classCurie,
+        @RequestParam MultiValueMap<String, String> filters) {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Class datasetClass = classRepository.findOne(new DatasetClassId(dataset, new Curie(classCurie)));
+        Validate.notNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
+        logger.info("Retrieved Class {} in Dataset {}", classCurie, datasetId);
+        return analiseDataset.retrieveClassInstancesCount(dataset, datasetClass, filters);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.POST)

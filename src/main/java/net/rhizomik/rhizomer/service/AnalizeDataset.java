@@ -178,4 +178,19 @@ public class AnalizeDataset {
         ctx.setFrame(frame);
         writer.write(out, model.getGraph(), pm, null, ctx);
     }
+
+    public int retrieveClassInstancesCount(Dataset dataset, Class datasetClass,
+        MultiValueMap<String, String> filters) {
+        URI classUri = datasetClass.getUri();
+        ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
+            Queries.getQueryClassInstancesCount(classUri.toString(), filters),
+            dataset.getDatasetGraphs(), null);
+        int count = 0;
+        while (result.hasNext()) {
+            QuerySolution soln = result.nextSolution();
+            if (soln.contains("?n"))
+                count = soln.getLiteral("?n").getInt();
+        }
+        return count;
+    }
 }
