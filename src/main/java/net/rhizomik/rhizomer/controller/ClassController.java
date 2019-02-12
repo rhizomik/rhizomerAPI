@@ -74,7 +74,7 @@ public class ClassController {
         logger.info("Retrieved Class {} in Dataset {}", classCurie, datasetId);
         StreamingResponseBody stream = outputStream ->
             analiseDataset.retrieveClassInstances(outputStream,
-                dataset, datasetClass, filters, page, size, RDFFormat.JSONLD_FRAME_PRETTY);
+                dataset, datasetClass, filters, page, size, RDFFormat.JSONLD);
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(stream);
