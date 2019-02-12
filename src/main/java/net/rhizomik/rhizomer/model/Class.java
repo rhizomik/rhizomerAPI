@@ -2,6 +2,7 @@ package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.stream.Collectors;
 import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,15 @@ public class Class {
         logger.debug("Created class: {}", super.toString());
     }
 
+    public List<Facet> getFacets(float relevance) {
+        return facets.stream().filter(
+            facet -> ((float)facet.getTimesUsed() / this.getInstanceCount()) > relevance).collect(
+            Collectors.toCollection(ArrayList::new));
+    }
+
     public List<Facet> getFacets() { return facets; }
+
+    public int getFacetsCount() { return facets.size(); }
 
     public void setFacets(List<Facet> facets) { this.facets.clear(); this.facets.addAll(facets); }
 

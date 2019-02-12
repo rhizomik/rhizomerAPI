@@ -12,6 +12,7 @@ public class ExpectedClass {
     public String label;
     public String curie;
     public int instanceCount = 0;
+    public int facetsCount = 0;
     public List<ExpectedFacet> facets = new ArrayList<>();
 
     public ExpectedClass() {}
@@ -22,6 +23,7 @@ public class ExpectedClass {
         this.curie = id.split("/")[4];
         this.label = datasetClass.getLabel();
         this.instanceCount = datasetClass.getInstanceCount();
+        this.facetsCount = datasetClass.getFacetsCount();
     }
 
     public String getUri() {
@@ -38,6 +40,7 @@ public class ExpectedClass {
                 "uri='" + getUri() + '\'' +
                 ", label='" + label + '\'' +
                 ", instanceCount=" + instanceCount +
+                ", facetsCount=" + facetsCount +
                 '}';
     }
 
@@ -47,15 +50,8 @@ public class ExpectedClass {
         if (o == null || getClass() != o.getClass()) return false;
         ExpectedClass that = (ExpectedClass) o;
         if (instanceCount != that.instanceCount) return false;
+        if (facetsCount != that.facetsCount) return false;
         if (!getUri().equals(that.getUri())) return false;
         return label != null ? label.equals(that.label) : that.label == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getUri().hashCode();
-        result = 31 * result + (label != null ? label.hashCode() : 0);
-        result = 31 * result + instanceCount;
-        return result;
     }
 }

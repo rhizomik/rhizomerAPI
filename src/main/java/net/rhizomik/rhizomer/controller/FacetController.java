@@ -35,7 +35,10 @@ public class FacetController {
     @Autowired private AnalizeDataset analiseDataset;
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets", method = RequestMethod.GET)
-    public @ResponseBody List<Facet> listClassFacets(@PathVariable String datasetId, @PathVariable String classCurie) throws Exception {
+    public @ResponseBody List<Facet> listClassFacets(
+        @PathVariable String datasetId,
+        @PathVariable String classCurie,
+        @RequestParam(value="relevance", defaultValue="0") float relevance) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
@@ -44,7 +47,7 @@ public class FacetController {
         logger.info("Retrieving facets for Class {} in Dataset {}", classCurie, datasetId);
         if (datasetClass.getFacets().isEmpty() && dataset.getSparqlEndPoint()!=null )
             analiseDataset.detectClassFacets(datasetClass);
-        return datasetClass.getFacets();
+        return datasetClass.getFacets(relevance);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}", method = RequestMethod.GET)
