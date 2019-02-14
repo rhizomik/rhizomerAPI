@@ -32,10 +32,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/user").authenticated()
+            .antMatchers(HttpMethod.GET, "/datasets").authenticated()
+
+            .antMatchers(HttpMethod.GET, "/admins*/**").hasRole("ADMIN")
+            .antMatchers(HttpMethod.POST, "/admins*/**").hasRole("ADMIN")
+            .antMatchers(HttpMethod.PUT, "/admins*/**").hasRole("ADMIN")
+            .antMatchers(HttpMethod.PATCH, "/admins*/*").hasRole("ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/admins*/**").hasRole("ADMIN")
+
+            .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+            .antMatchers(HttpMethod.GET, "/users/*").authenticated()
+            .antMatchers(HttpMethod.POST, "/users/*").hasRole("ADMIN")
+
             .antMatchers(HttpMethod.PUT, "/**/*").authenticated()
             .antMatchers(HttpMethod.POST, "/**/*").authenticated()
-            .antMatchers(HttpMethod.DELETE, "/**/*").authenticated()
             .antMatchers(HttpMethod.PATCH, "/**/*").authenticated()
+            .antMatchers(HttpMethod.DELETE, "/**/*").authenticated()
             .anyRequest().permitAll()
             .and()
             .httpBasic().realmName("Rhizomer")

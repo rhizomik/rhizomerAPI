@@ -13,12 +13,14 @@ import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
+import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,14 +35,16 @@ public class FacetController {
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
     @Autowired private AnalizeDataset analiseDataset;
+    @Autowired private SecurityController securityController;
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets", method = RequestMethod.GET)
-    public @ResponseBody List<Facet> listClassFacets(
+    public @ResponseBody List<Facet> listClassFacets(Authentication auth,
         @PathVariable String datasetId,
         @PathVariable String classCurie,
         @RequestParam(value="relevance", defaultValue="0") float relevance) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
         Class datasetClass = classRepository.findOne(datasetClassId);
         Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
@@ -51,9 +55,11 @@ public class FacetController {
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}", method = RequestMethod.GET)
-    public @ResponseBody Facet retrieveClassFacet(@PathVariable String datasetId, @PathVariable String classCurie, @PathVariable String facetCurie) throws Exception {
+    public @ResponseBody Facet retrieveClassFacet(@PathVariable String datasetId,
+        @PathVariable String classCurie, @PathVariable String facetCurie, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
         Class datasetClass = classRepository.findOne(datasetClassId);
         Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
@@ -67,9 +73,11 @@ public class FacetController {
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Facet createClassFacet(@Valid @RequestBody Facet newFacet, @PathVariable String datasetId, @PathVariable String classCurie) throws Exception {
+    public Facet createClassFacet(@Valid @RequestBody Facet newFacet, @PathVariable String datasetId,
+        @PathVariable String classCurie, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
         Class datasetClass = classRepository.findOne(datasetClassId);
         Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
@@ -82,9 +90,11 @@ public class FacetController {
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets", method = RequestMethod.PUT)
-    public @ResponseBody List<Facet> updateClassFacets(@Valid @RequestBody List<Facet> newFacets, @PathVariable String datasetId, @PathVariable String classCurie) throws Exception {
+    public @ResponseBody List<Facet> updateClassFacets(@Valid @RequestBody List<Facet> newFacets,
+        @PathVariable String datasetId, @PathVariable String classCurie, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
         Class datasetClass = classRepository.findOne(datasetClassId);
         Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);

@@ -7,7 +7,7 @@ Feature: Detect dataset structure considering inference
 
   Background: Existing dataset in local server storing file data
     Given I login as "user" with password "password"
-    And There is a new dataset with id "apollo13"
+    And There is a new dataset by "user" with id "apollo13"
     And The dataset "apollo13" has a mock server
     And The server for dataset "apollo13" stores data
       | data                            | graph                                  |

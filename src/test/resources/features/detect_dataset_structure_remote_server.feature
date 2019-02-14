@@ -7,7 +7,7 @@ Feature: Detect dataset structure in remote Virtuoso server
 
   Background: Existing dataset on remote server
     Given I login as "user" with password "password"
-    And There is a new dataset with id "rdflicense"
+    And There is a new dataset by "user" with id "rdflicense"
     And The dataset "rdflicense" server is set to "http://virtuoso.udl.cat:8890/sparql"
     And I add the graphs to the dataset "rdflicense"
       | http://test.com/rdflicense                      |

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +48,16 @@ public class UserController {
         return userRepository.findByUsernameContaining(text);
     }
 
+    @PreAuthorize("#userId == principal.username or hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
+    public @ResponseBody
+    User retrieveUser(@PathVariable String userId) {
+        User user = userRepository.findOne(userId);
+        Validate.notNull(user, "User with id '%s' not found", userId);
+        logger.info("Retrieved User {}", userId);
+        return user;
+    }
+
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
@@ -58,15 +69,7 @@ public class UserController {
         return userRepository.save(newUser);
     }
 
-    @RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
-    public @ResponseBody
-    User retrieveUser(@PathVariable String userId) {
-        User user = userRepository.findOne(userId);
-        Validate.notNull(user, "User with id '%s' not found", userId);
-        logger.info("Retrieved User {}", userId);
-        return user;
-    }
-
+    @PreAuthorize("#userId == principal.username or hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/users/{userId}", method = RequestMethod.PUT)
     public @ResponseBody
     User updateUser(@Valid @RequestBody User updatedUser, @PathVariable String userId) {
@@ -78,8 +81,8 @@ public class UserController {
         return userRepository.save(user);
     }
 
+    @PreAuthorize("#userId == principal.username or hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
-    @ResponseBody
     public void deleteUser(@PathVariable String userId) {
         User user = userRepository.findOne(userId);
         Validate.notNull(user, "User with id '%s' not found", userId);

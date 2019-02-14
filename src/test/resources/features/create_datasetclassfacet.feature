@@ -6,7 +6,7 @@ Feature: Create class facets in a dataset
   I want to identify the class facets in it
 
   Background: Existing dataset
-    Given There is a new dataset with id "vegetables"
+    Given There is a new dataset by "user" with id "vegetables"
     And a class in dataset "vegetables" with URI "http://examples.org#Potato", label "Potato" and instance count 1
 
   Scenario: Manually define a class facet

@@ -7,7 +7,7 @@ Feature: Detect dataset structure
 
   Background: Existing dataset in local server storing file data
     Given I login as "user" with password "password"
-    And There is a new dataset with id "mixed"
+    And There is a new dataset by "user" with id "mixed"
     And The dataset "mixed" has a mock server
     And The server for dataset "mixed" stores data
       | data                            | graph                                 |

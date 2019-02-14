@@ -6,12 +6,14 @@ package net.rhizomik.rhizomer.controller;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
+import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,12 +27,25 @@ public class OntologiesController {
 
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private SPARQLService sparqlService;
+    @Autowired private SecurityController securityController;
+
+    @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.GET)
+    public @ResponseBody List<String> retrieveDatasetOntologies(@PathVariable String datasetId,
+        Authentication auth) {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        logger.info("Retrieved ontologies for Dataset {}", datasetId);
+        return dataset.getDatasetOntologies();
+    }
 
     @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody List<String> addDatasetOntology(@RequestBody List<String> ontologies, @PathVariable String datasetId) throws Exception {
+    public @ResponseBody List<String> addDatasetOntology(@RequestBody List<String> ontologies,
+        @PathVariable String datasetId, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkOwner(dataset, auth);
         ontologies.forEach(ontology -> {
             sparqlService.loadURI(dataset.getSparqlEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
                 ontology, dataset.getUsername(), dataset.getPassword());
@@ -40,18 +55,12 @@ public class OntologiesController {
         return datasetRepository.save(dataset).getDatasetOntologies();
     }
 
-    @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.GET)
-    public @ResponseBody List<String> retrieveDatasetOntologies(@PathVariable String datasetId) throws Exception {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
-        logger.info("Retrieved ontologies for Dataset {}", datasetId);
-        return dataset.getDatasetOntologies();
-    }
-
     @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.PUT)
-    public @ResponseBody List<String> updateDatasetOntologies(@Valid @RequestBody Set<String> updatedOntologies, @PathVariable String datasetId) throws Exception {
+    public @ResponseBody List<String> updateDatasetOntologies(Authentication auth,
+        @Valid @RequestBody Set<String> updatedOntologies, @PathVariable String datasetId) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkOwner(dataset, auth);
         dataset.setDatasetOntologies(updatedOntologies);
         URI datasetOntologiesGraph = dataset.getDatasetOntologiesGraph();
         sparqlService.clearGraph(dataset.getSparqlEndPoint(), datasetOntologiesGraph);

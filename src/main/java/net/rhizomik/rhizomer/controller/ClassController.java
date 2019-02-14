@@ -12,6 +12,7 @@ import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
+import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
 import org.apache.jena.riot.RDFFormat;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,11 +40,14 @@ public class ClassController {
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private AnalizeDataset analiseDataset;
+    @Autowired private SecurityController securityController;
 
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.GET)
-    public @ResponseBody List<Class> listDatasetClass(@PathVariable String datasetId) {
+    public @ResponseBody List<Class> listDatasetClass(@PathVariable String datasetId,
+        Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieving classes in Dataset {}", datasetId);
         if (dataset.getClasses().isEmpty() && dataset.getSparqlEndPoint()!=null )
             analiseDataset.detectDatasetClasses(dataset);
@@ -51,9 +56,10 @@ public class ClassController {
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}", method = RequestMethod.GET)
     public @ResponseBody Class retrieveDatasetClass(@PathVariable String datasetId,
-        @PathVariable String classCurie) {
+        @PathVariable String classCurie, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
         Class datasetClass = classRepository.findOne(new DatasetClassId(dataset, new Curie(classCurie)));
         Validate.notNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
         logger.info("Retrieved Class {} in Dataset {}", classCurie, datasetId);
@@ -64,14 +70,15 @@ public class ClassController {
     produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> retrieveClassFacetedInstances(
         @PathVariable String datasetId, @PathVariable String classCurie,
-        @RequestParam MultiValueMap<String, String> filters,
+        @RequestParam MultiValueMap<String, String> filters, Authentication auth,
         @RequestParam(value="page", defaultValue="0") int page,
         @RequestParam(value="size", defaultValue="10") int size) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
         Class datasetClass = classRepository.findOne(new DatasetClassId(dataset, new Curie(classCurie)));
         Validate.notNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
-        logger.info("Retrieved Class {} in Dataset {}", classCurie, datasetId);
+        logger.info("Retrieved instances for Class {} in Dataset {}", classCurie, datasetId);
         StreamingResponseBody stream = outputStream ->
             analiseDataset.retrieveClassInstances(outputStream,
                 dataset, datasetClass, filters, page, size, RDFFormat.JSONLD);
@@ -83,21 +90,24 @@ public class ClassController {
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/count", method = RequestMethod.GET)
     public @ResponseBody int retrieveClassFacetedInstancesCount(
         @PathVariable String datasetId, @PathVariable String classCurie,
-        @RequestParam MultiValueMap<String, String> filters) {
+        @RequestParam MultiValueMap<String, String> filters, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
         Class datasetClass = classRepository.findOne(new DatasetClassId(dataset, new Curie(classCurie)));
         Validate.notNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
-        logger.info("Retrieved Class {} in Dataset {}", classCurie, datasetId);
+        logger.info("Retrieved instances count for Class {} in Dataset {}", classCurie, datasetId);
         return analiseDataset.retrieveClassInstancesCount(dataset, datasetClass, filters);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Class createDatasetClass(@Valid @RequestBody Class newClass, @PathVariable String datasetId) {
+    public Class createDatasetClass(@Valid @RequestBody Class newClass,
+        @PathVariable String datasetId, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkOwner(dataset, auth);
         Validate.validState(!classRepository.exists(new DatasetClassId(dataset, new Curie(newClass.getUri()))),
                 "Class with URI '%s' already exists in Dataset '%s'", newClass.getUri(), datasetId);
         newClass.setDataset(dataset);
@@ -107,9 +117,10 @@ public class ClassController {
 
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.PUT)
     public @ResponseBody List<Class> updateDatasetClasses(@Valid @RequestBody List<Class> newClasses,
-        @PathVariable String datasetId) {
+        @PathVariable String datasetId, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkOwner(dataset, auth);
         dataset.getClasses().forEach(aClass -> {
             classRepository.delete(aClass);
             dataset.removeClass(aClass);

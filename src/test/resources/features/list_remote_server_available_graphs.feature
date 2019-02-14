@@ -7,7 +7,7 @@ Feature: List remote server available graphs
 
   Background: Existing dataset in remote server
     Given I login as "user" with password "password"
-    And There is a new dataset with id "rdflicense"
+    And There is a new dataset by "user" with id "rdflicense"
     And The dataset "rdflicense" server is set to "http://es.dbpedia.org/sparql"
 
   Scenario: The available graphs for the dataset server are those stored

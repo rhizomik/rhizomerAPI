@@ -7,7 +7,7 @@ Feature: Manage dataset ontologies
 
   Background: Existing dataset with classes and facets
     Given I login as "user" with password "password"
-    And There is a new dataset with id "apollo13"
+    And There is a new dataset by "user" with id "apollo13"
     And The dataset "apollo13" has a mock server
     And The following ontologies are set for dataset "apollo13"
       | data/nasa-schema.ttl            |

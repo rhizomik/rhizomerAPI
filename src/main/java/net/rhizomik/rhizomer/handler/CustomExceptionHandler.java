@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,6 +33,14 @@ public class CustomExceptionHandler {
     public ErrorInfo handleConstraintViolationException(HttpServletRequest request, ConstraintViolationException e) {
         logger.info("Generating HTTP BAD REQUEST from ConstraintViolationException: {}", e.toString());
         return new ErrorInfo(HttpStatus.UNPROCESSABLE_ENTITY, request, e);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AuthorizationServiceException.class)
+    @ResponseBody
+    public ErrorInfo handleAuthorizationException(HttpServletRequest request, AuthorizationServiceException e) {
+        logger.info("Generating HTTP BAD REQUEST from AuthorizationServiceException: {}", e.toString());
+        return new ErrorInfo(HttpStatus.UNAUTHORIZED, request, e);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

@@ -1,5 +1,7 @@
 package net.rhizomik.rhizomer.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.rhizomik.rhizomer.model.Queries.QueryType;
@@ -34,6 +36,7 @@ public class Dataset {
     private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+    private boolean isPublic = false;
 
     @ElementCollection
     private Set<String> datasetGraphs = new HashSet<>();
@@ -41,6 +44,10 @@ public class Dataset {
     private Set<String> datasetOntologies = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
     private List<Class> classes = new ArrayList<>();
+    @ManyToOne
+    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId = true)
+    private User owner;
 
     public Dataset() {}
 
@@ -137,6 +144,14 @@ public class Dataset {
     public void setPassword(String password) { this.password = password; }
 
     public String getPassword() { return password; }
+
+    public User getOwner() { return owner; }
+
+    public void setOwner(User owner) { this.owner = owner; }
+
+    public boolean isPublic() { return isPublic; }
+
+    public void setPublic(boolean aPublic) { isPublic = aPublic; }
 
     @JsonIgnore
     public URI getDatasetUri() {

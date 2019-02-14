@@ -35,8 +35,10 @@ import net.rhizomik.rhizomer.model.ExpectedFacet;
 import net.rhizomik.rhizomer.model.ExpectedRange;
 import net.rhizomik.rhizomer.model.ExpectedRangeValue;
 import net.rhizomik.rhizomer.model.Queries;
+import net.rhizomik.rhizomer.model.User;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
+import net.rhizomik.rhizomer.repository.UserRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
 import org.apache.jena.rdf.model.Model;
@@ -85,6 +87,7 @@ public class APIStepdefs {
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private SPARQLService sparqlService;
+    @Autowired private UserRepository userRepository;
 
     private static String currentUsername;
     private static String currentPassword;
@@ -132,11 +135,21 @@ public class APIStepdefs {
         currentUsername = currentPassword = null;
     }
 
-    @Given("^There is a new dataset with id \"([^\"]*)\"$")
-    public void aDatasetWithId(String datasetId) throws Throwable {
+    @Given("^Exists a user \"([^\"]*)\" with password \"([^\"]*)\"$")
+    public void existsAUserWithPassword(String username, String password) throws Throwable {
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        userRepository.save(newUser);
+    }
+
+    @Given("^There is a new dataset by \"([^\"]*)\" with id \"([^\"]*)\"$")
+    public void aDatasetWithId(String username, String datasetId) throws Throwable {
         if (datasetRepository.exists(datasetId))
             datasetRepository.delete(datasetId);
-        datasetRepository.save(new Dataset(datasetId));
+        Dataset newDataset = new Dataset(datasetId);
+        newDataset.setOwner(userRepository.findOne(username));
+        datasetRepository.save(newDataset);
     }
 
     @Given("^a class in dataset \"([^\"]*)\" with URI \"([^\"]*)\", label \"([^\"]*)\" and instance count (\\d+)$")
@@ -146,7 +159,7 @@ public class APIStepdefs {
     }
 
     @When("^I create a dataset with id \"([^\"]*)\"$")
-    public void aManagerCreatesADatasetWithId(String datasetId) throws Throwable {
+    public void iCreateADatasetWithId(String datasetId) throws Throwable {
         Dataset dataset = new Dataset(datasetId);
         String json = mapper.writeValueAsString(dataset);
         this.result = mockMvc.perform(post("/datasets")
@@ -154,6 +167,18 @@ public class APIStepdefs {
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
+    }
+
+    @When("^I create a public dataset with id \"([^\"]*)\"$")
+    public void iCreateAPublicDatasetWithId(String datasetId) throws Throwable {
+        Dataset dataset = new Dataset(datasetId);
+        dataset.setPublic(true);
+        String json = mapper.writeValueAsString(dataset);
+        this.result = mockMvc.perform(post("/datasets")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json)
+            .accept(MediaType.APPLICATION_JSON)
+            .with(authenticate()));
     }
 
     @When("^I create a class in dataset \"([^\"]*)\" with URI \"([^\"]*)\", label \"([^\"]*)\" and instance count (\\d+)$")
@@ -221,7 +246,8 @@ public class APIStepdefs {
     @And("^exists a dataset with id \"([^\"]*)\"$")
     public void existsADatasetWithId(String datasetId) throws Throwable {
         this.result = mockMvc.perform(get("/datasets/{datasetId}", datasetId)
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
         this.result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(datasetId)));
@@ -230,7 +256,8 @@ public class APIStepdefs {
     @And("^exists a class with id \"([^\"]*)\"$")
     public void existsAClassWithId(String classUriStr) throws Throwable {
         this.result = mockMvc.perform(get(new URI(classUriStr))
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
         this.result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(classUriStr)));
@@ -239,7 +266,8 @@ public class APIStepdefs {
     @And("^exists a facet with id \"([^\"]*)\"$")
     public void existsAFacetWithId(String facetUriStr) throws Throwable {
         this.result = mockMvc.perform(get(new URI(facetUriStr))
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
         this.result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(facetUriStr)));
@@ -248,21 +276,24 @@ public class APIStepdefs {
     @And("^There is no dataset with id \"([^\"]*)\"$")
     public void thereIsNoDatasetWithId(String datasetId) throws Throwable {
         this.result = mockMvc.perform(get("/datasets/{datasetId}", datasetId)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
                 .andExpect(status().isNotFound());
     }
 
     @And("^There is no class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
     public void thereIsNoClassInDataset(String classCurie, String datasetId) throws Throwable {
         this.result = mockMvc.perform(get("/datasets/{datasetId}/classes/{classCurie}", datasetId, classCurie)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
                 .andExpect(status().isNotFound());
     }
 
     @And("^There is no facet \"([^\"]*)\" for class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
     public void thereIsNoFacetForClassInDataset(String facetCurie, String classCurie, String datasetId) throws Throwable {
         this.result = mockMvc.perform(get("/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}", datasetId, classCurie, facetCurie)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
                 .andExpect(status().isNotFound());
     }
 
@@ -365,10 +396,18 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$.updateEndPoint", is(updateEndPoint.toString())));
     }
 
+    @When("^I retrieve the dataset with id \"([^\"]*)\"$")
+    public void iRetrieveTheDatasetWithId(String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}", datasetId)
+            .accept(MediaType.APPLICATION_JSON)
+            .with(authenticate()));
+    }
+
     @When("^I list the graphs in dataset \"([^\"]*)\" server$")
     public void iListTheGraphsInDatasetServer(String datasetId) throws Throwable {
         this.result = mockMvc.perform(get("/datasets/{datasetId}/server/graphs", datasetId)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
                 .andExpect(status().isOk());
     }
 
@@ -433,7 +472,8 @@ public class APIStepdefs {
     public void theFollowingOntologiesAreDefinedForTheDataset(String datasetId, List<String> ontologies) throws Throwable {
         ontologies = ontologies.stream().filter(s -> s.length()>0).collect(Collectors.toList());
         this.result = mockMvc.perform(get("/datasets/{datasetId}/ontologies", datasetId)
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
         this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
     }
 
@@ -441,7 +481,8 @@ public class APIStepdefs {
     public void theFollowingDataGraphsAreDefinedForTheDataset(String datasetId, List<String> graphs) throws Throwable {
         graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
         this.result = mockMvc.perform(get("/datasets/{datasetId}/graphs", datasetId)
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
         this.result.andExpect(jsonPath("$", containsInAnyOrder(graphs.toArray())));
     }
 
@@ -456,7 +497,8 @@ public class APIStepdefs {
     public void theSizeOfDatasetGraphsIs(String datasetId, int expectedSize) throws Throwable {
         Dataset dataset = datasetRepository.findOne(datasetId);
         this.result = mockMvc.perform(get("/datasets/{datasetId}/graphs", datasetId)
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
         String json = this.result.andReturn().getResponse().getContentAsString();
         List<String> datasetGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, String.class));
         int actualSize = datasetGraphs.stream().mapToInt(graph -> sparqlService.countGraphTriples(dataset.getSparqlEndPoint(), graph)).sum();
@@ -466,21 +508,24 @@ public class APIStepdefs {
     @When("^I extract the classes from dataset \"([^\"]*)\"$")
     public void I_extract_the_classes_from_dataset(String datasetId) throws Throwable {
         this.result = mockMvc.perform(get("/datasets/{datasetId}/classes", datasetId)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
                 .andExpect(status().isOk());
     }
 
     @When("^I extract the facets for class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
     public void iExtractTheFacetsForClassInDataset(String classCurie, String datasetId) throws Throwable {
         this.result = mockMvc.perform(get("/datasets/{datasetId}/classes/{classCurie}/facets", datasetId, classCurie)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
                 .andExpect(status().isOk());
     }
 
     @When("^I retrieve facet range \"([^\"]*)\" values$")
     public void iRetrieveFacetRangesValues(String facetRangeId, List<ExpectedRangeValue> expectedRangeValues) throws Throwable {
         String json = mockMvc.perform(get(facetRangeId + "/values")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();

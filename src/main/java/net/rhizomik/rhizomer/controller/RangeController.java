@@ -19,12 +19,14 @@ import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.RangeRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
+import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,14 +45,16 @@ public class RangeController {
     @Autowired private FacetRepository facetRepository;
     @Autowired private RangeRepository rangeRepository;
     @Autowired private AnalizeDataset analiseDataset;
+    @Autowired private SecurityController securityController;
 
-
-    @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges", method = RequestMethod.GET)
+    @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges",
+        method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public List<Range> getRanges(@PathVariable String datasetId, @PathVariable String classCurie, @PathVariable String facetCurie) {
+    public @ResponseBody List<Range> getRanges(@PathVariable String datasetId,
+        @PathVariable String classCurie, @PathVariable String facetCurie, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
         Class datasetClass = classRepository.findOne(datasetClassId);
         Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
@@ -60,16 +64,18 @@ public class RangeController {
         return classFacet.getRanges();
     }
 
-    @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges/{rangeCurie}/values", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET,
+        value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges/{rangeCurie}/values")
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public List<Value> getRangeValues(@PathVariable String datasetId, @PathVariable String classCurie,
+    public @ResponseBody List<Value> getRangeValues(@PathVariable String datasetId,
+        @PathVariable String classCurie,
         @PathVariable String facetCurie, @PathVariable String rangeCurie,
-        @RequestParam MultiValueMap<String, String> filters,
+        @RequestParam MultiValueMap<String, String> filters, Authentication auth,
         @RequestParam(value="page", defaultValue="0") int page,
         @RequestParam(value="size", defaultValue="10") int size) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
         Class datasetClass = classRepository.findOne(datasetClassId);
         Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
@@ -82,13 +88,15 @@ public class RangeController {
         return analiseDataset.retrieveRangeValues(dataset, facetRange, filters, page, size);
     }
 
-    @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges", method = RequestMethod.POST)
+    @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges",
+        method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public Range addRange(@Valid @RequestBody Range newRange, @PathVariable String datasetId,
-        @PathVariable String classCurie, @PathVariable String facetCurie) {
+    public @ResponseBody Range addRange(@Valid @RequestBody Range newRange,
+        @PathVariable String datasetId, @PathVariable String classCurie,
+        @PathVariable String facetCurie, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
         Class datasetClass = classRepository.findOne(datasetClassId);
         Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);

@@ -6,7 +6,7 @@ Feature: Create classes in a dataset
   I want to identify the classes in it
 
   Background: Existing dataset
-    Given There is a new dataset with id "vegetables"
+    Given There is a new dataset by "user" with id "vegetables"
 
   Scenario: manually define a class
     Given I login as "user" with password "password"

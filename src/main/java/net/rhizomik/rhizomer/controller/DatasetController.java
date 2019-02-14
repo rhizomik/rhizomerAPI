@@ -3,56 +3,73 @@ package net.rhizomik.rhizomer.controller;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
+import javax.validation.Valid;
+import net.rhizomik.rhizomer.model.Admin;
 import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.model.User;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
-import net.rhizomik.rhizomer.service.SPARQLService;
+import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RepositoryRestController
 public class DatasetController {
     final Logger logger = LoggerFactory.getLogger(DatasetController.class);
 
     @Autowired private DatasetRepository datasetRepository;
-    @Autowired private SPARQLService sparqlService;
+    @Autowired private SecurityController securityController;
 
     @RequestMapping(value = "/datasets", method = RequestMethod.GET)
     public @ResponseBody
-    Iterable<Dataset> listDatasets() throws Exception {
-        return datasetRepository.findAll();
+    Iterable<Dataset> listDatasets(Authentication auth) throws Exception {
+        if (auth.getPrincipal() instanceof Admin)
+            return datasetRepository.findAll();
+        else {
+            return datasetRepository.findByOwner((User)auth.getPrincipal());
+        }
     }
 
     @RequestMapping(value = "/datasets", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
-    Dataset createDataset(@Valid @RequestBody Dataset newDataset) throws Exception {
+    Dataset createDataset(@Valid @RequestBody Dataset newDataset, Authentication auth) {
         Validate.isTrue(!datasetRepository.exists(newDataset.getId()),
                 "Dataset with id '%s' already exists", newDataset.getId());
         logger.info("Creating Dataset: {}", newDataset.getId());
+        newDataset.setOwner((User)auth.getPrincipal());
         return datasetRepository.save(newDataset);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}", method = RequestMethod.GET)
     public @ResponseBody
-    Dataset retrieveDataset(@PathVariable String datasetId) throws Exception {
+    Dataset retrieveDataset(@PathVariable String datasetId, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+
         logger.info("Retrieved Dataset {}", datasetId);
         return dataset;
     }
 
     @RequestMapping(value = "/datasets/{datasetId}", method = RequestMethod.PUT)
     public @ResponseBody
-    Dataset updateDataset(@Valid @RequestBody Dataset updatedDataset, @PathVariable String datasetId) throws Exception {
+    Dataset updateDataset(@Valid @RequestBody Dataset updatedDataset,
+        @PathVariable String datasetId, Authentication auth) throws Exception {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+
         logger.info("Updating Dataset: {}", datasetId);
         dataset.setSparqlEndPoint(updatedDataset.getSparqlEndPoint());
         dataset.setUpdateEndPoint(updatedDataset.getUpdateEndPoint());
@@ -62,14 +79,17 @@ public class DatasetController {
         dataset.setInferenceEnabled(updatedDataset.isInferenceEnabled());
         dataset.setSampleSize(updatedDataset.getSampleSize());
         dataset.setCoverage(updatedDataset.getCoverage());
+        dataset.setPublic(updatedDataset.isPublic());
         return datasetRepository.save(dataset);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteDataset(@PathVariable String datasetId) throws Exception {
+    public void deleteDataset(@PathVariable String datasetId, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+
         logger.info("Deleting Dataset {}", datasetId);
         datasetRepository.delete(dataset);
     }

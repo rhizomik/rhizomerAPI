@@ -1,6 +1,8 @@
 package net.rhizomik.rhizomer.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.Collection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Entity
 @Table(name = "RhizomerUser")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="username")
 public class User implements UserDetails {
 
   public static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
