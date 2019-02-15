@@ -283,16 +283,13 @@ public class Queries {
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n" +
             filtersPatterns +
-            "\t\t } \n" +
+            "\t\t } LIMIT " + limit + " OFFSET " + offset + "\n" +
             "\t } \n" +
             "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
-        if (limit > 0) query.setLimit(limit);
-        if (offset > 0) query.setOffset(offset);
         return query;
     }
-
 
     public static Query getQueryClassInstancesCount(String classUri,
         MultiValueMap<String, String> filters) {
