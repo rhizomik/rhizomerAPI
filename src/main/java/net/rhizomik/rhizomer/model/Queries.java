@@ -141,7 +141,7 @@ public class Queries {
         return QueryFactory.create(prefixes +
             "SELECT ?class (COUNT(DISTINCT ?instance) as ?n) \n" +
             "WHERE { \n" +
-            "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
+            "\t ?instance a ?class . FILTER ( !isBlank(?class) && ?class != owl:Thing ) \n" +
             "} GROUP BY ?class");
     }
 
