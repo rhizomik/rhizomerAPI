@@ -16,7 +16,7 @@ Feature: Detect dataset structure considering inference
       | http://rhizomik.net/dataset/apollo13      |
     And The following ontologies are set for dataset "apollo13"
       | data/nasa-schema.ttl                    |
-    And The query type for dataset "apollo13" is set to "FULL"
+    And The query type for dataset "apollo13" is set to "DETAILED"
     And The inference for dataset "apollo13" is set to "true"
 
   Scenario: The extracted classes are those instantiated in the dataset

@@ -34,7 +34,7 @@ import net.rhizomik.rhizomer.model.ExpectedClass;
 import net.rhizomik.rhizomer.model.ExpectedFacet;
 import net.rhizomik.rhizomer.model.ExpectedRange;
 import net.rhizomik.rhizomer.model.ExpectedRangeValue;
-import net.rhizomik.rhizomer.model.Queries;
+import net.rhizomik.rhizomer.service.DetailedQueries;
 import net.rhizomik.rhizomer.model.User;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
@@ -338,7 +338,7 @@ public class APIStepdefs {
         existsADatasetWithId(datasetId);
         String datasetJson = this.result.andReturn().getResponse().getContentAsString();
         Dataset dataset = mapper.readValue(datasetJson, Dataset.class);
-        dataset.setQueryType(Queries.QueryType.valueOf(queryTypeString));
+        dataset.setQueryType(DetailedQueries.QueryType.valueOf(queryTypeString));
         datasetJson = mapper.writeValueAsString(dataset);
         this.result = mockMvc.perform(put("/datasets/{datasetId}", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)

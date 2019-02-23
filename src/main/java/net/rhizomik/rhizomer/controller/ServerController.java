@@ -47,7 +47,7 @@ public class ServerController {
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         securityController.checkOwner(dataset, auth);
         logger.info("Retrieve Dataset {} Server {} graphs", datasetId, dataset.getSparqlEndPoint().toString());
-        return analizeDataset.listServerGraphs(dataset.getSparqlEndPoint());
+        return analizeDataset.listServerGraphs(dataset);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/server", method = RequestMethod.POST)

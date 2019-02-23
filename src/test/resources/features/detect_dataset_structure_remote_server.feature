@@ -11,7 +11,7 @@ Feature: Detect dataset structure in remote Virtuoso server
     And The dataset "rdflicense" server is set to "http://virtuoso.udl.cat:8890/sparql"
     And I add the graphs to the dataset "rdflicense"
       | http://test.com/rdflicense                      |
-    And The query type for dataset "rdflicense" is set to "FULL"
+    And The query type for dataset "rdflicense" is set to "DETAILED"
     And The inference for dataset "rdflicense" is set to "false"
 
   Scenario: The extracted classes are those instantiated by the data

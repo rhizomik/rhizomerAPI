@@ -9,13 +9,13 @@ import java.util.List;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.Facet;
-import net.rhizomik.rhizomer.model.Queries;
 import net.rhizomik.rhizomer.model.Range;
 import net.rhizomik.rhizomer.model.Value;
 import net.rhizomik.rhizomer.model.id.DatasetClassFacetId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.RangeRepository;
+import net.rhizomik.rhizomer.service.Queries.QueryType;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
@@ -40,16 +40,25 @@ public class AnalizeDataset {
 
     @Autowired private PrefixCCMap prefixCCMap;
     @Autowired private SPARQLService sparqlService;
+    @Autowired private OptimizedQueries optimizedQueries;
+    @Autowired private DetailedQueries detailedQueries;
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
     @Autowired private RangeRepository rangeRepository;
+
+    private Queries queries(Queries.QueryType queryType) {
+        if (queryType == QueryType.DETAILED)
+            return detailedQueries;
+        else
+            return optimizedQueries;
+    }
 
     public void detectDatasetClasses(Dataset dataset){
         if (dataset.isInferenceEnabled())
             sparqlService.inferTypes(dataset);
 
-        ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(), Queries.getQueryClasses(dataset.getQueryType()),
-                                              dataset.getDatasetGraphs(), null);
+        ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
+            queries(dataset.getQueryType()).getQueryClasses(), dataset.getDatasetGraphs(), null);
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
             if (!soln.contains("?class")) continue;
@@ -67,9 +76,10 @@ public class AnalizeDataset {
 
     public void detectClassFacets(Class datasetClass) {
         ResultSet result = sparqlService.querySelect(datasetClass.getDataset().getSparqlEndPoint(),
-                Queries.getQueryClassFacets(datasetClass.getUri().toString(), datasetClass.getDataset().getQueryType(),
-                        datasetClass.getDataset().getSampleSize(), datasetClass.getInstanceCount(), datasetClass.getDataset().getCoverage()),
-                        datasetClass.getDataset().getDatasetGraphs(), null);
+            queries(datasetClass.getDataset().getQueryType()).getQueryClassFacets(
+                datasetClass.getUri().toString(), datasetClass.getDataset().getSampleSize(),
+                datasetClass.getInstanceCount(), datasetClass.getDataset().getCoverage()),
+            datasetClass.getDataset().getDatasetGraphs(), null);
 
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
@@ -118,7 +128,7 @@ public class AnalizeDataset {
         URI classUri = facetRange.getFacet().getDomain().getUri();
         URI facetUri = facetRange.getFacet().getUri();
         ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
-            Queries.getQueryFacetRageValues(classUri.toString(), facetUri.toString(),
+            queries(dataset.getQueryType()).getQueryFacetRangeValues(classUri.toString(), facetUri.toString(),
                 facetRange.getUri().toString(), filters, facetRange.getAllLiteral(),
                 size, size * page, true),
             dataset.getDatasetGraphs(), null);
@@ -146,8 +156,9 @@ public class AnalizeDataset {
         return rangeValues;
     }
 
-    public List<URI> listServerGraphs(URL sparqlEndPoint) {
-        ResultSet result = sparqlService.querySelect(sparqlEndPoint, Queries.getQueryGraphs());
+    public List<URI> listServerGraphs(Dataset dataset) {
+        ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
+            queries(dataset.getQueryType()).getQueryGraphs());
         List<URI> graphs = new ArrayList<>();
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
@@ -163,7 +174,7 @@ public class AnalizeDataset {
         MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
-            Queries.getQueryClassInstances(classUri.toString(), filters, size, size * page),
+            queries(dataset.getQueryType()).getQueryClassInstances(classUri.toString(), filters, size, size * page),
             dataset.getDatasetGraphs());
         RDFDataMgr.write(out, model, format);
     }
@@ -172,7 +183,7 @@ public class AnalizeDataset {
         MultiValueMap<String, String> filters) {
         URI classUri = datasetClass.getUri();
         ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
-            Queries.getQueryClassInstancesCount(classUri.toString(), filters),
+            queries(dataset.getQueryType()).getQueryClassInstancesCount(classUri.toString(), filters),
             dataset.getDatasetGraphs(), null);
         int count = 0;
         while (result.hasNext()) {

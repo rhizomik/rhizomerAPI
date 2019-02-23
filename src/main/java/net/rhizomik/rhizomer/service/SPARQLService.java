@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import net.rhizomik.rhizomer.model.Dataset;
-import net.rhizomik.rhizomer.model.Queries;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
@@ -27,6 +26,7 @@ import org.apache.jena.update.UpdateProcessor;
 import org.apache.jena.update.UpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,6 +35,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SPARQLService {
     private static final Logger logger = LoggerFactory.getLogger(SPARQLService.class);
+
+    @Autowired
+    OptimizedQueries queries;
 
     public ResultSet querySelect(URL sparqlEndpoint, Query query) {
         return this.querySelect(sparqlEndpoint, query, new ArrayList<>(), new ArrayList<>());
@@ -74,7 +77,7 @@ public class SPARQLService {
     }
 
     public int countGraphTriples(URL sparqlEndPoint, String graph) {
-        Query countTriples = Queries.getQueryCountTriples();
+        Query countTriples = queries.getQueryCountTriples();
         countTriples.addGraphURI(graph);
         ResultSet result = querySelect(sparqlEndPoint, countTriples);
         int count = 0;
@@ -108,25 +111,28 @@ public class SPARQLService {
     }
 
     public void clearGraph(URL sparqlEndPoint, URI datasetOntologiesGraph) {
-        UpdateRequest clearGraph = Queries.getClearGraph(datasetOntologiesGraph.toString());
+        UpdateRequest clearGraph = queries.getClearGraph(datasetOntologiesGraph.toString());
         queryUpdate(sparqlEndPoint, clearGraph);
     }
 
     public void inferTypes(Dataset dataset) {
         List<String> targetGraphs = dataset.getDatasetGraphs();
         targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-        UpdateRequest createGraph = Queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
+        UpdateRequest createGraph = queries
+            .getCreateGraph(dataset.getDatasetInferenceGraph().toString());
         queryUpdate(dataset.getSparqlEndPoint(), createGraph);
-        UpdateRequest update = Queries.getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
+        UpdateRequest update = queries
+            .getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
         queryUpdate(dataset.getSparqlEndPoint(), update);
     }
 
     public void inferTypesConstruct(net.rhizomik.rhizomer.model.Dataset dataset) {
-        UpdateRequest createGraph = Queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
+        UpdateRequest createGraph = queries
+            .getCreateGraph(dataset.getDatasetInferenceGraph().toString());
         queryUpdate(dataset.getSparqlEndPoint(), createGraph);
         List<String> targetGraphs = dataset.getDatasetGraphs();
         targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-        Model inferredModel = queryConstruct(dataset.getSparqlEndPoint(), Queries.getQueryInferTypes(), targetGraphs);
+        Model inferredModel = queryConstruct(dataset.getSparqlEndPoint(), queries.getQueryInferTypes(), targetGraphs);
         /*File inferenceOut = new File(dataset.getId() + "-inference.ttl");
         try {
             RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);

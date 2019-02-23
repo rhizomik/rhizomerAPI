@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.rhizomik.rhizomer.model.Queries.QueryType;
+import net.rhizomik.rhizomer.service.Queries.QueryType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class Dataset {
     private String id;
     private URL sparqlEndPoint;
     private URL updateEndPoint;
-    private QueryType queryType = QueryType.FULL;
+    private QueryType queryType = QueryType.OPTIMIZED;
     private boolean inferenceEnabled = false;
     private int sampleSize = 0;
     private double coverage = 0.0;

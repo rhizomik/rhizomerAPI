@@ -15,7 +15,7 @@ Feature: Detect dataset structure
       | data/rdflicenses.ttl            | http://test.com/rdflicense            |
     And The following data graphs are set for dataset "mixed"
       | http://rhizomik.net/dataset/apollo13          |
-    And The query type for dataset "mixed" is set to "FULL"
+    And The query type for dataset "mixed" is set to "DETAILED"
     And The inference for dataset "mixed" is set to "false"
 
   Scenario: The extracted classes are those instantiated in the dataset
@@ -51,8 +51,7 @@ Feature: Detect dataset structure
     When I extract the classes from dataset "mixed"
     Then The retrieved classes are
       | uri                                             | label       | instanceCount |
-    # Only if using Classes query putting untyped resources into rdfs:Resource
-    # | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
+      | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
       | http://www.w3.org/ns/odrl/2/Constraint          | Constraint  | 10            |
       | http://www.w3.org/ns/odrl/2/Prohibition         | Prohibition | 18            |
       | http://www.w3.org/ns/odrl/2/Policy              | Policy      | 175           |
@@ -104,8 +103,7 @@ Feature: Detect dataset structure
     And I extract the classes from dataset "mixed"
     Then The retrieved classes are
       | uri                                             | label       | instanceCount |
-    # Only if using Classes query putting untyped resources into rdfs:Resource
-    # | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
+      | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
       | http://www.w3.org/ns/odrl/2/Constraint          | Constraint  | 10            |
       | http://www.w3.org/ns/odrl/2/Prohibition         | Prohibition | 18            |
       | http://www.w3.org/ns/odrl/2/Policy              | Policy      | 175           |
