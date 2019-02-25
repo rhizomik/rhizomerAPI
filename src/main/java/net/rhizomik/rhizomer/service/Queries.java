@@ -1,9 +1,6 @@
 package net.rhizomik.rhizomer.service;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
@@ -127,26 +124,5 @@ public interface Queries {
         }
 
         return selectsUnion;
-    }
-
-    // TODO: consider omitting the following classes, properties and namespaces
-
-    String[] omitPropertiesArray = {
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-    };
-
-    String[] omitClassesArray = {
-            "http://www.w3.org/2002/07/owl#",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-            "http://www.w3.org/2000/01/rdf-schema#",
-            "http://www.w3.org/2001/XMLSchema#"
-    };
-
-    default Set<String> getOmitProperties() {
-        return new HashSet<>(Arrays.asList(omitPropertiesArray));
-    }
-
-    default Set<String> getOmitClasses() {
-        return new HashSet<>(Arrays.asList(omitClassesArray));
     }
 }

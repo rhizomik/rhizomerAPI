@@ -4,3 +4,7 @@ default-password: password
 spring:
   profiles:
     active: LOCAL_SERVER_TESTING
+
+rhizomer-omit:
+  properties: 
+  classes:

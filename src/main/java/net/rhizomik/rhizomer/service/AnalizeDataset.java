@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.Dataset;
@@ -38,6 +39,11 @@ import org.springframework.util.MultiValueMap;
 public class AnalizeDataset {
     final Logger logger = LoggerFactory.getLogger(AnalizeDataset.class);
 
+    @org.springframework.beans.factory.annotation.Value("${rhizomer-omit.properties}")
+    String[] omittedProperties;
+    @org.springframework.beans.factory.annotation.Value("${rhizomer-omit.classes}")
+    String[] omittedClasses;
+
     @Autowired private PrefixCCMap prefixCCMap;
     @Autowired private SPARQLService sparqlService;
     @Autowired private OptimizedQueries optimizedQueries;
@@ -63,6 +69,7 @@ public class AnalizeDataset {
             QuerySolution soln = result.nextSolution();
             if (!soln.contains("?class")) continue;
             Resource r = soln.getResource("?class");
+            if (isOmittedClass(r.getURI())) continue;
             int count = soln.getLiteral("?n").getInt();
             try {
                 Class detectedClass = new Class(dataset, new URI(r.getURI()), r.getLocalName(), count);
@@ -74,6 +81,10 @@ public class AnalizeDataset {
         }
     }
 
+    private boolean isOmittedClass(String uri) {
+        return Arrays.stream(omittedClasses).anyMatch(uri::contains);
+    }
+
     public void detectClassFacets(Class datasetClass) {
         ResultSet result = sparqlService.querySelect(datasetClass.getDataset().getSparqlEndPoint(),
             queries(datasetClass.getDataset().getQueryType()).getQueryClassFacets(
@@ -83,44 +94,48 @@ public class AnalizeDataset {
 
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
-            if (soln.contains("?property")) {
-                Resource property = soln.getResource("?property");
-                String range = XSD.xstring.toString();
-                if (soln.contains("?range"))
-                    range = soln.get("?range").toString();
-                int uses = soln.getLiteral("?uses").getInt();
-                int values = soln.getLiteral("?values").getInt();
-                boolean allLiteralBoolean = false;
-                if (soln.contains("?allLiteral")) {
-                    Literal allLiteral = soln.getLiteral("?allLiteral");
-                    allLiteralBoolean = (allLiteral.getInt() != 0);
+            if (!soln.contains("?property")) continue;
+            Resource property = soln.getResource("?property");
+            if (isOmittedProperty(property.getURI())) continue;
+            String range = XSD.xstring.toString();
+            if (soln.contains("?range"))
+                range = soln.get("?range").toString();
+            int uses = soln.getLiteral("?uses").getInt();
+            int values = soln.getLiteral("?values").getInt();
+            boolean allLiteralBoolean = false;
+            if (soln.contains("?allLiteral")) {
+                Literal allLiteral = soln.getLiteral("?allLiteral");
+                allLiteralBoolean = (allLiteral.getInt() != 0);
+            }
+            try {
+                Facet detectedFacet;
+                URI propertyUri = new URI(property.getURI());
+                DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClass.getId(), propertyUri);
+                if (facetRepository.exists(datasetClassFacetId))
+                    detectedFacet = facetRepository.findOne(datasetClassFacetId);
+                else {
+                    detectedFacet = facetRepository.save(new Facet(datasetClass, propertyUri, property.getLocalName()));
+                    datasetClass.addFacet(detectedFacet);
+                    logger.info("Added detected Facet {} to Class {} in Dataset",
+                            detectedFacet.getId().getFacetCurie(), datasetClass.getId().getClassCurie(),
+                            datasetClass.getDataset().getId());
                 }
-                try {
-                    Facet detectedFacet;
-                    URI propertyUri = new URI(property.getURI());
-                    DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClass.getId(), propertyUri);
-                    if (facetRepository.exists(datasetClassFacetId))
-                        detectedFacet = facetRepository.findOne(datasetClassFacetId);
-                    else {
-                        detectedFacet = facetRepository.save(new Facet(datasetClass, propertyUri, property.getLocalName()));
-                        datasetClass.addFacet(detectedFacet);
-                        logger.info("Added detected Facet {} to Class {} in Dataset",
-                                detectedFacet.getId().getFacetCurie(), datasetClass.getId().getClassCurie(),
-                                datasetClass.getDataset().getId());
-                    }
-                    URI rangeUri = new URI(range);
-                    String rangeLabel = prefixCCMap.localName(range);
-                    Range detectedRange = new Range(detectedFacet, rangeUri, rangeLabel, uses, values, allLiteralBoolean);
-                    detectedFacet.addRange(rangeRepository.save(detectedRange));
-                    facetRepository.save(detectedFacet);
-                    logger.info("Added detected Range {} to Facet {} for Class {} in Dataset",
-                            detectedRange.getId().getRangeCurie(), detectedFacet.getId().getFacetCurie(),
-                            datasetClass.getId().getClassCurie(), datasetClass.getDataset().getId());
-                } catch (URISyntaxException e) {
-                    logger.error("URI syntax error: {}", property.getURI());
-                }
+                URI rangeUri = new URI(range);
+                String rangeLabel = prefixCCMap.localName(range);
+                Range detectedRange = new Range(detectedFacet, rangeUri, rangeLabel, uses, values, allLiteralBoolean);
+                detectedFacet.addRange(rangeRepository.save(detectedRange));
+                facetRepository.save(detectedFacet);
+                logger.info("Added detected Range {} to Facet {} for Class {} in Dataset",
+                        detectedRange.getId().getRangeCurie(), detectedFacet.getId().getFacetCurie(),
+                        datasetClass.getId().getClassCurie(), datasetClass.getDataset().getId());
+            } catch (URISyntaxException e) {
+                logger.error("URI syntax error: {}", property.getURI());
             }
         }
+    }
+
+    private boolean isOmittedProperty(String uri) {
+        return Arrays.stream(omittedProperties).anyMatch(uri::contains);
     }
 
     public List<Value> retrieveRangeValues(Dataset dataset, Range facetRange,
