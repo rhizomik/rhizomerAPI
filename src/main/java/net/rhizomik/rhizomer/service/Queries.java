@@ -1,5 +1,6 @@
 package net.rhizomik.rhizomer.service;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.jena.query.ParameterizedSparqlString;
@@ -35,6 +36,10 @@ public interface Queries {
     Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
         MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset,
         boolean ordered) ;
+
+    default Query getQueryDescribeResource(URI resourceUri) {
+        return QueryFactory.create("DESCRIBE <" + resourceUri + ">");
+    }
 
     default Query getQueryInferTypes() {
         return QueryFactory.create(prefixes +

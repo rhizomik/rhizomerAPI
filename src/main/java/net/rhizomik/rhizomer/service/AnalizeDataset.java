@@ -208,4 +208,10 @@ public class AnalizeDataset {
         }
         return count;
     }
+
+    public void describeDatasetResource(OutputStream out, Dataset dataset, URI resourceUri, RDFFormat format) {
+        Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
+            queries(dataset.getQueryType()).getQueryDescribeResource(resourceUri), dataset.getDatasetGraphs());
+        RDFDataMgr.write(out, model, format);
+    }
 }
