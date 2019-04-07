@@ -20,6 +20,7 @@ import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateProcessor;
@@ -36,6 +37,8 @@ import org.springframework.stereotype.Service;
 public class SPARQLService {
     private static final Logger logger = LoggerFactory.getLogger(SPARQLService.class);
 
+    private static final long TIMEOUT = 25000; // 25 seconds
+
     @Autowired
     OptimizedQueries queries;
 
@@ -47,9 +50,18 @@ public class SPARQLService {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, ontologies);
+        ((QueryEngineHTTP) q).addParam("timeout", Long.toString(TIMEOUT));
         ResultSet result = ResultSetFactory.copyResults(q.execSelect());
         q.close();
         return result;
+    }
+
+    public Model queryDescribe(URL sparqlEndpoint, Query query, List<String> graphs) {
+        graphs.forEach(query::addGraphURI);
+        logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
+        QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, null);
+        ((QueryEngineHTTP) q).addParam("timeout", Long.toString(TIMEOUT));
+        return q.execDescribe();
     }
 
     public Model queryConstruct(URL sparqlEndpoint, Query query, List<String> graphs) {
@@ -67,13 +79,6 @@ public class SPARQLService {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-    }
-
-    public Model queryDescribe(URL sparqlEndpoint, Query query, List<String> graphs) {
-        graphs.forEach(query::addGraphURI);
-        logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, null);
-        return q.execDescribe();
     }
 
     public int countGraphTriples(URL sparqlEndPoint, String graph) {
