@@ -118,4 +118,20 @@ public class DatasetController {
             .contentType(MediaType.APPLICATION_JSON)
             .body(stream);
     }
+
+    @RequestMapping(value = "/datasets/{datasetId}/browse", method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StreamingResponseBody> browseUri(
+        @PathVariable String datasetId,
+        @RequestParam(value = "uri") URI resourceUri, Authentication auth) {
+        Dataset dataset = datasetRepository.findOne(datasetId);
+        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        logger.info("Browsing available data at {}", resourceUri);
+        StreamingResponseBody stream = outputStream ->
+            analizeDataset.browseUri(outputStream, resourceUri, RDFFormat.JSONLD);
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(stream);
+    }
 }

@@ -21,6 +21,7 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
@@ -212,6 +213,12 @@ public class AnalizeDataset {
     public void describeDatasetResource(OutputStream out, Dataset dataset, URI resourceUri, RDFFormat format) {
         Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
             queries(dataset.getQueryType()).getQueryDescribeResource(resourceUri), dataset.getDatasetGraphs());
+        RDFDataMgr.write(out, model, format);
+    }
+
+    public void browseUri(OutputStream out, URI resourceUri, RDFFormat format) {
+        Model model = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(model, resourceUri.toString());
         RDFDataMgr.write(out, model, format);
     }
 }
