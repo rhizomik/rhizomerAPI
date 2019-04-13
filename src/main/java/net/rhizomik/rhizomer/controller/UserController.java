@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @PreAuthorize("#userId == principal.username or hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/users/{userId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/users/{userId:.+}", method = RequestMethod.GET)
     public @ResponseBody
     User retrieveUser(@PathVariable String userId) {
         User user = userRepository.findOne(userId);
@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @PreAuthorize("#userId == principal.username or hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/users/{userId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/users/{userId:.+}", method = RequestMethod.PUT)
     public @ResponseBody
     User updateUser(@Valid @RequestBody User updatedUser, @PathVariable String userId) {
         User user = userRepository.findOne(userId);
@@ -82,7 +82,7 @@ public class UserController {
     }
 
     @PreAuthorize("#userId == principal.username or hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/users/{userId:.+}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable String userId) {
         User user = userRepository.findOne(userId);
         Validate.notNull(user, "User with id '%s' not found", userId);
