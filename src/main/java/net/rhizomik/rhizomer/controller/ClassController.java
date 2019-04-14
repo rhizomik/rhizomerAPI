@@ -70,15 +70,17 @@ public class ClassController {
     produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> retrieveClassFacetedInstances(
         @PathVariable String datasetId, @PathVariable String classCurie,
-        @RequestParam MultiValueMap<String, String> filters, Authentication auth,
         @RequestParam(value="page", defaultValue="0") int page,
-        @RequestParam(value="size", defaultValue="10") int size) {
+        @RequestParam(value="size", defaultValue="10") int size,
+        @RequestParam MultiValueMap<String, String> filters, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         Class datasetClass = classRepository.findOne(new DatasetClassId(dataset, new Curie(classCurie)));
         Validate.notNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
         logger.info("Retrieved instances for Class {} in Dataset {}", classCurie, datasetId);
+        filters.remove("page");
+        filters.remove("size");
         StreamingResponseBody stream = outputStream ->
             analiseDataset.retrieveClassInstances(outputStream,
                 dataset, datasetClass, filters, page, size, RDFFormat.JSONLD);
