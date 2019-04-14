@@ -28,6 +28,7 @@ import org.apache.jena.update.UpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,7 +38,8 @@ import org.springframework.stereotype.Service;
 public class SPARQLService {
     private static final Logger logger = LoggerFactory.getLogger(SPARQLService.class);
 
-    private static final long TIMEOUT = 25000; // 25 seconds
+    @Value("${rhizomer.sparql-timeout:0}")
+    private String TIMEOUT;
 
     @Autowired
     OptimizedQueries queries;
@@ -50,7 +52,7 @@ public class SPARQLService {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, ontologies);
-        ((QueryEngineHTTP) q).addParam("timeout", Long.toString(TIMEOUT));
+        ((QueryEngineHTTP) q).addParam("timeout", TIMEOUT);
         ResultSet result = ResultSetFactory.copyResults(q.execSelect());
         q.close();
         return result;
@@ -60,7 +62,7 @@ public class SPARQLService {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, null);
-        ((QueryEngineHTTP) q).addParam("timeout", Long.toString(TIMEOUT));
+        ((QueryEngineHTTP) q).addParam("timeout", TIMEOUT);
         return q.execDescribe();
     }
 
