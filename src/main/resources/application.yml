@@ -1,5 +1,8 @@
 allowed-origins: http://localhost:4200
-default-password: password
-rhizomer-omit:
-  properties: wikiPage
-  classes: http://www.w3.org/2002/07/owl, http://www.w3.org/1999/02/22-rdf-syntax-ns, http://www.w3.org/2000/01/rdf-schema
+
+rhizomer:
+  default-password: password
+  sparql-timeout: 0
+  omit:
+    properties: wikiPage
+    classes: http://www.w3.org/2002/07/owl, http://www.w3.org/1999/02/22-rdf-syntax-ns, http://www.w3.org/2000/01/rdf-schema

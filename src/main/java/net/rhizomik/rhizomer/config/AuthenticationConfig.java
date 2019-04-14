@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurers
 @Configuration
 public class AuthenticationConfig extends GlobalAuthenticationConfigurerAdapter {
 
-  @Value("${default-password}")
+  @Value("${rhizomer.default-password}")
   String defaultPassword;
 
   @Autowired BasicUserDetailsService basicUserDetailsService;

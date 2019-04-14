@@ -40,9 +40,9 @@ import org.springframework.util.MultiValueMap;
 public class AnalizeDataset {
     final Logger logger = LoggerFactory.getLogger(AnalizeDataset.class);
 
-    @org.springframework.beans.factory.annotation.Value("${rhizomer-omit.properties}")
+    @org.springframework.beans.factory.annotation.Value("${rhizomer.omit.properties}")
     String[] omittedProperties;
-    @org.springframework.beans.factory.annotation.Value("${rhizomer-omit.classes}")
+    @org.springframework.beans.factory.annotation.Value("${rhizomer.omit.classes}")
     String[] omittedClasses;
 
     @Autowired private PrefixCCMap prefixCCMap;
