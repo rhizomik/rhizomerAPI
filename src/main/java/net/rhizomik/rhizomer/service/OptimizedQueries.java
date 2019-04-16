@@ -16,7 +16,7 @@ public class OptimizedQueries implements Queries {
     @Override
     public Query getQueryClasses() {
         return QueryFactory.create(prefixes +
-            "SELECT ?class (COUNT(DISTINCT ?instance) as ?n) \n" +
+            "SELECT ?class (COUNT(?instance) as ?n) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
             "} GROUP BY ?class");
