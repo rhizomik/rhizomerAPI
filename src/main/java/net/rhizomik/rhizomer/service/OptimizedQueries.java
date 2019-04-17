@@ -66,7 +66,7 @@ public class OptimizedQueries implements Queries {
                 "\t { { SELECT ?instance WHERE { ?instance a ?class } OFFSET 0 "+"LIMIT "+sampleSize+" } \n" +
                 addSamples(classCount, sampleSize, coverage) + " } \n" +
                 "\t ?instance ?property ?object \n" +
-                "\t BIND(if(isLiteral(?object), 1, 0) AS ?isLiteral) \n" +
+                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
                 "} GROUP BY ?property");
         } else {
             pQuery.setCommandText(prefixes +
@@ -74,7 +74,7 @@ public class OptimizedQueries implements Queries {
                 "WHERE { \n" +
                 "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
                 "\t ?instance ?property ?object \n" +
-                "\t BIND(if(isLiteral(?object), 1, 0) AS ?isLiteral) \n" +
+                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
                 "} GROUP BY ?property");
         }
         pQuery.setIri("class", classUri);
