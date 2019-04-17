@@ -17,6 +17,7 @@ import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.RangeRepository;
 import net.rhizomik.rhizomer.service.Queries.QueryType;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
@@ -106,7 +107,10 @@ public class AnalizeDataset {
             boolean allLiteralBoolean = false;
             if (soln.contains("?allLiteral")) {
                 Literal allLiteral = soln.getLiteral("?allLiteral");
-                allLiteralBoolean = (allLiteral.getInt() != 0);
+                if (allLiteral.getDatatype().equals(XSDDatatype.XSDboolean))
+                    allLiteralBoolean = allLiteral.getBoolean();
+                else
+                    allLiteralBoolean = (allLiteral.getInt() != 0);
             }
             try {
                 Facet detectedFacet;
