@@ -76,7 +76,7 @@ public class DatasetController {
         @PathVariable String datasetId, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
-        securityController.checkPublicOrOwner(dataset, auth);
+        securityController.checkOwner(dataset, auth);
 
         logger.info("Updating Dataset: {}", datasetId);
         dataset.setSparqlEndPoint(updatedDataset.getSparqlEndPoint());
@@ -96,7 +96,7 @@ public class DatasetController {
     public void deleteDataset(@PathVariable String datasetId, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
-        securityController.checkPublicOrOwner(dataset, auth);
+        securityController.checkOwner(dataset, auth);
 
         logger.info("Deleting Dataset {}", datasetId);
         datasetRepository.delete(dataset);
