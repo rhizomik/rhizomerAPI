@@ -28,7 +28,7 @@ public class DetailedQueries implements Queries {
     public Query getQueryClassInstancesCount(String classUri,
         MultiValueMap<String, String> filters) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(prefixes +
+        pQuery.setCommandText(
             "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . \n" +
@@ -43,7 +43,7 @@ public class DetailedQueries implements Queries {
     public Query getQueryClassInstances(String classUri,
         MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(prefixes +
+        pQuery.setCommandText(
             "DESCRIBE ?instance \n" +
             "WHERE { \n" +
             "\t { SELECT DISTINCT ?instance \n" +

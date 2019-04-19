@@ -15,7 +15,7 @@ public class OptimizedQueries implements Queries {
 
     @Override
     public Query getQueryClasses() {
-        return QueryFactory.create(prefixes +
+        return QueryFactory.create(
             "SELECT ?class (COUNT(?instance) as ?n) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
@@ -41,7 +41,7 @@ public class OptimizedQueries implements Queries {
     public Query getQueryClassInstances(String classUri,
         MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(prefixes +
+        pQuery.setCommandText(
             "DESCRIBE ?instance \n" +
             "WHERE { \n" +
             "\t { SELECT DISTINCT ?instance \n" +
@@ -60,7 +60,7 @@ public class OptimizedQueries implements Queries {
     public Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         if (sampleSize > 0 && coverage > 0.0) {
-            pQuery.setCommandText(prefixes +
+            pQuery.setCommandText(
                 "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
                 "WHERE { \n" +
                 "\t { { SELECT ?instance WHERE { ?instance a ?class } OFFSET 0 "+"LIMIT "+sampleSize+" } \n" +
@@ -69,7 +69,7 @@ public class OptimizedQueries implements Queries {
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
                 "} GROUP BY ?property");
         } else {
-            pQuery.setCommandText(prefixes +
+            pQuery.setCommandText(
                 "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
                 "WHERE { \n" +
                 "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +

@@ -17,10 +17,7 @@ import org.springframework.util.MultiValueMap;
 @Service
 public interface Queries {
     String prefixes =
-            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" +
-            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
-            "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n" +
-            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n";
+            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n";
 
     enum QueryType { OPTIMIZED, DETAILED }
 
@@ -105,9 +102,9 @@ public interface Queries {
     }
 
     default Query getQueryGraphs() {
-        return QueryFactory.create(prefixes +
+        return QueryFactory.create(
                 "SELECT DISTINCT ?graph \n" +
-                "WHERE { GRAPH ?graph { ?s rdf:type ?o } }");
+                "WHERE { GRAPH ?graph { ?s a ?o } }");
     }
 
     default Query getQueryCountType(String type) {
