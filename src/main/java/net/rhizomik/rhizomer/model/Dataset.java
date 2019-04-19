@@ -43,6 +43,7 @@ public class Dataset {
     @ElementCollection
     private Set<String> datasetOntologies = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
+    @OrderBy("instanceCount DESC")
     private List<Class> classes = new ArrayList<>();
     @ManyToOne
     @JsonBackReference
@@ -81,6 +82,12 @@ public class Dataset {
 
     @JsonIgnore
     public List<Class> getClasses() { return new ArrayList<>(classes); }
+
+    @JsonIgnore
+    public List<Class> getClasses(int top) {
+        int max = Integer.min(top, classes.size());
+        return new ArrayList<>(classes.subList(0, max));
+    }
 
     public void setClasses(List<Class> classes) { this.classes.clear(); this.classes.addAll(classes); }
 

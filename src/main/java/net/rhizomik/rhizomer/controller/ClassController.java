@@ -44,13 +44,15 @@ public class ClassController {
 
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.GET)
     public @ResponseBody List<Class> listDatasetClass(@PathVariable String datasetId,
-        Authentication auth) {
+        @RequestParam(value="top", defaultValue="0") int top, Authentication auth) {
         Dataset dataset = datasetRepository.findOne(datasetId);
         Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieving classes in Dataset {}", datasetId);
         if (dataset.getClasses().isEmpty() && dataset.getSparqlEndPoint()!=null )
             analiseDataset.detectDatasetClasses(dataset);
+        if (top > 0)
+            return dataset.getClasses(top);
         return dataset.getClasses();
     }
 
