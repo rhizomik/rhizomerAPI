@@ -26,12 +26,20 @@ public class OptimizedQueries implements Queries {
     public Query getQueryClassInstancesCount(String classUri,
         MultiValueMap<String, String> filters) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(prefixes +
-            "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
-            "WHERE { \n" +
-            "\t ?instance a ?class . \n" +
-            getFilterPatterns(filters) +
-            "}");
+        if (filters.isEmpty()) {
+            pQuery.setCommandText(
+                "SELECT (COUNT(?instance) AS ?n) \n" +
+                "WHERE { \n" +
+                "\t ?instance a ?class . \n" +
+                "}");
+        } else {
+            pQuery.setCommandText(
+                "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
+                "WHERE { \n" +
+                "\t ?instance a ?class . \n" +
+                getFilterPatterns(filters) +
+                "}");
+        }
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
         return query;
