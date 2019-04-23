@@ -20,9 +20,9 @@ Feature: Create server dataset
 
   Scenario: create public dataset accessible anonymously
     Given I login as "user" with password "password"
-    And I create a public dataset with id "vegetables"
+    And I create a public dataset with id "public"
     And I'm not logged in
-    When I retrieve the dataset with id "vegetables"
+    When I retrieve the dataset with id "public"
     Then the response status is 200
 
   Scenario: create non-public dataset and try to access it as admin

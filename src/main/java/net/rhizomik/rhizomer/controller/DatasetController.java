@@ -52,7 +52,7 @@ public class DatasetController {
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
     Dataset createDataset(@Valid @RequestBody Dataset newDataset, Authentication auth) {
-        Validate.isTrue(!datasetRepository.exists(newDataset.getId()),
+        Validate.isTrue(!datasetRepository.existsById(newDataset.getId()),
                 "Dataset with id '%s' already exists", newDataset.getId());
         logger.info("Creating Dataset: {}", newDataset.getId());
         newDataset.setOwner((User)auth.getPrincipal());
@@ -62,8 +62,8 @@ public class DatasetController {
     @RequestMapping(value = "/datasets/{datasetId}", method = RequestMethod.GET)
     public @ResponseBody
     Dataset retrieveDataset(@PathVariable String datasetId, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkPublicOrOwner(dataset, auth);
 
         logger.info("Retrieved Dataset {}", datasetId);
@@ -74,8 +74,8 @@ public class DatasetController {
     public @ResponseBody
     Dataset updateDataset(@Valid @RequestBody Dataset updatedDataset,
         @PathVariable String datasetId, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);
 
         logger.info("Updating Dataset: {}", datasetId);
@@ -94,8 +94,8 @@ public class DatasetController {
     @RequestMapping(value = "/datasets/{datasetId}", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteDataset(@PathVariable String datasetId, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);
 
         logger.info("Deleting Dataset {}", datasetId);
@@ -107,8 +107,8 @@ public class DatasetController {
     public ResponseEntity<StreamingResponseBody> describeDatasetResource(
         @PathVariable String datasetId,
         @RequestParam(value = "uri") URI resourceUri, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieved description for {}", resourceUri);
         StreamingResponseBody stream = outputStream ->
@@ -124,8 +124,8 @@ public class DatasetController {
     public ResponseEntity<StreamingResponseBody> browseUri(
         @PathVariable String datasetId,
         @RequestParam(value = "uri") URI resourceUri, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Browsing available data at {}", resourceUri);
         StreamingResponseBody stream = outputStream ->

@@ -42,12 +42,12 @@ public class FacetController {
         @PathVariable String datasetId,
         @PathVariable String classCurie,
         @RequestParam(value="relevance", defaultValue="0") float relevance) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkPublicOrOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
-        Class datasetClass = classRepository.findOne(datasetClassId);
-        Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
+        Class datasetClass = classRepository.findById(datasetClassId).orElseThrow(() ->
+            new NullPointerException(String.format("Class with id '%s' not found", datasetClassId)));
         logger.info("Retrieving facets for Class {} in Dataset {}", classCurie, datasetId);
         if (datasetClass.getFacets().isEmpty() && dataset.getSparqlEndPoint()!=null )
             analiseDataset.detectClassFacets(datasetClass);
@@ -57,15 +57,15 @@ public class FacetController {
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}", method = RequestMethod.GET)
     public @ResponseBody Facet retrieveClassFacet(@PathVariable String datasetId,
         @PathVariable String classCurie, @PathVariable String facetCurie, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkPublicOrOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
-        Class datasetClass = classRepository.findOne(datasetClassId);
-        Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
+        Class datasetClass = classRepository.findById(datasetClassId).orElseThrow(() ->
+            new NullPointerException(String.format("Class with id '%s' not found", datasetClassId)));
         DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClassId, new Curie(facetCurie));
-        Facet classFacet = facetRepository.findOne(datasetClassFacetId);
-        Validate.notNull(classFacet, "Facet with id '%s' not found", datasetClassFacetId);
+        Facet classFacet = facetRepository.findById(datasetClassFacetId).orElseThrow(() ->
+            new NullPointerException(String.format("Facet with id '%s' not found", datasetClassFacetId)));
         logger.info("Retrieved Facet {} for Class {} in Dataset {}", facetCurie, classCurie, datasetId);
         return classFacet;
     }
@@ -75,14 +75,14 @@ public class FacetController {
     @ResponseBody
     public Facet createClassFacet(@Valid @RequestBody Facet newFacet, @PathVariable String datasetId,
         @PathVariable String classCurie, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
-        Class datasetClass = classRepository.findOne(datasetClassId);
-        Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
+        Class datasetClass = classRepository.findById(datasetClassId).orElseThrow(() ->
+            new NullPointerException(String.format("Class with id '%s' not found", datasetClassId)));
         DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClassId, new Curie(newFacet.getUri()));
-        Validate.isTrue(!facetRepository.exists(datasetClassFacetId),
+        Validate.isTrue(!facetRepository.existsById(datasetClassFacetId),
                 "Facet with URI '%s' already exists for Class '%s' in Dataset '%s'", newFacet.getUri(), classCurie, datasetId);
         newFacet.setDomain(datasetClass);
         logger.info("Creating Facet: {}", newFacet.toString());
@@ -92,12 +92,12 @@ public class FacetController {
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets", method = RequestMethod.PUT)
     public @ResponseBody List<Facet> updateClassFacets(@Valid @RequestBody List<Facet> newFacets,
         @PathVariable String datasetId, @PathVariable String classCurie, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);
         DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
-        Class datasetClass = classRepository.findOne(datasetClassId);
-        Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
+        Class datasetClass = classRepository.findById(datasetClassId).orElseThrow(() ->
+            new NullPointerException(String.format("Class with id '%s' not found", datasetClassId)));
         datasetClass.getFacets().forEach(aFacet -> facetRepository.delete(aFacet));
         datasetClass.setFacets(Collections.emptyList());
 

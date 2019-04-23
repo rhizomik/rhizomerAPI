@@ -145,16 +145,16 @@ public class APIStepdefs {
 
     @Given("^There is a new dataset by \"([^\"]*)\" with id \"([^\"]*)\"$")
     public void aDatasetWithId(String username, String datasetId) throws Throwable {
-        if (datasetRepository.exists(datasetId))
-            datasetRepository.delete(datasetId);
+        if (datasetRepository.existsById(datasetId))
+            datasetRepository.deleteById(datasetId);
         Dataset newDataset = new Dataset(datasetId);
-        newDataset.setOwner(userRepository.findOne(username));
+        newDataset.setOwner(userRepository.findById(username).get());
         datasetRepository.save(newDataset);
     }
 
     @Given("^a class in dataset \"([^\"]*)\" with URI \"([^\"]*)\", label \"([^\"]*)\" and instance count (\\d+)$")
     public void aClassInDatasetWithURILabelAndInstanceCount(String datasetId, String classUriStr, String classLabel, int instanceCount) throws Throwable {
-        Dataset dataset = datasetRepository.findOne(datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).get();
         classRepository.save(new Class(dataset, new URI(classUriStr), classLabel, instanceCount));
     }
 
@@ -299,7 +299,7 @@ public class APIStepdefs {
 
     @Given("^The dataset \"([^\"]*)\" has a mock server$")
     public void theDatasetHasAMockServer(String datasetId) throws Throwable {
-        Dataset dataset = datasetRepository.findOne(datasetId);
+        Dataset dataset = datasetRepository.findById(datasetId).get();
         SPARQLServiceMockFactory.clearDataset();
         dataset.setSparqlEndPoint(new URL("http://sparql/mock"));
         datasetRepository.save(dataset);
@@ -487,21 +487,21 @@ public class APIStepdefs {
     }
 
     @And("^The size of dataset \"([^\"]*)\" ontologies graph is (\\d+)$")
-    public void theSizeOfDatasetOntologiesGraphIs(String datasetId, int expectedSize) throws Throwable {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        int actualSize = sparqlService.countGraphTriples(dataset.getSparqlEndPoint(), dataset.getDatasetOntologiesGraph().toString());
+    public void theSizeOfDatasetOntologiesGraphIs(String datasetId, long expectedSize) throws Throwable {
+        Dataset dataset = datasetRepository.findById(datasetId).get();
+        long actualSize = sparqlService.countGraphTriples(dataset.getSparqlEndPoint(), dataset.getDatasetOntologiesGraph().toString());
         assertThat(actualSize, is(expectedSize));
     }
 
     @And("^The size of dataset \"([^\"]*)\" data graphs is (\\d+)$")
-    public void theSizeOfDatasetGraphsIs(String datasetId, int expectedSize) throws Throwable {
-        Dataset dataset = datasetRepository.findOne(datasetId);
+    public void theSizeOfDatasetGraphsIs(String datasetId, long expectedSize) throws Throwable {
+        Dataset dataset = datasetRepository.findById(datasetId).get();
         this.result = mockMvc.perform(get("/datasets/{datasetId}/graphs", datasetId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         String json = this.result.andReturn().getResponse().getContentAsString();
         List<String> datasetGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, String.class));
-        int actualSize = datasetGraphs.stream().mapToInt(graph -> sparqlService.countGraphTriples(dataset.getSparqlEndPoint(), graph)).sum();
+        long actualSize = datasetGraphs.stream().mapToLong(graph -> sparqlService.countGraphTriples(dataset.getSparqlEndPoint(), graph)).sum();
         assertThat(actualSize, is(expectedSize));
     }
 

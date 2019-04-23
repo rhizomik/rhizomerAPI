@@ -20,7 +20,6 @@ import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.RangeRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
 import net.rhizomik.rhizomer.service.SecurityController;
-import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,15 +51,10 @@ public class RangeController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody List<Range> getRanges(@PathVariable String datasetId,
         @PathVariable String classCurie, @PathVariable String facetCurie, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
-        DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
-        Class datasetClass = classRepository.findOne(datasetClassId);
-        Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
-        DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClassId, new Curie(facetCurie));
-        Facet classFacet = facetRepository.findOne(datasetClassFacetId);
-        Validate.notNull(classFacet, "Facet with id '%s' not found", datasetClassFacetId);
+        Class datasetClass = getClass(classCurie, dataset);
+        Facet classFacet = getFacet(facetCurie, datasetClass.getId());
         return classFacet.getRanges();
     }
 
@@ -73,18 +67,11 @@ public class RangeController {
         @RequestParam MultiValueMap<String, String> filters, Authentication auth,
         @RequestParam(value="page", defaultValue="0") int page,
         @RequestParam(value="size", defaultValue="10") int size) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
-        DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
-        Class datasetClass = classRepository.findOne(datasetClassId);
-        Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
-        DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClassId, new Curie(facetCurie));
-        Facet classFacet = facetRepository.findOne(datasetClassFacetId);
-        Validate.notNull(classFacet, "Facet with id '%s' not found", datasetClassFacetId);
-        DatasetClassFacetRangeId datasetClassFacetRangeId = new DatasetClassFacetRangeId(datasetClassFacetId, new Curie(rangeCurie));
-        Range facetRange = rangeRepository.findOne(datasetClassFacetRangeId);
-        Validate.notNull(facetRange, "Range with id '%s' not found", datasetClassFacetRangeId);
+        Class datasetClass = getClass(classCurie, dataset);
+        Facet classFacet = getFacet(facetCurie, datasetClass.getId());
+        Range facetRange = getRange(rangeCurie, classFacet);
         return analiseDataset.retrieveRangeValues(dataset, facetRange, filters, page, size);
     }
 
@@ -94,17 +81,42 @@ public class RangeController {
     public @ResponseBody Range addRange(@Valid @RequestBody Range newRange,
         @PathVariable String datasetId, @PathVariable String classCurie,
         @PathVariable String facetCurie, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
-        DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
-        Class datasetClass = classRepository.findOne(datasetClassId);
-        Validate.notNull(datasetClass, "Class with id '%s' not found", datasetClassId);
-        DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClassId, new Curie(facetCurie));
-        Facet classFacet = facetRepository.findOne(datasetClassFacetId);
-        Validate.notNull(classFacet, "Facet with id '%s' not found", datasetClassFacetId);
+        Class datasetClass = getClass(classCurie, dataset);
+        Facet classFacet = getFacet(facetCurie, datasetClass.getId());
         newRange.setFacet(classFacet);
         logger.info("Creating Range: {}", newRange.toString());
         return rangeRepository.save(newRange);
+    }
+
+    private Dataset getDataset(String datasetId) {
+        return datasetRepository
+            .findById(datasetId)
+            .orElseThrow(() ->
+                new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+    }
+
+    private Class getClass(String classCurie, Dataset dataset) {
+        return classRepository
+            .findById(new DatasetClassId(dataset, new Curie(classCurie)))
+            .orElseThrow(() ->
+                new NullPointerException(
+                    String.format("Class '%s' in Dataset '%s' not found", classCurie, dataset.getId())));
+    }
+
+    private Facet getFacet(String facetCurie, DatasetClassId datasetClassId) {
+        DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClassId, new Curie(facetCurie));
+        return facetRepository.findById(datasetClassFacetId).orElseThrow(() ->
+            new NullPointerException(
+                String.format("Facet with id '%s' not found", datasetClassFacetId)));
+    }
+
+    private Range getRange(@PathVariable String rangeCurie,
+        Facet classFacet) {
+        DatasetClassFacetRangeId datasetClassFacetRangeId =
+            new DatasetClassFacetRangeId(classFacet.getId(), new Curie(rangeCurie));
+        return rangeRepository.findById(datasetClassFacetRangeId).orElseThrow(() ->
+            new NullPointerException(String.format("Range with id '%s' not found", datasetClassFacetRangeId)));
     }
 }

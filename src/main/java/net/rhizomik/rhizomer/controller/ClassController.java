@@ -45,8 +45,7 @@ public class ClassController {
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.GET)
     public @ResponseBody List<Class> listDatasetClass(@PathVariable String datasetId,
         @RequestParam(value="top", defaultValue="0") int top, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieving classes in Dataset {}", datasetId);
         if (dataset.getClasses().isEmpty() && dataset.getSparqlEndPoint()!=null )
@@ -59,11 +58,9 @@ public class ClassController {
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}", method = RequestMethod.GET)
     public @ResponseBody Class retrieveDatasetClass(@PathVariable String datasetId,
         @PathVariable String classCurie, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
-        Class datasetClass = classRepository.findOne(new DatasetClassId(dataset, new Curie(classCurie)));
-        Validate.notNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
+        Class datasetClass = getClass(classCurie, dataset);
         logger.info("Retrieved Class {} in Dataset {}", classCurie, datasetId);
         return datasetClass;
     }
@@ -75,11 +72,9 @@ public class ClassController {
         @RequestParam(value="page", defaultValue="0") int page,
         @RequestParam(value="size", defaultValue="10") int size,
         @RequestParam MultiValueMap<String, String> filters, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
-        Class datasetClass = classRepository.findOne(new DatasetClassId(dataset, new Curie(classCurie)));
-        Validate.notNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
+        Class datasetClass = getClass(classCurie, dataset);
         logger.info("Retrieved instances for Class {} in Dataset {}", classCurie, datasetId);
         filters.remove("page");
         filters.remove("size");
@@ -95,11 +90,9 @@ public class ClassController {
     public @ResponseBody int retrieveClassFacetedInstancesCount(
         @PathVariable String datasetId, @PathVariable String classCurie,
         @RequestParam MultiValueMap<String, String> filters, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
-        Class datasetClass = classRepository.findOne(new DatasetClassId(dataset, new Curie(classCurie)));
-        Validate.notNull(datasetClass, "Class '%s' in Dataset '%s' not found", classCurie, datasetId);
+        Class datasetClass = getClass(classCurie, dataset);
         logger.info("Retrieved instances count for Class {} in Dataset {}", classCurie, datasetId);
         return analiseDataset.retrieveClassInstancesCount(dataset, datasetClass, filters);
     }
@@ -109,10 +102,9 @@ public class ClassController {
     @ResponseBody
     public Class createDatasetClass(@Valid @RequestBody Class newClass,
         @PathVariable String datasetId, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
-        Validate.validState(!classRepository.exists(new DatasetClassId(dataset, new Curie(newClass.getUri()))),
+        Validate.validState(!classRepository.existsById(new DatasetClassId(dataset, new Curie(newClass.getUri()))),
                 "Class with URI '%s' already exists in Dataset '%s'", newClass.getUri(), datasetId);
         newClass.setDataset(dataset);
         logger.info("Creating Class: {}", newClass.toString());
@@ -122,8 +114,7 @@ public class ClassController {
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.PUT)
     public @ResponseBody List<Class> updateDatasetClasses(@Valid @RequestBody List<Class> newClasses,
         @PathVariable String datasetId, Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
         dataset.getClasses().forEach(aClass -> {
             classRepository.delete(aClass);
@@ -135,5 +126,20 @@ public class ClassController {
         });
         logger.info("Updated Dataset {} classes to {}", datasetId, newClasses.toString());
         return datasetRepository.save(dataset).getClasses();
+    }
+
+    private Dataset getDataset(String datasetId) {
+        return datasetRepository
+            .findById(datasetId)
+            .orElseThrow(() ->
+                new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+    }
+
+    private Class getClass(String classCurie, Dataset dataset) {
+        return classRepository
+            .findById(new DatasetClassId(dataset, new Curie(classCurie)))
+            .orElseThrow(() ->
+                new NullPointerException(
+                    String.format("Class '%s' in Dataset '%s' not found", classCurie, dataset.getId())));
     }
 }

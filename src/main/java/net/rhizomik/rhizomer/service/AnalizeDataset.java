@@ -116,8 +116,8 @@ public class AnalizeDataset {
                 Facet detectedFacet;
                 URI propertyUri = new URI(property.getURI());
                 DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClass.getId(), propertyUri);
-                if (facetRepository.exists(datasetClassFacetId))
-                    detectedFacet = facetRepository.findOne(datasetClassFacetId);
+                if (facetRepository.existsById(datasetClassFacetId))
+                    detectedFacet = facetRepository.findById(datasetClassFacetId).get();
                 else {
                     detectedFacet = facetRepository.save(new Facet(datasetClass, propertyUri, property.getLocalName()));
                     datasetClass.addFacet(detectedFacet);

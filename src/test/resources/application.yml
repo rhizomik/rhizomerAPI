@@ -1,8 +1,11 @@
-allowed-origins: https://rhizomer.rhizomik.net, http://localhost:4200
+allowed-origins: http://localhost:4200
 
 spring:
   profiles:
     active: LOCAL_SERVER_TESTING
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 rhizomer:
   default-password: password

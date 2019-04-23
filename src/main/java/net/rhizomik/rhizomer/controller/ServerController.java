@@ -43,8 +43,7 @@ public class ServerController {
     @RequestMapping(value = "/datasets/{datasetId}/server/graphs", method = RequestMethod.GET)
     public @ResponseBody List<URI> retrieveServerGraphs(@PathVariable String datasetId,
         Authentication auth) {
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
         logger.info("Retrieve Dataset {} Server {} graphs", datasetId, dataset.getSparqlEndPoint().toString());
         return analizeDataset.listServerGraphs(dataset);
@@ -56,8 +55,7 @@ public class ServerController {
         throws IOException {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpRequest(request).build();
         String datasetId = uriComponents.getPathSegments().get(1);
-        Dataset dataset = datasetRepository.findOne(datasetId);
-        Validate.notNull(dataset, "Dataset with id '%s' not found", datasetId);
+        Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
         String graph = uriComponents.getQueryParams().getFirst("graph");
         Validate.notEmpty(graph,
@@ -75,5 +73,12 @@ public class ServerController {
         datasetRepository.save(dataset);
         logger.info("By default added graph {} to dataset {}", graph, dataset.getId());
         return model.size();
+    }
+
+    private Dataset getDataset(String datasetId) {
+        return datasetRepository
+            .findById(datasetId)
+            .orElseThrow(() ->
+                new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
     }
 }

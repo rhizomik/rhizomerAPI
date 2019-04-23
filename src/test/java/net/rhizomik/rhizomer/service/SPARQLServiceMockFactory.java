@@ -1,6 +1,5 @@
 package net.rhizomik.rhizomer.service;
 
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.anyString;
@@ -46,28 +45,28 @@ public class SPARQLServiceMockFactory {
         Queries queries = new OptimizedQueries();
         SPARQLService mock = Mockito.mock(SPARQLService.class);
 
-        when(mock.querySelect(isA(URL.class), isA(Query.class)))
+        when(mock.querySelect(any(URL.class), any(Query.class)))
                 .thenAnswer(invocationOnMock -> {
-                    Query query = (Query) invocationOnMock.getArguments()[1];
+                    Query query = invocationOnMock.getArgument(1);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
                     QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
                     return qexec.execSelect();
                 });
 
-        when(mock.querySelect(isA(URL.class), isA(Query.class), anyList(), anyList()))
+        when(mock.querySelect(any(URL.class), any(Query.class), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
-                    Query query = (Query) invocationOnMock.getArguments()[1];
-                    List<String> graphs = (List<String>) invocationOnMock.getArguments()[2];
+                    Query query = invocationOnMock.getArgument(1);
+                    List<String> graphs = invocationOnMock.getArgument(2);
                     graphs.forEach(query::addGraphURI);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
                     QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
                     return qexec.execSelect();
                 });
 
-        when(mock.queryConstruct(isA(URL.class), isA(Query.class), anyList()))
+        when(mock.queryConstruct(any(URL.class), any(Query.class), anyList()))
                 .thenAnswer(invocationOnMock -> {
-                    Query query = (Query) invocationOnMock.getArguments()[1];
-                    List<String> graphs = (List<String>) invocationOnMock.getArguments()[2];
+                    Query query = invocationOnMock.getArgument(1);
+                    List<String> graphs = invocationOnMock.getArgument(2);
                     Model queryDataset = ModelFactory.createDefaultModel();
                     graphs.forEach(graph -> queryDataset.add(dataset.getNamedModel(graph)));
                     graphs.forEach(query::addGraphURI);
@@ -81,44 +80,44 @@ public class SPARQLServiceMockFactory {
             logger.debug("Sending to {} query: \n{}", "mockServer", update.toString());
             UpdateAction.execute(update, dataset);
             return null;
-        }).when(mock).queryUpdate(isA(URL.class), any(UpdateRequest.class));
+        }).when(mock).queryUpdate(any(URL.class), any(UpdateRequest.class));
 
-        when(mock.countGraphTriples(isA(URL.class), anyString()))
+        when(mock.countGraphTriples(any(URL.class), anyString()))
                 .thenAnswer(invocationOnMock -> {
-                    String graph = (String) invocationOnMock.getArguments()[1];
+                    String graph = invocationOnMock.getArgument(1);
                     if (dataset.containsNamedModel(graph))
                         return dataset.getNamedModel(graph).size();
                     else
-                        return 0;
+                        return 0L;
                 });
 
         doAnswer(invocationOnMock -> {
-            URL sparqlEndPoint = (URL) invocationOnMock.getArguments()[0];
-            String graph = (String) invocationOnMock.getArguments()[1];
-            String uri = (String) invocationOnMock.getArguments()[2];
-            String username = (String) invocationOnMock.getArguments()[3];
-            String password = (String) invocationOnMock.getArguments()[4];
+            URL sparqlEndPoint = invocationOnMock.getArgument(0);
+            String graph = invocationOnMock.getArgument(1);
+            String uri = invocationOnMock.getArgument(2);
+            String username = invocationOnMock.getArgument(3);
+            String password = invocationOnMock.getArgument(4);
             Model model = RDFDataMgr.loadModel(uri);
             mock.loadModel(sparqlEndPoint, graph, model, username, password);
             return null;
-        }).when(mock).loadURI(isA(URL.class), anyString(), anyString(), anyString(), anyString());
+        }).when(mock).loadURI(any(URL.class), anyString(), anyString(), any(), any());
 
         doAnswer(invocationOnMock -> {
-            String graph = (String) invocationOnMock.getArguments()[1];
-            Model model = (Model) invocationOnMock.getArguments()[2];
+            String graph = invocationOnMock.getArgument(1);
+            Model model = invocationOnMock.getArgument(2);
             dataset.addNamedModel(graph, model);
             return null;
-        }).when(mock).loadModel(isA(URL.class), anyString(), any(Model.class), anyString(), anyString());
+        }).when(mock).loadModel(any(URL.class), anyString(), any(Model.class), any(), any());
 
         doAnswer(invocationOnMock -> {
-            URI graph = (URI) invocationOnMock.getArguments()[1];
+            URI graph = invocationOnMock.getArgument(1);
             Model blankModel = ModelFactory.createDefaultModel();
             dataset.replaceNamedModel(graph.toString(), blankModel);
             return null;
-        }).when(mock).clearGraph(isA(URL.class), isA(URI.class));
+        }).when(mock).clearGraph(any(URL.class), any(URI.class));
 
         doAnswer(invocationOnMock -> {
-            Dataset dataset = (Dataset) invocationOnMock.getArguments()[0];
+            Dataset dataset = invocationOnMock.getArgument(0);
             List<String> targetGraphs = dataset.getDatasetGraphs();
             targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
             UpdateRequest createGraph = queries
@@ -128,7 +127,7 @@ public class SPARQLServiceMockFactory {
                 .getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
             mock.queryUpdate(dataset.getSparqlEndPoint(), update);
             return null;
-        }).when(mock).inferTypes(isA(Dataset.class));
+        }).when(mock).inferTypes(any(Dataset.class));
 
         return mock;
     }

@@ -83,15 +83,15 @@ public class SPARQLService {
         }
     }
 
-    public int countGraphTriples(URL sparqlEndPoint, String graph) {
+    public long countGraphTriples(URL sparqlEndPoint, String graph) {
         Query countTriples = queries.getQueryCountTriples();
         countTriples.addGraphURI(graph);
         ResultSet result = querySelect(sparqlEndPoint, countTriples);
-        int count = 0;
+        long count = 0;
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
             if (soln.contains("?n"))
-                count = soln.getLiteral("?n").getInt();
+                count = soln.getLiteral("?n").getLong();
         }
         return count;
     }

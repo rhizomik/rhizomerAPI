@@ -35,7 +35,7 @@ public class AdminController {
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
     Admin createAdmin(@Valid @RequestBody Admin newAdmin) {
-        Validate.isTrue(!adminRepository.exists(newAdmin.getUsername()),
+        Validate.isTrue(!adminRepository.existsById(newAdmin.getUsername()),
             "Admin with id '%s' already exists", newAdmin.getUsername());
         logger.info("Creating Admin: {}", newAdmin.getUsername());
         newAdmin.encodePassword();
@@ -45,8 +45,8 @@ public class AdminController {
     @RequestMapping(value = "/admins/{adminId}", method = RequestMethod.GET)
     public @ResponseBody
     Admin retrieveAdmin(@PathVariable String adminId) {
-        Admin admin = adminRepository.findOne(adminId);
-        Validate.notNull(admin, "Admin with id '%s' not found", adminId);
+        Admin admin = adminRepository.findById(adminId).orElseThrow(() ->
+            new NullPointerException(String.format("Admin with id '%s' not found", adminId)));
         logger.info("Retrieved Admin {}", adminId);
         return admin;
     }
@@ -54,8 +54,8 @@ public class AdminController {
     @RequestMapping(value = "/admins/{adminId}", method = RequestMethod.PUT)
     public @ResponseBody
     Admin updateAdmin(@Valid @RequestBody Admin updatedAdmin, @PathVariable String adminId) {
-        Admin admin = adminRepository.findOne(adminId);
-        Validate.notNull(admin, "Admin with id '%s' not found", adminId);
+        Admin admin = adminRepository.findById(adminId).orElseThrow(() ->
+            new NullPointerException(String.format("Admin with id '%s' not found", adminId)));
         logger.info("Updating Admin: {}", adminId);
         admin.setPassword(updatedAdmin.getPassword());
         admin.encodePassword();
@@ -65,8 +65,8 @@ public class AdminController {
     @RequestMapping(value = "/admins/{adminId}", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteAdmin(@PathVariable String adminId) {
-        Admin admin = adminRepository.findOne(adminId);
-        Validate.notNull(admin, "Admin with id '%s' not found", adminId);
+        Admin admin = adminRepository.findById(adminId).orElseThrow(() ->
+            new NullPointerException(String.format("Admin with id '%s' not found", adminId)));
         logger.info("Deleting Admin {}", adminId);
         adminRepository.delete(admin);
     }

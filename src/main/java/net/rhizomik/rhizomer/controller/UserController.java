@@ -52,8 +52,7 @@ public class UserController {
     @RequestMapping(value = "/users/{userId:.+}", method = RequestMethod.GET)
     public @ResponseBody
     User retrieveUser(@PathVariable String userId) {
-        User user = userRepository.findOne(userId);
-        Validate.notNull(user, "User with id '%s' not found", userId);
+        User user = getUser(userId);
         logger.info("Retrieved User {}", userId);
         return user;
     }
@@ -62,7 +61,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
     User createUser(@Valid @RequestBody User newUser) {
-        Validate.isTrue(!userRepository.exists(newUser.getUsername()),
+        Validate.isTrue(!userRepository.existsById(newUser.getUsername()),
             "User with id '%s' already exists", newUser.getUsername());
         logger.info("Creating User: {}", newUser.getUsername());
         newUser.encodePassword();
@@ -73,8 +72,7 @@ public class UserController {
     @RequestMapping(value = "/users/{userId:.+}", method = RequestMethod.PUT)
     public @ResponseBody
     User updateUser(@Valid @RequestBody User updatedUser, @PathVariable String userId) {
-        User user = userRepository.findOne(userId);
-        Validate.notNull(user, "User with id '%s' not found", userId);
+        User user = getUser(userId);
         logger.info("Updating User: {}", userId);
         user.setPassword(updatedUser.getPassword());
         user.encodePassword();
@@ -84,9 +82,13 @@ public class UserController {
     @PreAuthorize("#userId == principal.username or hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/users/{userId:.+}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable String userId) {
-        User user = userRepository.findOne(userId);
-        Validate.notNull(user, "User with id '%s' not found", userId);
+        User user = getUser(userId);
         logger.info("Deleting User {}", userId);
         userRepository.delete(user);
+    }
+
+    private User getUser(String userId) {
+        return userRepository.findById(userId).orElseThrow(() ->
+            new NullPointerException(String.format("User with id '%s' not found", userId)));
     }
 }

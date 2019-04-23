@@ -1,5 +1,10 @@
 allowed-origins: http://localhost:4200
 
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+
 rhizomer:
   default-password: password
   sparql-timeout: 0

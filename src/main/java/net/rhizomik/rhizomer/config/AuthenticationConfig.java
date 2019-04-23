@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
 
 @Configuration
 public class AuthenticationConfig extends GlobalAuthenticationConfigurerAdapter {
@@ -26,14 +26,14 @@ public class AuthenticationConfig extends GlobalAuthenticationConfigurerAdapter 
         .userDetailsService(basicUserDetailsService)
         .passwordEncoder(User.passwordEncoder);
 
-    if (!adminRepository.exists("admin")) {
+    if (!adminRepository.existsById("admin")) {
       Admin admin = new Admin();
       admin.setUsername("admin");
       admin.setPassword(defaultPassword);
       admin.encodePassword();
       adminRepository.save(admin);
     }
-    if (!userRepository.exists("user")) {
+    if (!userRepository.existsById("user")) {
       User user = new User();
       user.setUsername("user");
       user.setPassword(defaultPassword);
