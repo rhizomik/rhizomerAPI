@@ -32,7 +32,7 @@ public class DetailedQueries implements Queries {
             "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . \n" +
-            getFilterPatterns(filters) +
+            getFilterPatternsAnd(filters) +
             "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
@@ -49,7 +49,7 @@ public class DetailedQueries implements Queries {
             "\t { SELECT DISTINCT ?instance \n" +
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n" +
-            getFilterPatterns(filters) +
+            getFilterPatternsAnd(filters) +
             "\t\t } LIMIT " + limit + " OFFSET " + offset + "\n" +
             "\t } \n" +
             "}");
@@ -97,7 +97,7 @@ public class DetailedQueries implements Queries {
             "\t { SELECT DISTINCT ?instance " +
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n" +
-            getFilterPatterns(filters) +
+            getFilterPatternsAnd(filters) +
             "\t\t } \n" +
             "\t } \n" +
             "\t ?instance ?property ?value . \n" +
@@ -119,7 +119,7 @@ public class DetailedQueries implements Queries {
         return query;
     }
 
-    public static String getFilterPatterns(MultiValueMap<String, String> filters) {
+    public static String getFilterPatternsOr(MultiValueMap<String, String> filters) {
         StringBuilder filtersPatterns = new StringBuilder();
         filters.forEach((property, values) -> {
             String propertyVar = Integer.toUnsignedString(property.hashCode());
@@ -131,6 +131,20 @@ public class DetailedQueries implements Queries {
                     + ")) . \n";
             }
             filtersPatterns.append(pattern);
+        });
+        return filtersPatterns.toString();
+    }
+
+    public static String getFilterPatternsAnd(MultiValueMap<String, String> filters) {
+        StringBuilder filtersPatterns = new StringBuilder();
+        filters.forEach((property, values) -> {
+            values.removeIf(value -> value.equals("null"));
+            values.forEach(value -> {
+                String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
+                String pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . " +
+                    "FILTER ( ?v" + propertyValueVar + " = " + value + " ) \n";
+                filtersPatterns.append(pattern);
+            });
         });
         return filtersPatterns.toString();
     }
