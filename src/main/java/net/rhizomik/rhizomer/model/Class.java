@@ -25,7 +25,7 @@ public class Class {
 
     private String uri;
     private String label;
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "domain")
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "domain", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Facet> facets = new ArrayList<>();
     private int instanceCount;

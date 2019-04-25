@@ -44,7 +44,7 @@ public class Dataset {
     private Set<String> datasetGraphs = new HashSet<>();
     @ElementCollection
     private Set<String> datasetOntologies = new HashSet<>();
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset")
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset", cascade = CascadeType.ALL)
     @OrderBy("instanceCount DESC")
     private List<Class> classes = new ArrayList<>();
     @ManyToOne

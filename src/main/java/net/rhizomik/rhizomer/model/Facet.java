@@ -28,7 +28,7 @@ public class Facet {
     @ManyToOne
     @JsonIgnore
     private Class domain;
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "facet")
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "facet", cascade = CascadeType.ALL)
     private List<Range> ranges = new ArrayList<>();
 
     public Facet() {
