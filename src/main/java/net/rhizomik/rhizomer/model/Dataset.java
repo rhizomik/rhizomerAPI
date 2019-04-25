@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.rhizomik.rhizomer.service.Queries.QueryType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,10 +85,22 @@ public class Dataset {
     @JsonIgnore
     public List<Class> getClasses() { return new ArrayList<>(classes); }
 
-    @JsonIgnore
     public List<Class> getClasses(int top) {
         int max = Integer.min(top, classes.size());
         return new ArrayList<>(classes.subList(0, max));
+    }
+
+    public List<Class> getClassesContaining(String containing) {
+        return getClassesContaining(containing, -1);
+    }
+
+    public List<Class> getClassesContaining(String containing, int top) {
+        Stream<Class> selected = classes.stream()
+            .filter(c -> c.getUri().toString().toLowerCase().contains(containing.toLowerCase()) ||
+                c.getLabel().toLowerCase().contains(containing.toLowerCase()));
+        if (top >= 0)
+            selected = selected.limit(top);
+        return selected.collect(Collectors.toList());
     }
 
     public void setClasses(List<Class> classes) { this.classes.clear(); this.classes.addAll(classes); }

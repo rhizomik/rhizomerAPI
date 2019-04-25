@@ -43,16 +43,17 @@ public class ClassController {
     @Autowired private SecurityController securityController;
 
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.GET)
-    public @ResponseBody List<Class> listDatasetClass(@PathVariable String datasetId,
-        @RequestParam(value="top", defaultValue="0") int top, Authentication auth) {
+    public @ResponseBody List<Class> searchDatasetClass(@PathVariable String datasetId,
+        @RequestParam(value = "containing", defaultValue = "") String containing,
+        @RequestParam(value = "top", defaultValue = "-1") int top, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
-        logger.info("Retrieving classes in Dataset {}", datasetId);
+        logger.info("Retrieving top {} classes in Dataset {} containing '{}'", top, datasetId, containing);
         if (dataset.getClasses().isEmpty() && dataset.getSparqlEndPoint()!=null )
             analiseDataset.detectDatasetClasses(dataset);
-        if (top > 0)
-            return dataset.getClasses(top);
-        return dataset.getClasses();
+        if (top >= 0)
+            return dataset.getClassesContaining(containing, top);
+        return dataset.getClassesContaining(containing);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}", method = RequestMethod.GET)

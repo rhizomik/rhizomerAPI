@@ -27,6 +27,19 @@ Feature: Detect dataset structure
       | http://purl.org/net/schemas/space/Mission     | Mission     | 1             |
     And exists a class with id "/datasets/mixed/classes/foaf:Person"
 
+  Scenario: Retrieve just the top most instantiated classes
+    When I extract the top 2 classes from dataset "mixed"
+    Then The retrieved classes are
+      | uri                                           | label       | instanceCount |
+      | http://xmlns.com/foaf/0.1/Person              | Person      | 2             |
+      | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
+
+  Scenario: Retrieve top classes containing text in URI or label and ignoring case
+    When I extract the top 2 classes from dataset "mixed" containing "role"
+    Then The retrieved classes are
+      | uri                                           | label       | instanceCount |
+      | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
+
   Scenario: The extracted facets for an existing class are those instantiated in the dataset
     Given I create a class in dataset "mixed" with URI "http://xmlns.com/foaf/0.1/Person", label "Person" and instance count 2
     When I extract the facets for class "foaf:Person" in dataset "mixed"

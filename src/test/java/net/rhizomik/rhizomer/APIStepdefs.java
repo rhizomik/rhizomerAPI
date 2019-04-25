@@ -34,11 +34,11 @@ import net.rhizomik.rhizomer.model.ExpectedClass;
 import net.rhizomik.rhizomer.model.ExpectedFacet;
 import net.rhizomik.rhizomer.model.ExpectedRange;
 import net.rhizomik.rhizomer.model.ExpectedRangeValue;
-import net.rhizomik.rhizomer.service.DetailedQueries;
 import net.rhizomik.rhizomer.model.User;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.UserRepository;
+import net.rhizomik.rhizomer.service.DetailedQueries;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
 import org.apache.jena.rdf.model.Model;
@@ -511,6 +511,23 @@ public class APIStepdefs {
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()))
                 .andExpect(status().isOk());
+    }
+
+    @When("^I extract the top (\\d+) classes from dataset \"([^\"]*)\"$")
+    public void iExtractTheTopClassesFromDataset(int top, String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/classes?top={top}", datasetId, top)
+            .accept(MediaType.APPLICATION_JSON)
+            .with(authenticate()))
+            .andExpect(status().isOk());
+    }
+
+    @When("^I extract the top (\\d+) classes from dataset \"([^\"]*)\" containing \"([^\"]*)\"$")
+    public void iExtractTheTopClassesFromDatasetContaining(int top, String datasetId, String text) throws Throwable {
+        this.result = mockMvc.perform(
+            get("/datasets/{datasetId}/classes?top={top}&containing={text}", datasetId, top, text)
+            .accept(MediaType.APPLICATION_JSON)
+            .with(authenticate()))
+        .andExpect(status().isOk());
     }
 
     @When("^I extract the facets for class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
