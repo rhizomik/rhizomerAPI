@@ -1,6 +1,5 @@
 package net.rhizomik.rhizomer.service;
 
-import java.util.stream.Collectors;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -40,25 +39,6 @@ public class OptimizedQueries implements Queries {
                 getFilterPatternsAnd(filters) +
                 "}");
         }
-        pQuery.setIri("class", classUri);
-        Query query = pQuery.asQuery();
-        return query;
-    }
-
-    @Override
-    public Query getQueryClassInstances(String classUri,
-        MultiValueMap<String, String> filters, int limit, int offset) {
-        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(
-            "DESCRIBE ?instance \n" +
-            "WHERE { \n" +
-            "\t { SELECT DISTINCT ?instance \n" +
-            "\t\t WHERE { \n" +
-            "\t\t\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(filters) +
-            "\t\t } LIMIT " + limit + " OFFSET " + offset + "\n" +
-            "\t } \n" +
-            "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
         return query;
@@ -115,35 +95,5 @@ public class OptimizedQueries implements Queries {
         if (offset > 0) query.setOffset(offset);
         if (ordered) query.addOrderBy("count", -1);
         return query;
-    }
-
-    public static String getFilterPatternsOr(MultiValueMap<String, String> filters) {
-        StringBuilder filtersPatterns = new StringBuilder();
-        filters.forEach((property, values) -> {
-            String propertyVar = Integer.toUnsignedString(property.hashCode());
-            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " . \n";
-            values.removeIf(value -> value.equals("null"));
-            if (!values.isEmpty()) {
-                pattern += "\t FILTER( STR(?v" + propertyVar + ") IN (" +
-                    values.stream().map(value -> "STR(" + value + ")").collect(Collectors.joining(", "))
-                    + ")) . \n";
-            }
-            filtersPatterns.append(pattern);
-        });
-        return filtersPatterns.toString();
-    }
-
-    public static String getFilterPatternsAnd(MultiValueMap<String, String> filters) {
-        StringBuilder filtersPatterns = new StringBuilder();
-        filters.forEach((property, values) -> {
-            values.removeIf(value -> value.equals("null"));
-            values.forEach(value -> {
-                String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
-                String pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . " +
-                    "FILTER ( STR(?v" + propertyValueVar + ") = STR(" + value + ") ) \n";
-                filtersPatterns.append(pattern);
-            });
-        });
-        return filtersPatterns.toString();
     }
 }

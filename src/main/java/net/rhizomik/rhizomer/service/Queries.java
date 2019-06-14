@@ -25,8 +25,23 @@ public interface Queries {
 
     Query getQueryClassInstancesCount(String classUri, MultiValueMap<String, String> filters);
 
-    Query getQueryClassInstances(String classUri, MultiValueMap<String, String> filters,
-        int limit, int offset);
+    default Query getQueryClassInstances(String classUri,
+        MultiValueMap<String, String> filters, int limit, int offset) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(
+            "DESCRIBE ?instance \n" +
+                "WHERE { \n" +
+                "\t { SELECT DISTINCT ?instance \n" +
+                "\t\t WHERE { \n" +
+                "\t\t\t ?instance a ?class . \n" +
+                getFilterPatternsAnd(filters) +
+                "\t\t } LIMIT " + limit + " OFFSET " + offset + "\n" +
+                "\t } \n" +
+                "}");
+        pQuery.setIri("class", classUri);
+        Query query = pQuery.asQuery();
+        return query;
+    }
 
     Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage);
 
@@ -126,5 +141,35 @@ public interface Queries {
         }
 
         return selectsUnion;
+    }
+
+    default String getFilterPatternsOr(MultiValueMap<String, String> filters) {
+        StringBuilder filtersPatterns = new StringBuilder();
+        filters.forEach((property, values) -> {
+            String propertyVar = Integer.toUnsignedString(property.hashCode());
+            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " . \n";
+            values.removeIf(value -> value.equals("null"));
+            if (!values.isEmpty()) {
+                pattern += "\t FILTER( STR(?v" + propertyVar + ") IN (" +
+                    values.stream().map(value -> "STR(" + value + ")").collect(Collectors.joining(", "))
+                    + ")) . \n";
+            }
+            filtersPatterns.append(pattern);
+        });
+        return filtersPatterns.toString();
+    }
+
+    default String getFilterPatternsAnd(MultiValueMap<String, String> filters) {
+        StringBuilder filtersPatterns = new StringBuilder();
+        filters.forEach((property, values) -> {
+            values.forEach(value -> {
+                String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
+                String pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
+                if (!value.equals("null"))
+                    pattern += "FILTER ( STR(?v" + propertyValueVar + ") = STR(" + value + ") ) \n";
+                filtersPatterns.append(pattern);
+            });
+        });
+        return filtersPatterns.toString();
     }
 }
