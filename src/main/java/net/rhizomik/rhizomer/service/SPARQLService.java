@@ -108,7 +108,7 @@ public class SPARQLService {
         UpdateRequest update = UpdateFactory.create(insertString);
         logger.debug("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
         UpdateProcessor processor;
-        if (username != null || !username.isEmpty())
+        if (username != null && !username.isEmpty())
             processor = UpdateExecutionFactory.createRemote(
                 update, sparqlEndpoint.toString(), withCreds(username, password));
         else
