@@ -5,6 +5,8 @@ package net.rhizomik.rhizomer.controller;
  */
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
@@ -54,7 +56,7 @@ public class ServerController {
     public @ResponseBody long storeData(ServletServerHttpRequest request, Authentication auth)
         throws IOException {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpRequest(request).build();
-        String datasetId = uriComponents.getPathSegments().get(1);
+        String datasetId = URLDecoder.decode(uriComponents.getPathSegments().get(1), StandardCharsets.UTF_8.toString());
         Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
         String graph = uriComponents.getQueryParams().getFirst("graph");
