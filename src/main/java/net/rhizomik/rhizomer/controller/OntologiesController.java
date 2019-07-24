@@ -3,7 +3,6 @@ package net.rhizomik.rhizomer.controller;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
@@ -65,8 +64,9 @@ public class OntologiesController {
             new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);
         dataset.setDatasetOntologies(updatedOntologies);
-        URI datasetOntologiesGraph = dataset.getDatasetOntologiesGraph();
-        sparqlService.clearGraph(dataset.getSparqlEndPoint(), datasetOntologiesGraph);
+        String datasetOntologiesGraph = dataset.getDatasetOntologiesGraph().toString();
+        sparqlService.clearGraph(dataset.getSparqlEndPoint(), datasetOntologiesGraph,
+            dataset.getUsername(), dataset.getPassword());
         updatedOntologies.forEach(ontologyUriStr ->
                 sparqlService.loadURI(dataset.getSparqlEndPoint(), datasetOntologiesGraph.toString(),
                     ontologyUriStr, dataset.getUsername(), dataset.getPassword()));

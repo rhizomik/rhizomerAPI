@@ -1,7 +1,6 @@
 package net.rhizomik.rhizomer.service;
 
 import java.io.StringWriter;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,9 +72,15 @@ public class SPARQLService {
         return q.execConstruct();
     }
 
-    public void queryUpdate(URL sparqlEndpoint, UpdateRequest update) {
+    public void queryUpdate(URL sparqlEndpoint, UpdateRequest update, String username, String password) {
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
-        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, sparqlEndpoint.toString());
+        UpdateProcessor processor;
+        if (username != null && !username.isEmpty())
+            processor = UpdateExecutionFactory.createRemote(
+                update, sparqlEndpoint.toString(), withCreds(username, password));
+        else
+            processor = UpdateExecutionFactory.createRemote(
+                update, sparqlEndpoint.toString());
         try {
             processor.execute();
         } catch (Exception e) {
@@ -101,25 +106,17 @@ public class SPARQLService {
         loadModel(sparqlEndpoint, graph, model, username, password);
     }
 
-    public void loadModel(URL sparqlEndpoint, String graph, Model model, String username, String password) {
+    public void loadModel(URL sparqlEndPoint, String graph, Model model, String username, String password) {
         StringWriter out = new StringWriter();
         RDFDataMgr.write(out, model, Lang.NTRIPLES);
         String insertString = "INSERT DATA { GRAPH <" + graph + "> { " + out.toString() + " } } ";
         UpdateRequest update = UpdateFactory.create(insertString);
-        logger.debug("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
-        UpdateProcessor processor;
-        if (username != null && !username.isEmpty())
-            processor = UpdateExecutionFactory.createRemote(
-                update, sparqlEndpoint.toString(), withCreds(username, password));
-        else
-            processor = UpdateExecutionFactory.createRemote(
-                update, sparqlEndpoint.toString());
-        processor.execute();
+        queryUpdate(sparqlEndPoint, update, username, password);
     }
 
-    public void clearGraph(URL sparqlEndPoint, URI datasetOntologiesGraph) {
-        UpdateRequest clearGraph = queries.getClearGraph(datasetOntologiesGraph.toString());
-        queryUpdate(sparqlEndPoint, clearGraph);
+    public void clearGraph(URL sparqlEndPoint, String graph, String username, String password) {
+        UpdateRequest clearGraph = queries.getClearGraph(graph);
+        queryUpdate(sparqlEndPoint, clearGraph, username, password);
     }
 
     public void inferTypes(Dataset dataset) {
@@ -127,16 +124,16 @@ public class SPARQLService {
         targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
         UpdateRequest createGraph = queries
             .getCreateGraph(dataset.getDatasetInferenceGraph().toString());
-        queryUpdate(dataset.getSparqlEndPoint(), createGraph);
+        queryUpdate(dataset.getSparqlEndPoint(), createGraph, dataset.getUsername(), dataset.getPassword());
         UpdateRequest update = queries
             .getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
-        queryUpdate(dataset.getSparqlEndPoint(), update);
+        queryUpdate(dataset.getSparqlEndPoint(), update, dataset.getUsername(), dataset.getPassword());
     }
 
     public void inferTypesConstruct(net.rhizomik.rhizomer.model.Dataset dataset) {
         UpdateRequest createGraph = queries
             .getCreateGraph(dataset.getDatasetInferenceGraph().toString());
-        queryUpdate(dataset.getSparqlEndPoint(), createGraph);
+        queryUpdate(dataset.getSparqlEndPoint(), createGraph, dataset.getUsername(), dataset.getPassword());
         List<String> targetGraphs = dataset.getDatasetGraphs();
         targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
         Model inferredModel = queryConstruct(dataset.getSparqlEndPoint(), queries.getQueryInferTypes(), targetGraphs);

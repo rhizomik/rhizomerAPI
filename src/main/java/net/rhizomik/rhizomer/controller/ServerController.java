@@ -51,7 +51,7 @@ public class ServerController {
         return analizeDataset.listServerGraphs(dataset);
     }
 
-    @RequestMapping(value = "/datasets/{datasetId}/server", method = RequestMethod.POST)
+    @RequestMapping(value = "/datasets/{datasetId}/server", method = { RequestMethod.POST, RequestMethod.PUT })
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody long storeData(ServletServerHttpRequest request, Authentication auth)
         throws IOException {
@@ -64,6 +64,11 @@ public class ServerController {
             "A destination graph should be defined in the request URL: /datasets/{datasetId}/server?graph={graphURI}");
         String contentType = request.getServletRequest().getContentType();
         Validate.notEmpty(contentType, "A Content-Type header should be defined corresponding to the input RDF data syntax");
+
+        if (request.getMethod().matches("PUT")) {
+            logger.info("Clearing graph {} at server {}", graph, dataset.getUpdateEndPoint());
+            sparqlService.clearGraph(dataset.getUpdateEndPoint(), graph, dataset.getUsername(), dataset.getPassword());
+        }
 
         Model model = ModelFactory.createDefaultModel();
         RDFDataMgr.read(model, request.getBody(), graph, RDFLanguages.contentTypeToLang(contentType));
