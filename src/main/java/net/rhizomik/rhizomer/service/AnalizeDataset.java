@@ -27,6 +27,7 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.RiotException;
 import org.apache.jena.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -222,7 +223,11 @@ public class AnalizeDataset {
 
     public void browseUri(OutputStream out, URI resourceUri, RDFFormat format) {
         Model model = ModelFactory.createDefaultModel();
-        RDFDataMgr.read(model, resourceUri.toString());
+        try {
+            RDFDataMgr.read(model, resourceUri.toString());
+        } catch (RiotException e) {
+            logger.info("Unable to retrieve RDF from {}: {}", resourceUri, e.getMessage());
+        }
         RDFDataMgr.write(out, model, format);
     }
 }
