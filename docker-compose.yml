@@ -27,4 +27,4 @@ services:
 #      - DATABASE_PASSWORD=password
       - ALLOWED_ORIGINS=http://localhost:4200, http://localhost
       - JAVA_OPTS=-Xmx512m -Xms128m
-      - DEFAULT_PASSWORD=password
+      - RHIZOMER_DEFAULT_PASSWORD=password
