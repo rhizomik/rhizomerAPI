@@ -109,7 +109,9 @@ public class SPARQLService {
     public void loadModel(URL sparqlEndPoint, String graph, Model model, String username, String password) {
         StringWriter out = new StringWriter();
         RDFDataMgr.write(out, model, Lang.NTRIPLES);
-        String insertString = "INSERT DATA { GRAPH <" + graph + "> { " + out.toString() + " } } ";
+        // Original, changed to fix Virtuoso bug: https://github.com/openlink/virtuoso-opensource/issues/126
+        // String insertString = "INSERT DATA { GRAPH <" + graph + "> { " + out.toString() + " } } ";
+        String insertString = "INSERT { GRAPH <" + graph + "> { " + out.toString() + " } } WHERE { SELECT * {OPTIONAL {?s ?p ?o} } LIMIT 1 }";
         UpdateRequest update = UpdateFactory.create(insertString);
         queryUpdate(sparqlEndPoint, update, username, password);
     }
