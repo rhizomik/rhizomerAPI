@@ -1,30 +1,30 @@
-version: '2'
+version: '3'
 services:
-
-# Enable to use MariaDB for persistence
-#  database:
-#    image: mariadb:latest
-#    container_name: database
-#    environment:
-#      - MYSQL_DATABASE=rhizomer
-#      - MYSQL_USER=rhizomer
-#      - MYSQL_PASSWORD=password
-#      - MYSQL_ROOT_PASSWORD=password
-#    expose:
-#      - "3306"
 
   rhizomer-api:
     image: rhizomik/rhizomer-api
     container_name: rhizomer-api
-#    depends_on:
-#      - database
     ports:
       - "8080:8080"
     environment:
+      - ALLOWED_ORIGINS=${CLIENT_URL:-http://localhost}
+      - DEFAULT_PASSWORD=password
+      - JAVA_OPTS=-Xmx512m -Xms128m
+# Enable for database persistence, default is in-memory
 #      - SPRING_PROFILES_ACTIVE=production
 #      - DATABASE_URL=jdbc:mysql://database:3306/rhizomer
 #      - DATABASE_USERNAME=rhizomer
 #      - DATABASE_PASSWORD=password
-      - ALLOWED_ORIGINS=http://localhost:4200, http://localhost
-      - JAVA_OPTS=-Xmx512m -Xms128m
-      - RHIZOMER_DEFAULT_PASSWORD=password
+#    depends_on:
+#      - database
+#
+#    database:
+#      image: mariadb:latest
+#      container_name: database
+#      environment:
+#        - MYSQL_DATABASE=rhizomer
+#        - MYSQL_USER=rhizomer
+#        - MYSQL_PASSWORD=password
+#        - MYSQL_ROOT_PASSWORD=password
+#      expose:
+#        - "3306"
