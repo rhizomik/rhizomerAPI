@@ -82,7 +82,8 @@ public class DatasetController {
         dataset.setSparqlEndPoint(updatedDataset.getSparqlEndPoint());
         dataset.setUpdateEndPoint(updatedDataset.getUpdateEndPoint());
         dataset.setUsername(updatedDataset.getUsername());
-        dataset.setPassword(updatedDataset.getPassword());
+        if (updatedDataset.getPassword() != null && !updatedDataset.getPassword().isEmpty())
+            dataset.setPassword(updatedDataset.getPassword());
         dataset.setQueryType(updatedDataset.getQueryType());
         dataset.setInferenceEnabled(updatedDataset.isInferenceEnabled());
         dataset.setSampleSize(updatedDataset.getSampleSize());
