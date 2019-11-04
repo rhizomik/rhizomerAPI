@@ -44,6 +44,7 @@ import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +149,8 @@ public class APIStepdefs {
         if (datasetRepository.existsById(datasetId))
             datasetRepository.deleteById(datasetId);
         Dataset newDataset = new Dataset(datasetId);
-        newDataset.setOwner(userRepository.findById(username).get());
+        Assert.assertTrue(userRepository.findById(username).isPresent());
+        newDataset.setOwner(username);
         datasetRepository.save(newDataset);
     }
 

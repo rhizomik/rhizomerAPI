@@ -1,6 +1,5 @@
 package net.rhizomik.rhizomer.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.MalformedURLException;
@@ -18,7 +17,6 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import net.rhizomik.rhizomer.service.Queries.QueryType;
@@ -52,9 +50,7 @@ public class Dataset {
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset", cascade = CascadeType.ALL)
     @OrderBy("instanceCount DESC")
     private List<Class> classes = new ArrayList<>();
-    @ManyToOne
-    @JsonIdentityReference(alwaysAsId = true)
-    private User owner;
+    private String owner;
 
     public Dataset() {}
 
@@ -170,9 +166,9 @@ public class Dataset {
 
     public String getPassword() { return password; }
 
-    public User getOwner() { return owner; }
+    public String getOwner() { return owner; }
 
-    public void setOwner(User owner) { this.owner = owner; }
+    public void setOwner(String owner) { this.owner = owner; }
 
     public boolean isPublic() { return isPublic; }
 

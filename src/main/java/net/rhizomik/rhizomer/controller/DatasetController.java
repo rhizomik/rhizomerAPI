@@ -55,7 +55,7 @@ public class DatasetController {
         Validate.isTrue(!datasetRepository.existsById(newDataset.getId()),
                 "Dataset with id '%s' already exists", newDataset.getId());
         logger.info("Creating Dataset: {}", newDataset.getId());
-        newDataset.setOwner((User)auth.getPrincipal());
+        newDataset.setOwner(auth.getName());
         return datasetRepository.save(newDataset);
     }
 

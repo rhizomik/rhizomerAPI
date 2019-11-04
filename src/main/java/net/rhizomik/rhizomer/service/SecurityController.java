@@ -25,7 +25,7 @@ public class SecurityController {
             throw new AuthorizationServiceException("Not authorized to access dataset "+ dataset.getId());
         if (auth.isAuthenticated() &&
             !(auth.getPrincipal() instanceof Admin) &&
-            !dataset.getOwner().getUsername().equals(auth.getName()))
+            !dataset.getOwner().equals(auth.getName()))
             throw new AuthorizationServiceException("User " + auth.getName() +
                 " not authorized to access dataset "+ dataset.getId());
     }
