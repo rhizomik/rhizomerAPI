@@ -1,16 +1,8 @@
 package net.rhizomik.rhizomer.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import net.rhizomik.rhizomer.service.Queries.QueryType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.persistence.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,6 +11,19 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import net.rhizomik.rhizomer.service.Queries.QueryType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -48,7 +53,6 @@ public class Dataset {
     @OrderBy("instanceCount DESC")
     private List<Class> classes = new ArrayList<>();
     @ManyToOne
-    @JsonBackReference
     @JsonIdentityReference(alwaysAsId = true)
     private User owner;
 
