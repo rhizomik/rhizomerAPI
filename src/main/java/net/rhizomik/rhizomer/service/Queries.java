@@ -43,6 +43,26 @@ public interface Queries {
         return query;
     }
 
+    default Query getQueryClassInstancesLabels(String classUri,
+        MultiValueMap<String, String> filters, int limit, int offset) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+            "CONSTRUCT { ?resource rdfs:label ?label } \n" +
+                "WHERE { \n" +
+                "\t ?instance ?property ?resource . \n" +
+                "\t ?resource rdfs:label ?label .\n" +
+                "\t { SELECT DISTINCT ?instance \n" +
+                "\t\t WHERE { \n" +
+                "\t\t\t ?instance a ?class . \n" +
+                getFilterPatternsAnd(filters) +
+                "\t\t } LIMIT " + limit + " OFFSET " + offset + "\n" +
+                "\t } \n" +
+                "}");
+        pQuery.setIri("class", classUri);
+        Query query = pQuery.asQuery();
+        return query;
+    }
+
     Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage);
 
     Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
@@ -51,6 +71,19 @@ public interface Queries {
 
     default Query getQueryDescribeResource(URI resourceUri) {
         return QueryFactory.create("DESCRIBE <" + resourceUri + ">");
+    }
+
+    default Query getQueryDescribeResourceLabels(URI resourceUri) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+            "CONSTRUCT { ?resource rdfs:label ?label } \n" +
+            "WHERE { \n" +
+            "\t ?instance ?property ?resource . \n" +
+            "\t ?resource rdfs:label ?label .\n" +
+            "}");
+        pQuery.setIri("instance", resourceUri.toString());
+        Query query = pQuery.asQuery();
+        return query;
     }
 
     default Query getQueryInferTypes() {

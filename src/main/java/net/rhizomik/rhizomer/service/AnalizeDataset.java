@@ -197,6 +197,9 @@ public class AnalizeDataset {
         Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
             queries(dataset.getQueryType()).getQueryClassInstances(classUri.toString(), filters, size, size * page),
             dataset.getDatasetGraphs());
+        model.add(sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
+            queries(dataset.getQueryType()).getQueryClassInstancesLabels(classUri.toString(), filters, size, size * page),
+            dataset.getDatasetGraphs()));
         RDFDataMgr.write(out, model, format);
     }
 
@@ -218,6 +221,8 @@ public class AnalizeDataset {
     public void describeDatasetResource(OutputStream out, Dataset dataset, URI resourceUri, RDFFormat format) {
         Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
             queries(dataset.getQueryType()).getQueryDescribeResource(resourceUri), dataset.getDatasetGraphs());
+        model.add(sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
+            queries(dataset.getQueryType()).getQueryDescribeResourceLabels(resourceUri), dataset.getDatasetGraphs()));
         RDFDataMgr.write(out, model, format);
     }
 
