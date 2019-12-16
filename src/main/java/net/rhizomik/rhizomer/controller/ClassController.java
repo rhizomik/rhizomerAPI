@@ -67,12 +67,12 @@ public class ClassController {
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/instances", method = RequestMethod.GET,
-    produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> retrieveClassFacetedInstances(
-        @PathVariable String datasetId, @PathVariable String classCurie,
-        @RequestParam(value="page", defaultValue="0") int page,
-        @RequestParam(value="size", defaultValue="10") int size,
-        @RequestParam MultiValueMap<String, String> filters, Authentication auth) {
+            @PathVariable String datasetId, @PathVariable String classCurie,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam MultiValueMap<String, String> filters, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         Class datasetClass = getClass(classCurie, dataset);
@@ -83,8 +83,29 @@ public class ClassController {
             analiseDataset.retrieveClassInstances(outputStream,
                 dataset, datasetClass, filters, page, size, RDFFormat.JSONLD);
         return ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(stream);
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(stream);
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/instancesLabels", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StreamingResponseBody> retrieveClassFacetedInstancesLabels(
+            @PathVariable String datasetId, @PathVariable String classCurie,
+            @RequestParam(value="page", defaultValue="0") int page,
+            @RequestParam(value="size", defaultValue="10") int size,
+            @RequestParam MultiValueMap<String, String> filters, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        Class datasetClass = getClass(classCurie, dataset);
+        logger.info("Retrieved instances labels for Class {} in Dataset {}", classCurie, datasetId);
+        filters.remove("page");
+        filters.remove("size");
+        StreamingResponseBody stream = outputStream ->
+            analiseDataset.getLinkedResourcesLabels(outputStream,
+                dataset, datasetClass, filters, page, size, RDFFormat.JSONLD);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(stream);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/count", method = RequestMethod.GET)

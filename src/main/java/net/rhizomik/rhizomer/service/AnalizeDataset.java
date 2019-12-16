@@ -195,11 +195,17 @@ public class AnalizeDataset {
         MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
-            queries(dataset.getQueryType()).getQueryClassInstances(classUri.toString(), filters, size, size * page),
-            dataset.getDatasetGraphs());
-        model.add(sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
-            queries(dataset.getQueryType()).getQueryClassInstancesLabels(classUri.toString(), filters, size, size * page),
-            dataset.getDatasetGraphs()));
+            queries(dataset.getQueryType()).getQueryClassInstances(classUri.toString(), filters, size,
+                    size * page), dataset.getDatasetGraphs());
+        RDFDataMgr.write(out, model, format);
+    }
+
+    public void getLinkedResourcesLabels(OutputStream out, Dataset dataset, Class datasetClass,
+        MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
+        URI classUri = datasetClass.getUri();
+        Model model = sparqlService.queryDescribe(dataset.getSparqlEndPoint(),
+            queries(dataset.getQueryType()).getQueryClassInstancesLabels(classUri.toString(), filters, size,
+                    size * page), dataset.getDatasetGraphs());
         RDFDataMgr.write(out, model, format);
     }
 
