@@ -69,6 +69,7 @@ public class SPARQLService {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, null);
+        ((QueryEngineHTTP) q).addParam("timeout", TIMEOUT);
         return q.execConstruct();
     }
 
