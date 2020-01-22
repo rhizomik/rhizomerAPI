@@ -50,7 +50,7 @@ public class RangeController {
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody List<Range> getRanges(@PathVariable String datasetId,
-        @PathVariable String classCurie, @PathVariable String facetCurie, Authentication auth) {
+            @PathVariable String classCurie, @PathVariable String facetCurie, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         Class datasetClass = getClass(classCurie, dataset);
@@ -61,12 +61,11 @@ public class RangeController {
     @RequestMapping(method = RequestMethod.GET,
         value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges/{rangeCurie}/values")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody List<Value> getRangeValues(@PathVariable String datasetId,
-        @PathVariable String classCurie,
-        @PathVariable String facetCurie, @PathVariable String rangeCurie,
-        @RequestParam MultiValueMap<String, String> filters, Authentication auth,
-        @RequestParam(value="page", defaultValue="0") int page,
-        @RequestParam(value="size", defaultValue="10") int size) {
+    public @ResponseBody List<Value> getRangeValues(@PathVariable String datasetId, @PathVariable String classCurie,
+            @PathVariable String facetCurie, @PathVariable String rangeCurie,
+            @RequestParam MultiValueMap<String, String> filters, Authentication auth,
+            @RequestParam(value="page", defaultValue="0") int page,
+            @RequestParam(value="size", defaultValue="10") int size) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         Class datasetClass = getClass(classCurie, dataset);
@@ -75,12 +74,30 @@ public class RangeController {
         return analiseDataset.retrieveRangeValues(dataset, facetRange, filters, page, size);
     }
 
+    @RequestMapping(method = RequestMethod.GET,
+            value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges/{rangeCurie}/valuesContaining")
+    public @ResponseBody List<Value> getRangeValuesContaining(@PathVariable String datasetId,
+            @PathVariable String classCurie, @PathVariable String facetCurie, @PathVariable String rangeCurie,
+            @RequestParam MultiValueMap<String, String> filters, Authentication auth,
+            @RequestParam(value = "containing", defaultValue = "") String containing,
+            @RequestParam(value = "top", defaultValue = "-1") int top) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        logger.info("Retrieving top {} values for Facet {} containing '{}'", top, facetCurie, containing);
+        Class datasetClass = getClass(classCurie, dataset);
+        Facet classFacet = getFacet(facetCurie, datasetClass.getId());
+        Range facetRange = getRange(rangeCurie, classFacet);
+        filters.remove("containing");
+        filters.remove("top");
+        return analiseDataset.retrieveRangeValuesContaining(dataset, facetRange, filters, containing, top);
+    }
+
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges",
         method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody Range addRange(@Valid @RequestBody Range newRange,
-        @PathVariable String datasetId, @PathVariable String classCurie,
-        @PathVariable String facetCurie, Authentication auth) {
+            @PathVariable String datasetId, @PathVariable String classCurie,
+            @PathVariable String facetCurie, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
         Class datasetClass = getClass(classCurie, dataset);
