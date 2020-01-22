@@ -98,4 +98,36 @@ public class DetailedQueries implements Queries {
         if (ordered) query.addOrderBy("count", -1);
         return query;
     }
+
+    @Override
+    public Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
+                                                    MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+                "SELECT DISTINCT ?value ?label \n" +
+                "WHERE { \n" +
+                "\t { SELECT DISTINCT ?instance " +
+                "\t\t WHERE { \n" +
+                "\t\t\t ?instance a ?class . \n" +
+                getFilterPatternsAnd(filters) +
+                "\t\t } \n" +
+                "\t } \n" +
+                "\t ?instance ?property ?value . \n" +
+                "\t OPTIONAL { ?value rdfs:label ?label \n" +
+                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+                "\t OPTIONAL { ?value rdfs:label ?label } \n" +
+                ( isLiteral ?
+                    "\t FILTER( ISLITERAL(?value) && STR(DATATYPE(?value))=\"" + rangeUri + "\" )\n" :
+                    !rangeUri.equals(RDFS.Resource.getURI()) ?
+                        "\t ?value a <" + rangeUri + "> \n" :
+                        "\t OPTIONAL { ?value a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?value) ) \n" ) +
+                "\t FILTER( CONTAINS(LCASE(STR(?value)), LCASE(?containing)) || CONTAINS(LCASE(?label), LCASE(?containing)) ) \n" +
+                "}");
+        pQuery.setIri("class", classUri);
+        pQuery.setIri("property", facetUri);
+        pQuery.setLiteral("containing", containing);
+        Query query = pQuery.asQuery();
+        if (top > 0) query.setLimit(top);
+        return query;
+    }
 }

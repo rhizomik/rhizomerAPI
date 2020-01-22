@@ -145,7 +145,7 @@ public class AnalizeDataset {
     }
 
     public List<Value> retrieveRangeValues(Dataset dataset, Range facetRange,
-        MultiValueMap<String, String> filters, int page, int size) {
+            MultiValueMap<String, String> filters, int page, int size) {
         URI classUri = facetRange.getFacet().getDomain().getUri();
         URI facetUri = facetRange.getFacet().getUri();
         ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
@@ -172,6 +172,38 @@ public class AnalizeDataset {
                         curie = prefixCCMap.abbreviate(new URL(uri).toString());
                     } catch (Exception e) {}
                 rangeValues.add(new Value(value.toString(), count, uri, curie, label));
+            }
+        }
+        return rangeValues;
+    }
+
+    public List<Value> retrieveRangeValuesContaining(Dataset dataset, Range facetRange,
+           MultiValueMap<String, String> filters, String containing, int top) {
+        URI classUri = facetRange.getFacet().getDomain().getUri();
+        URI facetUri = facetRange.getFacet().getUri();
+        ResultSet result = sparqlService.querySelect(dataset.getSparqlEndPoint(),
+                queries(dataset.getQueryType()).getQueryFacetRangeValuesContaining(classUri.toString(), facetUri.toString(),
+                        facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top),
+                dataset.getDatasetGraphs(), null);
+
+        List<Value> rangeValues = new ArrayList<>();
+        while (result.hasNext()) {
+            QuerySolution soln = result.nextSolution();
+            if (soln.contains("?value")) {
+                RDFNode value = soln.get("?value");
+                // int count = soln.getLiteral("?count").getInt();
+                String label = null;
+                if (soln.contains("?label"))
+                    label = soln.getLiteral("?label").getString();
+                String uri = null;
+                if (value.isResource())
+                    uri = value.asResource().getURI();
+                String curie = null;
+                if (uri != null)
+                    try {
+                        curie = prefixCCMap.abbreviate(new URL(uri).toString());
+                    } catch (Exception e) {}
+                rangeValues.add(new Value(value.toString(), 0, uri, curie, label));
             }
         }
         return rangeValues;

@@ -63,7 +63,7 @@ public class OptimizedQueries implements Queries {
 
     @Override
     public Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
-        MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
+            MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "SELECT ?value ?label (COUNT(?value) AS ?count) \n" +
@@ -86,6 +86,34 @@ public class OptimizedQueries implements Queries {
         if (limit > 0) query.setLimit(limit);
         if (offset > 0) query.setOffset(offset);
         if (ordered) query.addOrderBy("count", -1);
+        return query;
+    }
+
+    @Override
+    public Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
+            MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+                "SELECT DISTINCT ?value ?label \n" +
+                "WHERE { \n" +
+                "\t { SELECT DISTINCT ?instance " +
+                "\t\t WHERE { \n" +
+                "\t\t\t ?instance a ?class . \n" +
+                getFilterPatternsAnd(filters) +
+                "\t\t } \n" +
+                "\t } \n" +
+                "\t ?instance ?property ?resource . \n" +
+                "\t OPTIONAL { ?resource rdfs:label ?label \n" +
+                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+                "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
+                "\t BIND( str(?resource) AS ?value) \n" +
+                "\t FILTER( CONTAINS(LCASE(?value), LCASE(?containing)) || CONTAINS(LCASE(?label), LCASE(?containing)) ) \n" +
+                "}");
+        pQuery.setIri("class", classUri);
+        pQuery.setIri("property", facetUri);
+        pQuery.setLiteral("containing", containing);
+        Query query = pQuery.asQuery();
+        if (top > 0) query.setLimit(top);
         return query;
     }
 }
