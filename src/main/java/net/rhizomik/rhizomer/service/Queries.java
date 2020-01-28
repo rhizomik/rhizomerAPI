@@ -187,7 +187,8 @@ public interface Queries {
             values.removeIf(value -> value.equals("null"));
             if (!values.isEmpty()) {
                 pattern += "\t FILTER( STR(?v" + propertyVar + ") IN (" +
-                    values.stream().map(value -> "STR(" + value + ")").collect(Collectors.joining(", "))
+                    values.stream().map(value -> "STR(" + value.replaceAll("[<>]", "\"") + ")")
+                            .collect(Collectors.joining(", "))
                     + ")) . \n";
             }
             filtersPatterns.append(pattern);
@@ -201,8 +202,10 @@ public interface Queries {
             values.forEach(value -> {
                 String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
                 String pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
-                if (!value.equals("null"))
-                    pattern += "FILTER ( STR(?v" + propertyValueVar + ") = STR(" + value + ") ) \n";
+                if (!value.equals("null")) {
+                    pattern += "FILTER ( STR(?v" + propertyValueVar + ") = " +
+                            value.replaceAll("[<>]", "\"") + " ) \n";
+                }
                 filtersPatterns.append(pattern);
             });
         });
