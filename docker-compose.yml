@@ -8,7 +8,7 @@ services:
       - "8080:8080"
     environment:
       - ALLOWED_ORIGINS=${CLIENT_URL:-http://localhost}
-      - DEFAULT_PASSWORD=password
+      - RHIZOMER_DEFAULT_PASSWORD=password
       - JAVA_OPTS=-Xmx512m -Xms128m
 # Enable for database persistence, default is in-memory
 #      - SPRING_PROFILES_ACTIVE=production
