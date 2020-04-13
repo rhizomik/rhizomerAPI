@@ -4,11 +4,14 @@ package net.rhizomik.rhizomer.controller;
  * Created by http://rhizomik.net/~roberto/
  */
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import net.rhizomik.rhizomer.model.Admin;
 import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.model.User;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
+import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
 import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
@@ -35,6 +38,7 @@ public class DatasetController {
     final Logger logger = LoggerFactory.getLogger(DatasetController.class);
 
     @Autowired private DatasetRepository datasetRepository;
+    @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private SecurityController securityController;
     @Autowired private AnalizeDataset analizeDataset;
 
@@ -84,8 +88,8 @@ public class DatasetController {
         Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
             new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);
-
-        logger.info("Deleting Dataset {}", datasetId);
+        logger.info("Deleting Dataset {} and its endpoints", datasetId);
+        endPointRepository.deleteByDataset(dataset);
         datasetRepository.delete(dataset);
     }
 

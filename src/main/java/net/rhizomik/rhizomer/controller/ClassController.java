@@ -53,8 +53,7 @@ public class ClassController {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieving top {} classes in Dataset {} containing '{}'", top, datasetId, containing);
-        List<SPARQLEndPoint> endPoints = endPointRepository.findByDataset(dataset);
-        if (dataset.getClasses().isEmpty() && !dataset.getEndPoints().isEmpty())
+        if (dataset.getClasses().isEmpty() && endPointRepository.existsByDataset(dataset))
             analiseDataset.detectDatasetClasses(dataset);
         if (top >= 0)
             return dataset.getClassesContaining(containing, top);

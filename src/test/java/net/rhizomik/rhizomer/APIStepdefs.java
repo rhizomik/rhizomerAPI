@@ -26,7 +26,6 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,6 +42,7 @@ import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -102,9 +102,11 @@ public class APIStepdefs {
     @Configuration
     @Profile("LOCAL_SERVER_TESTING")
     static class SPARQLServiceMockConfig {
+        @Autowired SPARQLEndPointRepository endPointRepository;
+
         @Bean
         public SPARQLService sparqlService() {
-            return SPARQLServiceMockFactory.build();
+            return SPARQLServiceMockFactory.build(endPointRepository);
         }
     }
 
@@ -147,9 +149,12 @@ public class APIStepdefs {
     }
 
     @Given("^There is a new dataset by \"([^\"]*)\" with id \"([^\"]*)\"$")
+    @Transactional
     public void aDatasetWithId(String username, String datasetId) throws Throwable {
-        if (datasetRepository.existsById(datasetId))
-            datasetRepository.deleteById(datasetId);
+        datasetRepository.findById(datasetId).ifPresent(dataset -> {
+                    endPointRepository.deleteByDataset(dataset);
+                    datasetRepository.delete(dataset);
+                });
         Dataset newDataset = new Dataset(datasetId);
         Assert.assertTrue(userRepository.findById(username).isPresent());
         newDataset.setOwner(username);
@@ -307,7 +312,6 @@ public class APIStepdefs {
         SPARQLServiceMockFactory.clearDataset();
         SPARQLEndPoint endPoint = new SPARQLEndPoint();
         endPoint.setQueryEndPoint(new URL("http://sparql/mock"));
-        endPoint.setDataset(dataset);
         endPoint.setWritable(true);
         String endPointJason = mapper.writeValueAsString(endPoint);
         this.result = mockMvc.perform(post("/datasets/{datasetId}/endpoints", datasetId)
@@ -378,37 +382,21 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$.inferenceEnabled", is(inference)));
     }
 
-    @And("^The dataset \"([^\"]*)\" server is set to \"([^\"]*)\"$")
-    public void theDatasetServerIsSetTo(String datasetId, URL sparqlEndPoint) throws Throwable {
-        existsADatasetWithId(datasetId);
-        String datasetJson = this.result.andReturn().getResponse().getContentAsString();
+    @And("^Add endpoint to dataset \"([^\"]*)\"$")
+    public void theDatasetServerIsSetTo(String datasetId, Map<String, String> props) throws Throwable {
         SPARQLEndPoint endPoint = new SPARQLEndPoint();
-        endPoint.setQueryEndPoint(sparqlEndPoint);
-        String endPointJason = mapper.writeValueAsString(endPoint);
-        this.result = mockMvc.perform(put("/datasets/{datasetId}/endpoints", datasetId)
+        endPoint.setQueryEndPoint(new URL(props.get("QueryEndPoint")));
+        endPoint.setUpdateEndPoint(props.containsKey("UpdateEndPoint") ? new URL(props.get("UpdateEndPoint")) : null);
+        endPoint.setUpdateUsername(props.get("UpdateUsername"));
+        endPoint.setWritable(Boolean.parseBoolean(props.get("Writable")));
+        this.result = mockMvc.perform(post("/datasets/{datasetId}/endpoints", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(endPointJason)
+                .content(new JSONObject(mapper.writeValueAsString(endPoint))
+                        .put("updatePassword", props.get("UpdatePassword")).toString())
                 .accept(MediaType.APPLICATION_JSON)
-                .with(authenticate()));
-        this.result.andExpect(jsonPath("$.queryEndPoint", is(sparqlEndPoint.toString())));
-    }
-
-    @And("^The dataset \"([^\"]*)\" update server is set to \"([^\"]*)\" with username \"([^\"]*)\" and password \"([^\"]*)\"$")
-    public void theDatasetUpdateServerIsSetTo(String datasetId, URL updateEndPoint,
-        String username, String password) throws Throwable {
-        existsADatasetWithId(datasetId);
-        String datasetJson = this.result.andReturn().getResponse().getContentAsString();
-        SPARQLEndPoint endPoint = new SPARQLEndPoint();
-        endPoint.setUpdateEndPoint(updateEndPoint);
-        endPoint.setUpdateUsername(username);
-        endPoint.setUpdatePassword(password);
-        String endPointJason = mapper.writeValueAsString(endPoint);
-        this.result = mockMvc.perform(put("/datasets/{datasetId}/endpoints", datasetId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(endPointJason)
-            .accept(MediaType.APPLICATION_JSON)
-            .with(authenticate()));
-        this.result.andExpect(jsonPath("$.updateEndPoint", is(updateEndPoint.toString())));
+                .with(authenticate()))
+                .andExpect(status().isCreated());
+        endPointId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.id");
     }
 
     @When("^I retrieve the dataset with id \"([^\"]*)\"$")
@@ -420,7 +408,7 @@ public class APIStepdefs {
 
     @When("^I list the graphs in dataset \"([^\"]*)\" server$")
     public void iListTheGraphsInDatasetServer(String datasetId) throws Throwable {
-        this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/graphs", datasetId, endPointId)
+        this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/server/graphs", datasetId, endPointId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()))
                 .andExpect(status().isOk());
@@ -505,7 +493,8 @@ public class APIStepdefs {
     @Transactional
     public void theSizeOfDatasetOntologiesGraphIs(String datasetId, long expectedSize) throws Throwable {
         Dataset dataset = datasetRepository.findById(datasetId).get();
-        long actualSize = sparqlService.countGraphTriples(dataset.getEndPoints().get(0).getQueryEndPoint(),
+        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
+        long actualSize = sparqlService.countGraphTriples(defaultEndPoint.getQueryEndPoint(),
                 dataset.getDatasetOntologiesGraph().toString());
         assertThat(actualSize, is(expectedSize));
     }
@@ -518,9 +507,11 @@ public class APIStepdefs {
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         String json = this.result.andReturn().getResponse().getContentAsString();
-        List<String> datasetGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, String.class));
-        long actualSize = datasetGraphs.stream().mapToLong(graph -> sparqlService.countGraphTriples(
-                dataset.getEndPoints().get(0).getQueryEndPoint(), graph)).sum();
+        List<String> datasetGraphs = mapper.readValue(json,
+                mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
+        long actualSize = datasetGraphs.stream().mapToLong(
+                graph -> sparqlService.countGraphTriples(defaultEndPoint.getQueryEndPoint(), graph)).sum();
         assertThat(actualSize, is(expectedSize));
     }
 

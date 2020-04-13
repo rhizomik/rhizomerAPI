@@ -54,10 +54,7 @@ public class EndPointController {
         securityController.checkOwner(dataset, auth);
         logger.info("Adding endpoint to dataset: {}", datasetId);
         endPoint.setDataset(dataset);
-        SPARQLEndPoint newEndPoint = endPointRepository.save(endPoint);
-        dataset.addEndPoint(endPoint);
-        datasetRepository.save(dataset);
-        return newEndPoint;
+        return endPointRepository.save(endPoint);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/endpoints/{endPointId}", method = RequestMethod.GET)

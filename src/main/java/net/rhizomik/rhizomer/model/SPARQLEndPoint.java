@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,6 +38,8 @@ public class SPARQLEndPoint {
     private ServerType type = ServerType.GENERIC;
     private enum ServerType {
         GENERIC,
+        VIRTUOSO,
+        FUSEKI,
         NEPTUNE;
     }
 
@@ -80,8 +81,7 @@ public class SPARQLEndPoint {
     }
 
     public List<String> getGraphs() {
-        List<String> graphsList = new ArrayList<>();
-        graphsList.addAll(this.graphs);
+        List<String> graphsList = new ArrayList<>(this.graphs);
         return graphsList;
     }
 }

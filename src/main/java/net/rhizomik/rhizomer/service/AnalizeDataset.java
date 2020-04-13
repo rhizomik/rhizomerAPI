@@ -15,6 +15,7 @@ import net.rhizomik.rhizomer.model.id.DatasetClassFacetId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.RangeRepository;
+import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.Queries.QueryType;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.QuerySolution;
@@ -50,6 +51,7 @@ public class AnalizeDataset {
     @Autowired private SPARQLService sparqlService;
     @Autowired private OptimizedQueries optimizedQueries;
     @Autowired private DetailedQueries detailedQueries;
+    @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
     @Autowired private RangeRepository rangeRepository;
@@ -65,7 +67,7 @@ public class AnalizeDataset {
         if (dataset.isInferenceEnabled())
             sparqlService.inferTypes(dataset);
 
-        dataset.getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             List<String> targetGraphs = endPoint.getGraphs();
             if (dataset.isInferenceEnabled())
                 targetGraphs.add(dataset.getDatasetInferenceGraph().toString());
@@ -94,13 +96,12 @@ public class AnalizeDataset {
     }
 
     public void detectClassFacets(Class datasetClass) {
-        datasetClass.getDataset().getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(datasetClass.getDataset()).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
                     queries(datasetClass.getDataset().getQueryType()).getQueryClassFacets(
                             datasetClass.getUri().toString(), datasetClass.getDataset().getSampleSize(),
                             datasetClass.getInstanceCount(), datasetClass.getDataset().getCoverage()),
                     endPoint.getGraphs(), null);
-
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 if (!soln.contains("?property")) continue;
@@ -156,7 +157,7 @@ public class AnalizeDataset {
         URI classUri = facetRange.getFacet().getDomain().getUri();
         URI facetUri = facetRange.getFacet().getUri();
         List<Value> rangeValues = new ArrayList<>();
-        dataset.getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
                     queries(dataset.getQueryType()).getQueryFacetRangeValues(classUri.toString(), facetUri.toString(),
                             facetRange.getUri().toString(), filters, facetRange.getAllLiteral(),
@@ -191,7 +192,7 @@ public class AnalizeDataset {
         URI classUri = facetRange.getFacet().getDomain().getUri();
         URI facetUri = facetRange.getFacet().getUri();
         List<Value> rangeValues = new ArrayList<>();
-        dataset.getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
                     queries(dataset.getQueryType()).getQueryFacetRangeValuesContaining(classUri.toString(), facetUri.toString(),
                             facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top),
@@ -237,7 +238,7 @@ public class AnalizeDataset {
     public void retrieveClassInstances(OutputStream out, Dataset dataset, Class datasetClass,
         MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
-        dataset.getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryDescribe(endPoint.getQueryEndPoint(),
                     queries(dataset.getQueryType()).getQueryClassInstances(classUri.toString(), filters, size,
                             size * page), endPoint.getGraphs());
@@ -248,7 +249,7 @@ public class AnalizeDataset {
     public void getLinkedResourcesLabels(OutputStream out, Dataset dataset, Class datasetClass,
         MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
-        dataset.getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryDescribe(endPoint.getQueryEndPoint(),
                     queries(dataset.getQueryType()).getQueryClassInstancesLabels(classUri.toString(), filters, size,
                             size * page), endPoint.getGraphs());
@@ -260,7 +261,7 @@ public class AnalizeDataset {
         MultiValueMap<String, String> filters) {
         URI classUri = datasetClass.getUri();
         AtomicInteger count = new AtomicInteger();
-        dataset.getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
                 queries(dataset.getQueryType()).getQueryClassInstancesCount(classUri.toString(), filters),
                 endPoint.getGraphs(), null);
@@ -274,7 +275,7 @@ public class AnalizeDataset {
     }
 
     public void describeDatasetResource(OutputStream out, Dataset dataset, URI resourceUri, RDFFormat format) {
-        dataset.getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryDescribe(endPoint.getQueryEndPoint(),
                     queries(dataset.getQueryType()).getQueryDescribeResource(resourceUri), endPoint.getGraphs());
             model.add(sparqlService.queryDescribe(endPoint.getQueryEndPoint(),

@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
+import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
@@ -30,6 +31,7 @@ public class OntologiesController {
     final Logger logger = LoggerFactory.getLogger(OntologiesController.class);
 
     @Autowired private DatasetRepository datasetRepository;
+    @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private SPARQLService sparqlService;
     @Autowired private SecurityController securityController;
 
@@ -48,9 +50,11 @@ public class OntologiesController {
         @PathVariable String datasetId, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
-        Validate.isTrue(!dataset.getEndPoints().isEmpty(),"Dataset '%s' does not have at least one endpoint", datasetId);
-        SPARQLEndPoint defaultEndPoint = dataset.getEndPoints().get(0);
-        Validate.isTrue(defaultEndPoint.isWritable(),"EndPoint '%s' is not writable", defaultEndPoint.getUpdateEndPoint());
+        Validate.isTrue(endPointRepository.existsByDataset(dataset),
+                "Dataset '%s' does not have at least one endpoint", datasetId);
+        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
+        Validate.isTrue(defaultEndPoint.isWritable(),
+                "EndPoint '%s' is not writable", defaultEndPoint.getUpdateEndPoint());
         ontologies.forEach(ontology -> {
             sparqlService.loadURI(defaultEndPoint.getUpdateEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
                 ontology, defaultEndPoint.getUpdateUsername(), defaultEndPoint.getUpdatePassword());
@@ -65,8 +69,9 @@ public class OntologiesController {
         @Valid @RequestBody Set<String> updatedOntologies, @PathVariable String datasetId) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
-        Validate.isTrue(!dataset.getEndPoints().isEmpty(),"Dataset '%s' does not have at least one endpoint", datasetId);
-        SPARQLEndPoint defaultEndPoint = dataset.getEndPoints().get(0);
+        Validate.isTrue(endPointRepository.existsByDataset(dataset),
+                "Dataset '%s' does not have at least one endpoint", datasetId);
+        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
         Validate.isTrue(defaultEndPoint.isWritable(),"EndPoint '%s' is not writable", defaultEndPoint.getUpdateEndPoint());
         dataset.setDatasetOntologies(updatedOntologies);
         String datasetOntologiesGraph = dataset.getDatasetOntologiesGraph().toString();

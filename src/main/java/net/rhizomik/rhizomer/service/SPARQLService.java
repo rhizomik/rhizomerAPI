@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.model.SPARQLEndPoint;
+import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
@@ -40,8 +42,8 @@ public class SPARQLService {
     @Value("${rhizomer.sparql-timeout:0}")
     private String TIMEOUT;
 
-    @Autowired
-    OptimizedQueries queries;
+    @Autowired SPARQLEndPointRepository endPointRepository;
+    @Autowired OptimizedQueries queries;
 
     public ResultSet querySelect(URL sparqlEndpoint, Query query) {
         return this.querySelect(sparqlEndpoint, query, new ArrayList<>(), new ArrayList<>());
@@ -77,16 +79,10 @@ public class SPARQLService {
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
         UpdateProcessor processor;
         if (username != null && !username.isEmpty())
-            processor = UpdateExecutionFactory.createRemote(
-                update, sparqlEndpoint.toString(), withCreds(username, password));
+            processor = UpdateExecutionFactory.createRemote(update, sparqlEndpoint.toString(), withCreds(username, password));
         else
-            processor = UpdateExecutionFactory.createRemote(
-                update, sparqlEndpoint.toString());
-        try {
-            processor.execute();
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+            processor = UpdateExecutionFactory.createRemote(update, sparqlEndpoint.toString());
+        processor.execute();
     }
 
     public long countGraphTriples(URL sparqlEndPoint, String graph) {
@@ -123,18 +119,16 @@ public class SPARQLService {
     }
 
     public void inferTypes(Dataset dataset) {
-        dataset.getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(dataset).stream().filter(SPARQLEndPoint::isWritable).forEach(endPoint -> {
             List<String> targetGraphs = endPoint.getGraphs();
             targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-            UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
-            queryUpdate(endPoint.getUpdateEndPoint(), createGraph, endPoint.getUpdateUsername(), endPoint.getUpdatePassword());
             UpdateRequest update = queries.getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
             queryUpdate(endPoint.getUpdateEndPoint(), update, endPoint.getUpdateUsername(), endPoint.getUpdatePassword());
         });
     }
 
     public void inferTypesConstruct(Dataset dataset) {
-        dataset.getEndPoints().forEach(endPoint -> {
+        endPointRepository.findByDataset(dataset).stream().filter(SPARQLEndPoint::isWritable).forEach(endPoint -> {
             List<String> targetGraphs = endPoint.getGraphs();
             targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
             UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());

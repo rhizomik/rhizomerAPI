@@ -12,6 +12,7 @@ import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.FacetRepository;
+import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
 import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
@@ -32,6 +33,7 @@ public class FacetController {
     final Logger logger = LoggerFactory.getLogger(FacetController.class);
 
     @Autowired private DatasetRepository datasetRepository;
+    @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
     @Autowired private AnalizeDataset analiseDataset;
@@ -49,7 +51,7 @@ public class FacetController {
         Class datasetClass = classRepository.findById(datasetClassId).orElseThrow(() ->
             new NullPointerException(String.format("Class with id '%s' not found", datasetClassId)));
         logger.info("Retrieving facets for Class {} in Dataset {}", classCurie, datasetId);
-        if (datasetClass.getFacets().isEmpty() && !dataset.getEndPoints().isEmpty())
+        if (datasetClass.getFacets().isEmpty() && endPointRepository.existsByDataset(dataset))
             analiseDataset.detectClassFacets(datasetClass);
         return datasetClass.getFacets(relevance);
     }

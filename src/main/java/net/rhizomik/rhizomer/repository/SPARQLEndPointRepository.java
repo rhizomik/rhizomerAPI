@@ -14,4 +14,6 @@ import java.util.List;
 public interface SPARQLEndPointRepository extends PagingAndSortingRepository<SPARQLEndPoint, Integer> {
 
     List<SPARQLEndPoint> findByDataset(Dataset dataset);
+    boolean existsByDataset(Dataset dataset);
+    void deleteByDataset(Dataset dataset);
 }

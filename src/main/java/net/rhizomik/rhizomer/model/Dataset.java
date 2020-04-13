@@ -40,8 +40,6 @@ public class Dataset {
     private double coverage = 0.0;
     private boolean isPublic = false;
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<SPARQLEndPoint> endPoints;
     @ElementCollection
     private Set<String> datasetOntologies = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset", cascade = CascadeType.ALL)
@@ -59,10 +57,6 @@ public class Dataset {
         this.id = id;
         this.datasetOntologies = ontologies;
     }
-
-    public void addEndPoint(SPARQLEndPoint endPoint) { endPoints.add(endPoint); }
-
-    public void removeEndPoint(SPARQLEndPoint endPoint) { endPoints.remove(endPoint); }
 
     @JsonIgnore
     public List<Class> getClasses() { return new ArrayList<>(classes); }
@@ -90,15 +84,6 @@ public class Dataset {
     public void addClass(Class aClass) { classes.add(aClass); }
 
     public void removeClass(Class aClass) { classes.remove(aClass); }
-
-    @JsonIgnore
-    public Set<String> getDatasetGraphs() {
-        Set<String> combinedGraphs = new HashSet<>();
-        endPoints.forEach(endPoint -> combinedGraphs.addAll(endPoint.getGraphs()));
-        if (isInferenceEnabled())
-            combinedGraphs.add(this.getDatasetInferenceGraph().toString());
-        return combinedGraphs;
-    }
 
     public void addDatasetOntology(String ontology) { this.datasetOntologies.add(ontology); }
 
