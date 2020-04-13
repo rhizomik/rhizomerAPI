@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.net.URL;
 import java.util.List;
 import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -117,14 +118,13 @@ public class SPARQLServiceMockFactory {
 
         doAnswer(invocationOnMock -> {
             Dataset dataset = invocationOnMock.getArgument(0);
-            List<String> targetGraphs = dataset.getDatasetGraphs();
+            SPARQLEndPoint endPoint = dataset.getEndPoints().get(0); // Just get the first one
+            List<String> targetGraphs = endPoint.getGraphs();
             targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-            UpdateRequest createGraph = queries
-                .getCreateGraph(dataset.getDatasetInferenceGraph().toString());
-            mock.queryUpdate(dataset.getSparqlEndPoint(), createGraph, null, null);
-            UpdateRequest update = queries
-                .getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
-            mock.queryUpdate(dataset.getSparqlEndPoint(), update, null, null);
+            UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
+            mock.queryUpdate(endPoint.getQueryEndPoint(), createGraph, null, null);
+            UpdateRequest update = queries.getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
+            mock.queryUpdate(endPoint.getQueryEndPoint(), update, null, null);
             return null;
         }).when(mock).inferTypes(any(Dataset.class));
 

@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -25,18 +26,16 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.model.Class;
-import net.rhizomik.rhizomer.model.Dataset;
-import net.rhizomik.rhizomer.model.ExpectedClass;
-import net.rhizomik.rhizomer.model.ExpectedFacet;
-import net.rhizomik.rhizomer.model.ExpectedRange;
-import net.rhizomik.rhizomer.model.ExpectedRangeValue;
-import net.rhizomik.rhizomer.model.User;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
+import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.repository.UserRepository;
 import net.rhizomik.rhizomer.service.DetailedQueries;
 import net.rhizomik.rhizomer.service.SPARQLService;
@@ -66,6 +65,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.transaction.Transactional;
+
 /**
  * Created by http://rhizomik.net/~roberto/
  */
@@ -81,11 +82,12 @@ public class APIStepdefs {
 
     private MockMvc mockMvc;
     private ResultActions result;
-
     private ObjectMapper mapper = new ObjectMapper();
+    private Integer endPointId;
 
     @Autowired private WebApplicationContext wac;
     @Autowired private DatasetRepository datasetRepository;
+    @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private SPARQLService sparqlService;
     @Autowired private UserRepository userRepository;
@@ -303,8 +305,18 @@ public class APIStepdefs {
     public void theDatasetHasAMockServer(String datasetId) throws Throwable {
         Dataset dataset = datasetRepository.findById(datasetId).get();
         SPARQLServiceMockFactory.clearDataset();
-        dataset.setSparqlEndPoint(new URL("http://sparql/mock"));
-        datasetRepository.save(dataset);
+        SPARQLEndPoint endPoint = new SPARQLEndPoint();
+        endPoint.setQueryEndPoint(new URL("http://sparql/mock"));
+        endPoint.setDataset(dataset);
+        endPoint.setWritable(true);
+        String endPointJason = mapper.writeValueAsString(endPoint);
+        this.result = mockMvc.perform(post("/datasets/{datasetId}/endpoints", datasetId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(endPointJason)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
+                .andExpect(status().isCreated());
+        endPointId = JsonPath.read(result.andReturn().getResponse().getContentAsString(), "$.id");
     }
 
     @And("^The server for dataset \"([^\"]*)\" stores data$")
@@ -316,7 +328,8 @@ public class APIStepdefs {
                 RDFDataMgr.write(out, model, Lang.JSONLD);
                 try {
                     this.result = mockMvc.perform(
-                        post("/datasets/{id}/server?graph={graph}", datasetId, graph.get("graph"))
+                        post("/datasets/{id}/endpoints/{id}/server?graph={graph}",
+                                datasetId, endPointId, graph.get("graph"))
                             .contentType("application/ld+json")
                             .content(out.toString())
                             .with(authenticate()))
@@ -369,15 +382,15 @@ public class APIStepdefs {
     public void theDatasetServerIsSetTo(String datasetId, URL sparqlEndPoint) throws Throwable {
         existsADatasetWithId(datasetId);
         String datasetJson = this.result.andReturn().getResponse().getContentAsString();
-        Dataset dataset = mapper.readValue(datasetJson, Dataset.class);
-        dataset.setSparqlEndPoint(sparqlEndPoint);
-        datasetJson = mapper.writeValueAsString(dataset);
-        this.result = mockMvc.perform(put("/datasets/{datasetId}", datasetId)
+        SPARQLEndPoint endPoint = new SPARQLEndPoint();
+        endPoint.setQueryEndPoint(sparqlEndPoint);
+        String endPointJason = mapper.writeValueAsString(endPoint);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/endpoints", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(datasetJson)
+                .content(endPointJason)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
-        this.result.andExpect(jsonPath("$.sparqlEndPoint", is(sparqlEndPoint.toString())));
+        this.result.andExpect(jsonPath("$.queryEndPoint", is(sparqlEndPoint.toString())));
     }
 
     @And("^The dataset \"([^\"]*)\" update server is set to \"([^\"]*)\" with username \"([^\"]*)\" and password \"([^\"]*)\"$")
@@ -385,14 +398,14 @@ public class APIStepdefs {
         String username, String password) throws Throwable {
         existsADatasetWithId(datasetId);
         String datasetJson = this.result.andReturn().getResponse().getContentAsString();
-        Dataset dataset = mapper.readValue(datasetJson, Dataset.class);
-        dataset.setUpdateEndPoint(updateEndPoint);
-        dataset.setUsername(username);
-        dataset.setPassword(password);
-        datasetJson = mapper.writeValueAsString(dataset);
-        this.result = mockMvc.perform(put("/datasets/{datasetId}", datasetId)
+        SPARQLEndPoint endPoint = new SPARQLEndPoint();
+        endPoint.setUpdateEndPoint(updateEndPoint);
+        endPoint.setUpdateUsername(username);
+        endPoint.setUpdatePassword(password);
+        String endPointJason = mapper.writeValueAsString(endPoint);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/endpoints", datasetId)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(datasetJson)
+            .content(endPointJason)
             .accept(MediaType.APPLICATION_JSON)
             .with(authenticate()));
         this.result.andExpect(jsonPath("$.updateEndPoint", is(updateEndPoint.toString())));
@@ -407,7 +420,7 @@ public class APIStepdefs {
 
     @When("^I list the graphs in dataset \"([^\"]*)\" server$")
     public void iListTheGraphsInDatasetServer(String datasetId) throws Throwable {
-        this.result = mockMvc.perform(get("/datasets/{datasetId}/server/graphs", datasetId)
+        this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/graphs", datasetId, endPointId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()))
                 .andExpect(status().isOk());
@@ -435,7 +448,7 @@ public class APIStepdefs {
     @When("^I add the graphs to the dataset \"([^\"]*)\"$")
     public void iAddTheGraphToTheDataset(String datasetId, List<String> graphs) throws Throwable {
         String graphsJson = mapper.writeValueAsString(graphs);
-        this.result = mockMvc.perform(post("/datasets/{datasetId}/graphs", datasetId)
+        this.result = mockMvc.perform(post("/datasets/{id}/endpoints/{id}/graphs", datasetId, endPointId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(graphsJson)
                 .accept(MediaType.APPLICATION_JSON)
@@ -461,7 +474,7 @@ public class APIStepdefs {
     public void theFollowingDataGraphsAreSetForDataset(String datasetId, List<String> graphs) throws Throwable {
         graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
         String graphsJson = mapper.writeValueAsString(graphs);
-        this.result = mockMvc.perform(put("/datasets/{datasetId}/graphs", datasetId)
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/endpoints/{id}/graphs", datasetId, endPointId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(graphsJson)
                 .accept(MediaType.APPLICATION_JSON)
@@ -482,28 +495,32 @@ public class APIStepdefs {
     @And("^The following data graphs are defined for the dataset \"([^\"]*)\"$")
     public void theFollowingDataGraphsAreDefinedForTheDataset(String datasetId, List<String> graphs) throws Throwable {
         graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
-        this.result = mockMvc.perform(get("/datasets/{datasetId}/graphs", datasetId)
+        this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/graphs", datasetId, endPointId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         this.result.andExpect(jsonPath("$", containsInAnyOrder(graphs.toArray())));
     }
 
     @And("^The size of dataset \"([^\"]*)\" ontologies graph is (\\d+)$")
+    @Transactional
     public void theSizeOfDatasetOntologiesGraphIs(String datasetId, long expectedSize) throws Throwable {
         Dataset dataset = datasetRepository.findById(datasetId).get();
-        long actualSize = sparqlService.countGraphTriples(dataset.getSparqlEndPoint(), dataset.getDatasetOntologiesGraph().toString());
+        long actualSize = sparqlService.countGraphTriples(dataset.getEndPoints().get(0).getQueryEndPoint(),
+                dataset.getDatasetOntologiesGraph().toString());
         assertThat(actualSize, is(expectedSize));
     }
 
     @And("^The size of dataset \"([^\"]*)\" data graphs is (\\d+)$")
+    @Transactional
     public void theSizeOfDatasetGraphsIs(String datasetId, long expectedSize) throws Throwable {
         Dataset dataset = datasetRepository.findById(datasetId).get();
-        this.result = mockMvc.perform(get("/datasets/{datasetId}/graphs", datasetId)
+        this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/graphs", datasetId, endPointId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         String json = this.result.andReturn().getResponse().getContentAsString();
         List<String> datasetGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, String.class));
-        long actualSize = datasetGraphs.stream().mapToLong(graph -> sparqlService.countGraphTriples(dataset.getSparqlEndPoint(), graph)).sum();
+        long actualSize = datasetGraphs.stream().mapToLong(graph -> sparqlService.countGraphTriples(
+                dataset.getEndPoints().get(0).getQueryEndPoint(), graph)).sum();
         assertThat(actualSize, is(expectedSize));
     }
 
