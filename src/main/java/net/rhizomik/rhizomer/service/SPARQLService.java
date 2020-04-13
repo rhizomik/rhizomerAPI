@@ -123,31 +123,32 @@ public class SPARQLService {
     }
 
     public void inferTypes(Dataset dataset) {
-        List<String> targetGraphs = dataset.getDatasetGraphs();
-        targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-        UpdateRequest createGraph = queries
-            .getCreateGraph(dataset.getDatasetInferenceGraph().toString());
-        queryUpdate(dataset.getSparqlEndPoint(), createGraph, dataset.getUsername(), dataset.getPassword());
-        UpdateRequest update = queries
-            .getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
-        queryUpdate(dataset.getSparqlEndPoint(), update, dataset.getUsername(), dataset.getPassword());
+        dataset.getEndPoints().forEach(endPoint -> {
+            List<String> targetGraphs = endPoint.getGraphs();
+            targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
+            UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
+            queryUpdate(endPoint.getUpdateEndPoint(), createGraph, endPoint.getUpdateUsername(), endPoint.getUpdatePassword());
+            UpdateRequest update = queries.getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
+            queryUpdate(endPoint.getUpdateEndPoint(), update, endPoint.getUpdateUsername(), endPoint.getUpdatePassword());
+        });
     }
 
-    public void inferTypesConstruct(net.rhizomik.rhizomer.model.Dataset dataset) {
-        UpdateRequest createGraph = queries
-            .getCreateGraph(dataset.getDatasetInferenceGraph().toString());
-        queryUpdate(dataset.getSparqlEndPoint(), createGraph, dataset.getUsername(), dataset.getPassword());
-        List<String> targetGraphs = dataset.getDatasetGraphs();
-        targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-        Model inferredModel = queryConstruct(dataset.getSparqlEndPoint(), queries.getQueryInferTypes(), targetGraphs);
-        /*File inferenceOut = new File(dataset.getId() + "-inference.ttl");
-        try {
-            RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage());
-        }*/
-        loadModel(dataset.getSparqlEndPoint(), dataset.getDatasetInferenceGraph().toString(),
-            inferredModel, dataset.getUsername(), dataset.getPassword());
+    public void inferTypesConstruct(Dataset dataset) {
+        dataset.getEndPoints().forEach(endPoint -> {
+            List<String> targetGraphs = endPoint.getGraphs();
+            targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
+            UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
+            queryUpdate(endPoint.getUpdateEndPoint(), createGraph, endPoint.getUpdateUsername(), endPoint.getUpdatePassword());
+            Model inferredModel = queryConstruct(endPoint.getUpdateEndPoint(), queries.getQueryInferTypes(), targetGraphs);
+            /*File inferenceOut = new File(dataset.getId() + "-inference.ttl");
+            try {
+                RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);
+            } catch (FileNotFoundException e) {
+                logger.error(e.getMessage());
+            }*/
+            loadModel(endPoint.getUpdateEndPoint(), dataset.getDatasetInferenceGraph().toString(),
+                    inferredModel, endPoint.getUpdateUsername(), endPoint.getUpdatePassword());
+        });
     }
 
     private static HttpClient withCreds(String uname, String password) {

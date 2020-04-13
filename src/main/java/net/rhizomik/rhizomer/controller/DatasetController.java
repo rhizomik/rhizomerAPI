@@ -62,10 +62,8 @@ public class DatasetController {
     @RequestMapping(value = "/datasets/{datasetId}", method = RequestMethod.GET)
     public @ResponseBody
     Dataset retrieveDataset(@PathVariable String datasetId, Authentication auth) {
-        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
-            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
-
         logger.info("Retrieved Dataset {}", datasetId);
         return dataset;
     }
@@ -74,22 +72,10 @@ public class DatasetController {
     public @ResponseBody
     Dataset updateDataset(@Valid @RequestBody Dataset updatedDataset,
         @PathVariable String datasetId, Authentication auth) {
-        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
-            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+        Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
-
         logger.info("Updating Dataset: {}", datasetId);
-        dataset.setSparqlEndPoint(updatedDataset.getSparqlEndPoint());
-        dataset.setUpdateEndPoint(updatedDataset.getUpdateEndPoint());
-        dataset.setUsername(updatedDataset.getUsername());
-        if (updatedDataset.getPassword() != null && !updatedDataset.getPassword().isEmpty())
-            dataset.setPassword(updatedDataset.getPassword());
-        dataset.setQueryType(updatedDataset.getQueryType());
-        dataset.setInferenceEnabled(updatedDataset.isInferenceEnabled());
-        dataset.setSampleSize(updatedDataset.getSampleSize());
-        dataset.setCoverage(updatedDataset.getCoverage());
-        dataset.setPublic(updatedDataset.isPublic());
-        return datasetRepository.save(dataset);
+        return datasetRepository.save(updatedDataset);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}", method = RequestMethod.DELETE)
@@ -134,5 +120,12 @@ public class DatasetController {
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(stream);
+    }
+
+    private Dataset getDataset(String datasetId) {
+        return datasetRepository
+                .findById(datasetId)
+                .orElseThrow(() ->
+                        new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
     }
 }

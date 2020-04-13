@@ -2,10 +2,8 @@ package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+
+import java.net.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +17,8 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+
+import lombok.Data;
 import net.rhizomik.rhizomer.service.Queries.QueryType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,24 +27,21 @@ import org.slf4j.LoggerFactory;
  * Created by http://rhizomik.net/~roberto/
  */
 @Entity
+@Data
 public class Dataset {
     private static final Logger logger = LoggerFactory.getLogger(Dataset.class);
 
     @Id
     private String id;
-    private URL sparqlEndPoint;
-    private URL updateEndPoint;
+
     private QueryType queryType = QueryType.OPTIMIZED;
     private boolean inferenceEnabled = false;
     private int sampleSize = 0;
     private double coverage = 0.0;
-    private String username;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
     private boolean isPublic = false;
 
-    @ElementCollection
-    private Set<String> datasetGraphs = new HashSet<>();
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<SPARQLEndPoint> endPoints;
     @ElementCollection
     private Set<String> datasetOntologies = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset", cascade = CascadeType.ALL)
@@ -58,29 +55,14 @@ public class Dataset {
         this.id = id;
     }
 
-    public Dataset(String id, URL serverUrl) throws MalformedURLException {
-        this(id, serverUrl, null, null);
-    }
-
-    public Dataset(String id, URL sparqlEndPoint, Set<String> graphs, Set<String> ontologies) throws MalformedURLException {
+    public Dataset(String id, Set<String> ontologies) throws MalformedURLException {
         this.id = id;
-        this.sparqlEndPoint = sparqlEndPoint;
-        this.updateEndPoint = sparqlEndPoint;
-        this.datasetGraphs = graphs;
         this.datasetOntologies = ontologies;
     }
 
-    public Dataset(String id, URL sparqlEndPoint, URL updateEndPoint, Set<String> graphs, Set<String> ontologies) throws MalformedURLException {
-        this.id = id;
-        this.sparqlEndPoint = sparqlEndPoint;
-        this.updateEndPoint = updateEndPoint;
-        this.datasetGraphs = graphs;
-        this.datasetOntologies = ontologies;
-    }
+    public void addEndPoint(SPARQLEndPoint endPoint) { endPoints.add(endPoint); }
 
-    public String getId() { return id; }
-
-    public void setId(String id) { this.id = id; }
+    public void removeEndPoint(SPARQLEndPoint endPoint) { endPoints.remove(endPoint); }
 
     @JsonIgnore
     public List<Class> getClasses() { return new ArrayList<>(classes); }
@@ -110,16 +92,13 @@ public class Dataset {
     public void removeClass(Class aClass) { classes.remove(aClass); }
 
     @JsonIgnore
-    public List<String> getDatasetGraphs() {
-        ArrayList<String> copyDatasetGraphs = new ArrayList<>(datasetGraphs);
+    public Set<String> getDatasetGraphs() {
+        Set<String> combinedGraphs = new HashSet<>();
+        endPoints.forEach(endPoint -> combinedGraphs.addAll(endPoint.getGraphs()));
         if (isInferenceEnabled())
-            copyDatasetGraphs.add(this.getDatasetInferenceGraph().toString());
-        return copyDatasetGraphs;
+            combinedGraphs.add(this.getDatasetInferenceGraph().toString());
+        return combinedGraphs;
     }
-
-    public void setDatasetGraphs(Set<String> datasetGraphs) { this.datasetGraphs = datasetGraphs; }
-
-    public void addDatasetGraph(String graph) { this.datasetGraphs.add(graph); }
 
     public void addDatasetOntology(String ontology) { this.datasetOntologies.add(ontology); }
 
@@ -128,58 +107,12 @@ public class Dataset {
 
     public void setDatasetOntologies(Set<String> datasetOntologies) { this.datasetOntologies = datasetOntologies; }
 
-    public URL getSparqlEndPoint() { return sparqlEndPoint; }
-
-    public void setSparqlEndPoint(URL sparqlEndPoint) { this.sparqlEndPoint = sparqlEndPoint; }
-
-    public URL getUpdateEndPoint() {
-        if (updateEndPoint == null)
-            return sparqlEndPoint;
-        return updateEndPoint;
-    }
-
-    public void setUpdateEndPoint(URL updateEndPoint) { this.updateEndPoint = updateEndPoint; }
-
-    public QueryType getQueryType() { return queryType; }
-
-    public void setQueryType(QueryType queryType) { this.queryType = queryType; }
-
-    public boolean isInferenceEnabled() { return inferenceEnabled; }
-
-    public void setInferenceEnabled(boolean inferenceEnabled) { this.inferenceEnabled = inferenceEnabled; }
-
-    public int getSampleSize() { return sampleSize; }
-
-    public void setSampleSize(int sampleSize) { this.sampleSize = sampleSize; }
-
-    public double getCoverage() { return coverage; }
-
-    public void setCoverage(double coverage) { this.coverage = coverage; }
-
-    public void setUsername(String username) { this.username = username; }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setPassword(String password) { this.password = password; }
-
-    public String getPassword() { return password; }
-
-    public String getOwner() { return owner; }
-
-    public void setOwner(String owner) { this.owner = owner; }
-
-    public boolean isPublic() { return isPublic; }
-
-    public void setPublic(boolean aPublic) { isPublic = aPublic; }
-
     @JsonIgnore
     public URI getDatasetUri() {
         URI datasetURI = null;
         try {
-            datasetURI = new URI("http://rhizomik.net/dataset/"+getId());
-        } catch (URISyntaxException e) {
+            datasetURI = new URI("http://" + InetAddress.getLocalHost().getHostName() + "/dataset/"+getId());
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return datasetURI;

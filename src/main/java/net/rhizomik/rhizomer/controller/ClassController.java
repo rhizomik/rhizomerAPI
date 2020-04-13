@@ -4,13 +4,16 @@ package net.rhizomik.rhizomer.controller;
  * Created by http://rhizomik.net/~roberto/
  */
 import java.util.List;
+import java.util.Set;
 import javax.validation.Valid;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.Curie;
 import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
+import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
 import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
@@ -38,6 +41,7 @@ public class ClassController {
     final Logger logger = LoggerFactory.getLogger(ClassController.class);
 
     @Autowired private DatasetRepository datasetRepository;
+    @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private AnalizeDataset analiseDataset;
     @Autowired private SecurityController securityController;
@@ -49,7 +53,8 @@ public class ClassController {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieving top {} classes in Dataset {} containing '{}'", top, datasetId, containing);
-        if (dataset.getClasses().isEmpty() && dataset.getSparqlEndPoint()!=null )
+        List<SPARQLEndPoint> endPoints = endPointRepository.findByDataset(dataset);
+        if (dataset.getClasses().isEmpty() && !dataset.getEndPoints().isEmpty())
             analiseDataset.detectDatasetClasses(dataset);
         if (top >= 0)
             return dataset.getClassesContaining(containing, top);

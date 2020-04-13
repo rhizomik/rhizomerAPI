@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
 import net.rhizomik.rhizomer.model.Dataset;
+import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SecurityController;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,7 @@ public class OntologiesController {
     @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.GET)
     public @ResponseBody List<String> retrieveDatasetOntologies(@PathVariable String datasetId,
         Authentication auth) {
-        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
-            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieved ontologies for Dataset {}", datasetId);
         return dataset.getDatasetOntologies();
@@ -45,12 +46,14 @@ public class OntologiesController {
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody List<String> addDatasetOntology(@RequestBody List<String> ontologies,
         @PathVariable String datasetId, Authentication auth) {
-        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
-            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+        Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
+        Validate.isTrue(!dataset.getEndPoints().isEmpty(),"Dataset '%s' does not have at least one endpoint", datasetId);
+        SPARQLEndPoint defaultEndPoint = dataset.getEndPoints().get(0);
+        Validate.isTrue(defaultEndPoint.isWritable(),"EndPoint '%s' is not writable", defaultEndPoint.getUpdateEndPoint());
         ontologies.forEach(ontology -> {
-            sparqlService.loadURI(dataset.getSparqlEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
-                ontology, dataset.getUsername(), dataset.getPassword());
+            sparqlService.loadURI(defaultEndPoint.getUpdateEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
+                ontology, defaultEndPoint.getUpdateUsername(), defaultEndPoint.getUpdatePassword());
             dataset.addDatasetOntology(ontology);
         });
         logger.info("Added ontologies {} to Dataset {}", ontologies.toString(), datasetId);
@@ -60,17 +63,26 @@ public class OntologiesController {
     @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.PUT)
     public @ResponseBody List<String> updateDatasetOntologies(Authentication auth,
         @Valid @RequestBody Set<String> updatedOntologies, @PathVariable String datasetId) {
-        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
-            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+        Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
+        Validate.isTrue(!dataset.getEndPoints().isEmpty(),"Dataset '%s' does not have at least one endpoint", datasetId);
+        SPARQLEndPoint defaultEndPoint = dataset.getEndPoints().get(0);
+        Validate.isTrue(defaultEndPoint.isWritable(),"EndPoint '%s' is not writable", defaultEndPoint.getUpdateEndPoint());
         dataset.setDatasetOntologies(updatedOntologies);
         String datasetOntologiesGraph = dataset.getDatasetOntologiesGraph().toString();
-        sparqlService.clearGraph(dataset.getSparqlEndPoint(), datasetOntologiesGraph,
-            dataset.getUsername(), dataset.getPassword());
+        sparqlService.clearGraph(defaultEndPoint.getUpdateEndPoint(), datasetOntologiesGraph,
+            defaultEndPoint.getUpdateUsername(), defaultEndPoint.getUpdatePassword());
         updatedOntologies.forEach(ontologyUriStr ->
-                sparqlService.loadURI(dataset.getSparqlEndPoint(), datasetOntologiesGraph.toString(),
-                    ontologyUriStr, dataset.getUsername(), dataset.getPassword()));
-        logger.info("Updated Dataset {} ontologies", datasetId);
+                sparqlService.loadURI(defaultEndPoint.getUpdateEndPoint(), datasetOntologiesGraph,
+                    ontologyUriStr, defaultEndPoint.getUpdateUsername(), defaultEndPoint.getUpdatePassword()));
+        logger.info("Updated Dataset {} ontologies with {}", datasetId, updatedOntologies.toString());
         return datasetRepository.save(dataset).getDatasetOntologies();
+    }
+
+    private Dataset getDataset(String datasetId) {
+        return datasetRepository
+                .findById(datasetId)
+                .orElseThrow(() ->
+                        new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
     }
 }

@@ -49,7 +49,7 @@ public class FacetController {
         Class datasetClass = classRepository.findById(datasetClassId).orElseThrow(() ->
             new NullPointerException(String.format("Class with id '%s' not found", datasetClassId)));
         logger.info("Retrieving facets for Class {} in Dataset {}", classCurie, datasetId);
-        if (datasetClass.getFacets().isEmpty() && dataset.getSparqlEndPoint()!=null )
+        if (datasetClass.getFacets().isEmpty() && !dataset.getEndPoints().isEmpty())
             analiseDataset.detectClassFacets(datasetClass);
         return datasetClass.getFacets(relevance);
     }
