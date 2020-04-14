@@ -148,17 +148,14 @@ public class EndPointController {
 
         if (request.getMethod().matches("PUT")) {
             logger.info("Clearing graph {} at server {}", graph, endPoint.getUpdateEndPoint());
-            sparqlService.clearGraph(
-                    endPoint.getUpdateEndPoint(), graph, endPoint.getUpdateUsername(), endPoint.getUpdatePassword());
+            analizeDataset.clearGraph(endPoint, graph);
         }
 
         Model model = ModelFactory.createDefaultModel();
         RDFDataMgr.read(model, request.getBody(), graph, RDFLanguages.contentTypeToLang(contentType));
         logger.info("Loading {} triples into graph {} at server {}",
             model.size(), graph, endPoint.getUpdateEndPoint());
-        sparqlService.loadModel(
-            endPoint.getUpdateEndPoint(), graph, model, endPoint.getUpdateUsername(), endPoint.getUpdatePassword());
-        endPoint.addGraph(graph);
+        analizeDataset.loadModel(endPoint, graph, model);
         endPointRepository.save(endPoint);
         logger.info("By default added graph {} to endpoint {}", graph, endPoint.getUpdateEndPoint());
         return model.size();

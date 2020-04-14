@@ -5,6 +5,7 @@ package net.rhizomik.rhizomer.controller;
  */
 import java.net.URI;
 import java.util.List;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import net.rhizomik.rhizomer.model.Admin;
 import net.rhizomik.rhizomer.model.Dataset;
@@ -83,7 +84,7 @@ public class DatasetController {
     }
 
     @RequestMapping(value = "/datasets/{datasetId}", method = RequestMethod.DELETE)
-    @ResponseBody
+    @Transactional
     public void deleteDataset(@PathVariable String datasetId, Authentication auth) {
         Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
             new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));

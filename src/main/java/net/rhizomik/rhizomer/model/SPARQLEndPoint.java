@@ -36,7 +36,7 @@ public class SPARQLEndPoint {
     private String updatePassword;
 
     private ServerType type = ServerType.GENERIC;
-    private enum ServerType {
+    public enum ServerType {
         GENERIC,
         VIRTUOSO,
         FUSEKI,

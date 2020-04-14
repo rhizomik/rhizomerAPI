@@ -3,6 +3,8 @@ package net.rhizomik.rhizomer.service;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -124,6 +126,14 @@ public interface Queries {
             " \t FILTER NOT EXISTS {?i a ?class} \n" +
             "} \n" +
             "}");
+    }
+
+    default UpdateRequest getInsertData(SPARQLEndPoint.ServerType serverType, String graph, String data) {
+        if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO)
+            // Fix Virtuoso bug: https://github.com/openlink/virtuoso-opensource/issues/126
+            return UpdateFactory.create("INSERT { GRAPH <" + graph + "> { " + data + " } } WHERE { SELECT * {OPTIONAL {?s ?p ?o} } LIMIT 1 }");
+        else
+            return UpdateFactory.create("INSERT DATA { GRAPH <" + graph + "> { " + data + " } } ");
     }
 
     default UpdateRequest getCreateGraph(String graph) {

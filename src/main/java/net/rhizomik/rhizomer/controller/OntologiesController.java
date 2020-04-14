@@ -10,6 +10,7 @@ import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
+import net.rhizomik.rhizomer.service.AnalizeDataset;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
@@ -32,7 +33,7 @@ public class OntologiesController {
 
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private SPARQLEndPointRepository endPointRepository;
-    @Autowired private SPARQLService sparqlService;
+    @Autowired private AnalizeDataset analizeDataset;
     @Autowired private SecurityController securityController;
 
     @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.GET)
@@ -46,7 +47,7 @@ public class OntologiesController {
 
     @RequestMapping(value = "/datasets/{datasetId}/ontologies", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody List<String> addDatasetOntology(@RequestBody List<String> ontologies,
+    public @ResponseBody List<String> addDatasetOntology(@RequestBody Set<String> ontologies,
         @PathVariable String datasetId, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
@@ -55,11 +56,8 @@ public class OntologiesController {
         SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
         Validate.isTrue(defaultEndPoint.isWritable(),
                 "EndPoint '%s' is not writable", defaultEndPoint.getUpdateEndPoint());
-        ontologies.forEach(ontology -> {
-            sparqlService.loadURI(defaultEndPoint.getUpdateEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
-                ontology, defaultEndPoint.getUpdateUsername(), defaultEndPoint.getUpdatePassword());
-            dataset.addDatasetOntology(ontology);
-        });
+        analizeDataset.loadOntologies(dataset, defaultEndPoint, ontologies);
+        datasetRepository.save(dataset);
         logger.info("Added ontologies {} to Dataset {}", ontologies.toString(), datasetId);
         return datasetRepository.save(dataset).getDatasetOntologies();
     }
@@ -74,12 +72,9 @@ public class OntologiesController {
         SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
         Validate.isTrue(defaultEndPoint.isWritable(),"EndPoint '%s' is not writable", defaultEndPoint.getUpdateEndPoint());
         dataset.setDatasetOntologies(updatedOntologies);
-        String datasetOntologiesGraph = dataset.getDatasetOntologiesGraph().toString();
-        sparqlService.clearGraph(defaultEndPoint.getUpdateEndPoint(), datasetOntologiesGraph,
-            defaultEndPoint.getUpdateUsername(), defaultEndPoint.getUpdatePassword());
-        updatedOntologies.forEach(ontologyUriStr ->
-                sparqlService.loadURI(defaultEndPoint.getUpdateEndPoint(), datasetOntologiesGraph,
-                    ontologyUriStr, defaultEndPoint.getUpdateUsername(), defaultEndPoint.getUpdatePassword()));
+        analizeDataset.clearOntologies(dataset, defaultEndPoint);
+        analizeDataset.loadOntologies(dataset, defaultEndPoint, updatedOntologies);
+        datasetRepository.save(dataset);
         logger.info("Updated Dataset {} ontologies with {}", datasetId, updatedOntologies.toString());
         return datasetRepository.save(dataset).getDatasetOntologies();
     }

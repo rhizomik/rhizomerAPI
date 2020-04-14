@@ -42,12 +42,12 @@ public class SPARQLServiceMockFactory {
         dataset = DatasetFactory.create();
     }
 
-    public static SPARQLService build(SPARQLEndPointRepository endPointRepository) {
+    public static SPARQLService build() {
 
         Queries queries = new OptimizedQueries();
         SPARQLService mock = Mockito.mock(SPARQLService.class);
 
-        when(mock.querySelect(any(URL.class), any(Query.class)))
+        when(mock.querySelect(any(URL.class), any(Query.class), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(1);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
@@ -65,7 +65,7 @@ public class SPARQLServiceMockFactory {
                     return qexec.execSelect();
                 });
 
-        when(mock.queryConstruct(any(URL.class), any(Query.class), anyList()))
+        when(mock.queryConstruct(any(URL.class), any(Query.class), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(1);
                     List<String> graphs = invocationOnMock.getArgument(2);
@@ -82,9 +82,9 @@ public class SPARQLServiceMockFactory {
             logger.debug("Sending to {} query: \n{}", "mockServer", update.toString());
             UpdateAction.execute(update, dataset);
             return null;
-        }).when(mock).queryUpdate(any(URL.class), any(UpdateRequest.class), any(), any());
+        }).when(mock).queryUpdate(any(URL.class), any(UpdateRequest.class), any());
 
-        when(mock.countGraphTriples(any(URL.class), anyString()))
+        when(mock.countGraphTriples(any(URL.class), anyString(), any()))
                 .thenAnswer(invocationOnMock -> {
                     String graph = invocationOnMock.getArgument(1);
                     if (dataset.containsNamedModel(graph))
@@ -95,40 +95,37 @@ public class SPARQLServiceMockFactory {
 
         doAnswer(invocationOnMock -> {
             URL sparqlEndPoint = invocationOnMock.getArgument(0);
-            String graph = invocationOnMock.getArgument(1);
-            String uri = invocationOnMock.getArgument(2);
-            String username = invocationOnMock.getArgument(3);
-            String password = invocationOnMock.getArgument(4);
+            SPARQLEndPoint.ServerType type = invocationOnMock.getArgument(1);
+            String graph = invocationOnMock.getArgument(2);
+            String uri = invocationOnMock.getArgument(3);
             Model model = RDFDataMgr.loadModel(uri);
-            mock.loadModel(sparqlEndPoint, graph, model, username, password);
+            mock.loadModel(sparqlEndPoint, type, graph, model, null);
             return null;
-        }).when(mock).loadURI(any(URL.class), anyString(), anyString(), any(), any());
+        }).when(mock).loadURI(any(URL.class), any(SPARQLEndPoint.ServerType.class), anyString(), anyString(), any());
 
         doAnswer(invocationOnMock -> {
-            String graph = invocationOnMock.getArgument(1);
-            Model model = invocationOnMock.getArgument(2);
+            String graph = invocationOnMock.getArgument(2);
+            Model model = invocationOnMock.getArgument(3);
             dataset.addNamedModel(graph, model);
             return null;
-        }).when(mock).loadModel(any(URL.class), anyString(), any(Model.class), any(), any());
+        }).when(mock).loadModel(any(URL.class), any(), anyString(), any(Model.class), any());
 
         doAnswer(invocationOnMock -> {
             String graph = invocationOnMock.getArgument(1);
             Model blankModel = ModelFactory.createDefaultModel();
             dataset.replaceNamedModel(graph, blankModel);
             return null;
-        }).when(mock).clearGraph(any(URL.class), anyString(), any(), any());
+        }).when(mock).clearGraph(any(URL.class), anyString(), any());
 
         doAnswer(invocationOnMock -> {
             Dataset dataset = invocationOnMock.getArgument(0);
-            SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
-            List<String> targetGraphs = defaultEndPoint.getGraphs();
+            SPARQLEndPoint endPoint = invocationOnMock.getArgument(1);
+            List<String> targetGraphs = endPoint.getGraphs();
             targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-            // UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
-            // mock.queryUpdate(defaultEndPoint.getQueryEndPoint(), createGraph, null, null);
             UpdateRequest update = queries.getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
-            mock.queryUpdate(defaultEndPoint.getQueryEndPoint(), update, null, null);
+            mock.queryUpdate(endPoint.getQueryEndPoint(), update, null);
             return null;
-        }).when(mock).inferTypes(any(Dataset.class));
+        }).when(mock).inferTypes(any(Dataset.class), any(SPARQLEndPoint.class), any());
 
         return mock;
     }

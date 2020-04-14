@@ -36,6 +36,7 @@ import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.repository.UserRepository;
+import net.rhizomik.rhizomer.service.AnalizeDataset;
 import net.rhizomik.rhizomer.service.DetailedQueries;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
@@ -89,7 +90,7 @@ public class APIStepdefs {
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
-    @Autowired private SPARQLService sparqlService;
+    @Autowired private AnalizeDataset analizeDataset;
     @Autowired private UserRepository userRepository;
 
     private static String currentUsername;
@@ -102,11 +103,9 @@ public class APIStepdefs {
     @Configuration
     @Profile("LOCAL_SERVER_TESTING")
     static class SPARQLServiceMockConfig {
-        @Autowired SPARQLEndPointRepository endPointRepository;
-
         @Bean
         public SPARQLService sparqlService() {
-            return SPARQLServiceMockFactory.build(endPointRepository);
+            return SPARQLServiceMockFactory.build();
         }
     }
 
@@ -388,10 +387,12 @@ public class APIStepdefs {
         endPoint.setQueryEndPoint(new URL(props.get("QueryEndPoint")));
         endPoint.setUpdateEndPoint(props.containsKey("UpdateEndPoint") ? new URL(props.get("UpdateEndPoint")) : null);
         endPoint.setUpdateUsername(props.get("UpdateUsername"));
+        endPoint.setQueryUsername(props.get("QueryUsername"));
         endPoint.setWritable(Boolean.parseBoolean(props.get("Writable")));
         this.result = mockMvc.perform(post("/datasets/{datasetId}/endpoints", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new JSONObject(mapper.writeValueAsString(endPoint))
+                        .put("queryPassword", props.get("QueryPassword"))
                         .put("updatePassword", props.get("UpdatePassword")).toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()))
@@ -494,8 +495,7 @@ public class APIStepdefs {
     public void theSizeOfDatasetOntologiesGraphIs(String datasetId, long expectedSize) throws Throwable {
         Dataset dataset = datasetRepository.findById(datasetId).get();
         SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
-        long actualSize = sparqlService.countGraphTriples(defaultEndPoint.getQueryEndPoint(),
-                dataset.getDatasetOntologiesGraph().toString());
+        long actualSize = analizeDataset.countGraphTriples(defaultEndPoint, dataset.getDatasetOntologiesGraph().toString());
         assertThat(actualSize, is(expectedSize));
     }
 
@@ -511,7 +511,7 @@ public class APIStepdefs {
                 mapper.getTypeFactory().constructCollectionType(List.class, String.class));
         SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
         long actualSize = datasetGraphs.stream().mapToLong(
-                graph -> sparqlService.countGraphTriples(defaultEndPoint.getQueryEndPoint(), graph)).sum();
+                graph -> analizeDataset.countGraphTriples(defaultEndPoint, graph)).sum();
         assertThat(actualSize, is(expectedSize));
     }
 
