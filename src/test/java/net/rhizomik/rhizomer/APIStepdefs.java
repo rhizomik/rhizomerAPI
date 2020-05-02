@@ -261,6 +261,14 @@ public class APIStepdefs {
                 .andExpect(jsonPath("$.id", is(datasetId)));
     }
 
+    @Then("^it doesn't exist a dataset with id \"([^\"]*)\"$")
+    public void itDoesnTExistADatasetWithId(String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}", datasetId)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
+        this.result.andExpect(status().isNotFound());
+    }
+
     @And("^exists a class with id \"([^\"]*)\"$")
     public void existsAClassWithId(String classUriStr) throws Throwable {
         this.result = mockMvc.perform(get(new URI(classUriStr))

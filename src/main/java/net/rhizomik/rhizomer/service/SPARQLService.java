@@ -101,6 +101,11 @@ public class SPARQLService {
         queryUpdate(sparqlEndPoint, clearGraph, creds);
     }
 
+    public void dropGraph(URL sparqlEndPoint, String graph, HttpClient creds) {
+        UpdateRequest clearGraph = queries.getDropGraph(graph);
+        queryUpdate(sparqlEndPoint, clearGraph, creds);
+    }
+
     public void inferTypes(Dataset dataset, SPARQLEndPoint endPoint, HttpClient creds) {
         if (endPoint.isWritable()) {
             List<String> targetGraphs = endPoint.getGraphs();

@@ -311,6 +311,11 @@ public class AnalizeDataset {
                 withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
     }
 
+    public void dropGraph(SPARQLEndPoint endPoint, String graph) {
+        sparqlService.dropGraph(endPoint.getUpdateEndPoint(), graph,
+                withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+    }
+
     public void loadModel(SPARQLEndPoint endPoint, String graph, Model model) {
         sparqlService.loadModel(endPoint.getUpdateEndPoint(), endPoint.getType(), graph, model,
                 withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));

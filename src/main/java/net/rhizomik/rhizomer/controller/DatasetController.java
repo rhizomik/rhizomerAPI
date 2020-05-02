@@ -4,7 +4,6 @@ package net.rhizomik.rhizomer.controller;
  * Created by http://rhizomik.net/~roberto/
  */
 import java.net.URI;
-import java.util.List;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import net.rhizomik.rhizomer.model.Admin;
@@ -90,6 +89,9 @@ public class DatasetController {
             new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);
         logger.info("Deleting Dataset {} and its endpoints", datasetId);
+        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
+        analizeDataset.dropGraph(defaultEndPoint, dataset.getDatasetOntologiesGraph().toString());
+        analizeDataset.dropGraph(defaultEndPoint, dataset.getDatasetInferenceGraph().toString());
         endPointRepository.deleteByDataset(dataset);
         datasetRepository.delete(dataset);
     }

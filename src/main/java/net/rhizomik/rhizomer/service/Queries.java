@@ -143,7 +143,12 @@ public interface Queries {
 
     default UpdateRequest getClearGraph(String graph) {
         return UpdateFactory.create(
-            "CLEAR GRAPH <" + graph + ">");
+            "CLEAR SILENT GRAPH <" + graph + ">");
+    }
+
+    default UpdateRequest getDropGraph(String graph) {
+        return UpdateFactory.create(
+            "DROP SILENT GRAPH <" + graph + ">");
     }
 
     default Query getQueryCountUntyped() {
@@ -158,14 +163,14 @@ public interface Queries {
 
     default Query getQueryCountTriples() {
         return QueryFactory.create(prefixes +
-                "SELECT (COUNT(?s)) AS ?n) \n" +
-                "WHERE { ?s ?p ?o }");
+            "SELECT (COUNT(?s)) AS ?n) \n" +
+            "WHERE { ?s ?p ?o }");
     }
 
     default Query getQueryGraphs() {
         return QueryFactory.create(
-                "SELECT DISTINCT ?graph \n" +
-                "WHERE { GRAPH ?graph { ?s a ?o } }");
+            "SELECT DISTINCT ?graph \n" +
+            "WHERE { GRAPH ?graph { ?s a ?o } }");
     }
 
     default Query getQueryCountType(String type) {
