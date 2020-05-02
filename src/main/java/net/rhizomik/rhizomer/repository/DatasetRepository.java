@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DatasetRepository extends PagingAndSortingRepository<Dataset, String> {
 
-    Iterable<Dataset> findByOwner(User owner);
+    Iterable<Dataset> findByOwner(String username);
 }

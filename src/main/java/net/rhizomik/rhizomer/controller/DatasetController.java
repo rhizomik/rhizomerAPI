@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import net.rhizomik.rhizomer.model.Admin;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
-import net.rhizomik.rhizomer.model.User;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
@@ -48,7 +47,7 @@ public class DatasetController {
         if (auth.getPrincipal() instanceof Admin)
             return datasetRepository.findAll();
         else {
-            return datasetRepository.findByOwner((User)auth.getPrincipal());
+            return datasetRepository.findByOwner(auth.getName());
         }
     }
 
