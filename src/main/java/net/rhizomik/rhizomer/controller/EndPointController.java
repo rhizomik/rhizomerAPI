@@ -45,6 +45,15 @@ public class EndPointController {
     @Autowired private SPARQLService sparqlService;
     @Autowired private SecurityController securityController;
 
+
+    @RequestMapping(value = "/datasets/{datasetId}/endpoints", method = RequestMethod.GET)
+    public @ResponseBody List<SPARQLEndPoint> retrieveEndPoints(@PathVariable String datasetId, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkOwner(dataset, auth);
+        logger.info("List Dataset {} endpoints", datasetId);
+        return endPointRepository.findByDataset(dataset);
+    }
+
     @RequestMapping(value = "/datasets/{datasetId}/endpoints", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public @ResponseBody
