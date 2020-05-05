@@ -34,7 +34,7 @@ public class SPARQLService {
     private String TIMEOUT;
 
     @Autowired SPARQLEndPointRepository endPointRepository;
-    @Autowired OptimizedQueries queries;
+    @Autowired Queries queries;
 
     public ResultSet querySelect(URL sparqlEndpoint, Query query, HttpClient creds) {
         return this.querySelect(sparqlEndpoint, query, new ArrayList<>(), creds);
