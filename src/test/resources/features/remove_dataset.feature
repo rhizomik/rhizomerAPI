@@ -18,7 +18,7 @@ Feature: Remove dataset
 
   Scenario: dataset is deleted together with its classes and facets
     When I delete a dataset with id "apollo13"
-    Then the response status is 200
+    Then the response status is 204
     And There is no dataset with id "apollo13"
     And There is no class "foaf:Person" in dataset "apollo13"
     And There is no facet "foaf:name" for class "foaf:Person" in dataset "apollo13"

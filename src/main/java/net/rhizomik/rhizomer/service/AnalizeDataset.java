@@ -190,7 +190,7 @@ public class AnalizeDataset {
                     if (uri != null)
                         try {
                             curie = prefixCCMap.abbreviate(new URL(uri).toString());
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
                         }
                     rangeValues.add(new Value(value.toString(), count, uri, curie, label));
                 }
@@ -224,7 +224,7 @@ public class AnalizeDataset {
                     if (uri != null)
                         try {
                             curie = prefixCCMap.abbreviate(new URL(uri).toString());
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
                         }
                     rangeValues.add(new Value(value.toString(), 0, uri, curie, label));
                 }
@@ -314,33 +314,43 @@ public class AnalizeDataset {
     }
 
     public void clearGraph(SPARQLEndPoint endPoint, String graph) {
-        sparqlService.clearGraph(endPoint.getUpdateEndPoint(), graph,
-                withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+        if (endPoint.isWritable()) {
+            sparqlService.clearGraph(endPoint.getUpdateEndPoint(), graph,
+                    withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+        }
     }
 
     public void dropGraph(SPARQLEndPoint endPoint, String graph) {
-        sparqlService.dropGraph(endPoint.getUpdateEndPoint(), graph,
-                withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+        if (endPoint.isWritable()) {
+            sparqlService.dropGraph(endPoint.getUpdateEndPoint(), graph,
+                    withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+        }
     }
 
     public void loadModel(SPARQLEndPoint endPoint, String graph, Model model) {
-        sparqlService.loadModel(endPoint.getUpdateEndPoint(), endPoint.getType(), graph, model,
-                withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
-        endPoint.addGraph(graph);
+        if (endPoint.isWritable()) {
+            sparqlService.loadModel(endPoint.getUpdateEndPoint(), endPoint.getType(), graph, model,
+                    withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+            endPoint.addGraph(graph);
+        }
     }
 
     public void clearOntologies(Dataset dataset, SPARQLEndPoint endPoint) {
-        sparqlService.clearGraph(endPoint.getUpdateEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
-                withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+        if (endPoint.isWritable()) {
+            sparqlService.clearGraph(endPoint.getUpdateEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
+                    withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+        }
     }
 
     public void loadOntologies(Dataset dataset, SPARQLEndPoint endPoint, Set<String> ontologies) {
-        ontologies.forEach(ontologyUriStr -> {
-            sparqlService.loadURI(endPoint.getUpdateEndPoint(), endPoint.getType(),
-                    dataset.getDatasetOntologiesGraph().toString(), ontologyUriStr,
-                    withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
-            dataset.addDatasetOntology(ontologyUriStr);
-        });
+        if (endPoint.isWritable()) {
+            ontologies.forEach(ontologyUriStr -> {
+                sparqlService.loadURI(endPoint.getUpdateEndPoint(), endPoint.getType(),
+                        dataset.getDatasetOntologiesGraph().toString(), ontologyUriStr,
+                        withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+                dataset.addDatasetOntology(ontologyUriStr);
+            });
+        }
     }
 
     private HttpClient withCreds(String username, String password) {

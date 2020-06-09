@@ -82,16 +82,20 @@ public class DatasetController {
     }
 
     @RequestMapping(value = "/datasets/{datasetId}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void deleteDataset(@PathVariable String datasetId, Authentication auth) {
         Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
             new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);
-        logger.info("Deleting Dataset {} and its endpoints", datasetId);
-        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
-        analizeDataset.dropGraph(defaultEndPoint, dataset.getDatasetOntologiesGraph().toString());
-        analizeDataset.dropGraph(defaultEndPoint, dataset.getDatasetInferenceGraph().toString());
-        endPointRepository.deleteByDataset(dataset);
+        logger.info("Deleting dataset {} and its endpoints", datasetId);
+        if (endPointRepository.existsByDataset(dataset)) {
+            logger.info("Deleting endpoints for dataset {}", datasetId);
+            SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
+            analizeDataset.dropGraph(defaultEndPoint, dataset.getDatasetOntologiesGraph().toString());
+            analizeDataset.dropGraph(defaultEndPoint, dataset.getDatasetInferenceGraph().toString());
+            endPointRepository.deleteByDataset(dataset);
+        }
         datasetRepository.delete(dataset);
     }
 
