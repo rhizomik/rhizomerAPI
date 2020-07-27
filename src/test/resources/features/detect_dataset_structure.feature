@@ -22,8 +22,9 @@ Feature: Detect dataset structure
     When I extract the classes from dataset "mixed"
     Then The retrieved classes are
       | uri                                           | label       | instanceCount |
+      | http://www.w3.org/2000/01/rdf-schema#Resource | Resource    | 1             |
       | http://xmlns.com/foaf/0.1/Person              | Person      | 2             |
-      | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
+      | http://purl.org/net/schemas/space/MissionRole | Mission Role| 2             |
       | http://purl.org/net/schemas/space/Mission     | Mission     | 1             |
     And exists a class with id "/datasets/mixed/classes/foaf:Person"
 
@@ -32,13 +33,14 @@ Feature: Detect dataset structure
     Then The retrieved classes are
       | uri                                           | label       | instanceCount |
       | http://xmlns.com/foaf/0.1/Person              | Person      | 2             |
-      | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
+      | http://purl.org/net/schemas/space/MissionRole | Mission Role| 2             |
 
   Scenario: Retrieve top classes containing text in URI or label and ignoring case
-    When I extract the top 2 classes from dataset "mixed" containing "role"
+    When I extract the top 2 classes from dataset "mixed" containing "mission"
     Then The retrieved classes are
       | uri                                           | label       | instanceCount |
-      | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
+      | http://purl.org/net/schemas/space/MissionRole | Mission Role| 2             |
+      | http://purl.org/net/schemas/space/Mission     | Mission     | 1             |
 
   Scenario: The extracted facets for an existing class are those instantiated in the dataset
     Given I create a class in dataset "mixed" with URI "http://xmlns.com/foaf/0.1/Person", label "Person" and instance count 2

@@ -16,11 +16,14 @@ public class OptimizedQueries implements Queries {
 
     @Override
     public Query getQueryClasses() {
-        return QueryFactory.create(
-            "SELECT ?class (COUNT(?instance) as ?n) \n" +
+        return QueryFactory.create(prefixes +
+            "SELECT ?class ?label (COUNT(?instance) as ?n) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
-            "} GROUP BY ?class");
+            "\t OPTIONAL { ?class rdfs:label ?label \n" +
+            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+            "\t OPTIONAL { ?class rdfs:label ?label } \n" +
+            "} GROUP BY ?class ?label");
     }
 
     @Override

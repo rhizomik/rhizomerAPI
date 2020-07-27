@@ -91,10 +91,13 @@ public class AnalizeDataset {
                 QuerySolution soln = result.nextSolution();
                 if (!soln.contains("?class")) continue;
                 Resource r = soln.getResource("?class");
+                String label = r.getLocalName();
+                if (soln.contains("?label"))
+                    label = soln.getLiteral("?label").getString();
                 if (isOmittedClass(r.getURI())) continue;
                 int count = soln.getLiteral("?n").getInt();
                 try {
-                    Class detectedClass = new Class(dataset, new URI(r.getURI()), r.getLocalName(), count);
+                    Class detectedClass = new Class(dataset, new URI(r.getURI()), label, count);
                     dataset.addClass(classRepository.save(detectedClass));
                     logger.info("Added detected Class {} from endpoint {}",
                             detectedClass.getId().getClassCurie(), endPoint.getQueryEndPoint());

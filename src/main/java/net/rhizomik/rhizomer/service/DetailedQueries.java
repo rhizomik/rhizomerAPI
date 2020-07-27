@@ -16,11 +16,15 @@ public class DetailedQueries implements Queries {
     @Override
     public Query getQueryClasses() {
         return QueryFactory.create(prefixes +
-            "SELECT ?class (COUNT(DISTINCT ?instance) as ?n) \n" +
+            "SELECT ?class ?label (COUNT(DISTINCT ?instance) as ?n) \n" +
             "WHERE { \n" +
-            "\t { ?instance a ?class . FILTER ( !isBlank(?class) ) } UNION \n" +
+            "\t { ?instance a ?class . FILTER ( !isBlank(?class) ) " +
+            "\t } UNION \n" +
             "\t { ?instance ?p ?o . FILTER(NOT EXISTS {?instance a ?c} ) BIND(rdfs:Resource AS ?class) } \n" +
-            "} GROUP BY ?class");
+            "\t OPTIONAL { ?class rdfs:label ?label \n" +
+            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+            "\t OPTIONAL { ?class rdfs:label ?label } \n" +
+            "} GROUP BY ?class ?label");
     }
 
     @Override

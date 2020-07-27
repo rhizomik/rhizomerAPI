@@ -23,8 +23,9 @@ Feature: Detect dataset structure considering inference
     When I extract the classes from dataset "apollo13"
     Then The retrieved classes are
       | uri                                           | label          | instanceCount |
+      | http://www.w3.org/2000/01/rdf-schema#Resource | Resource       | 1             |
       | http://xmlns.com/foaf/0.1/Person              | Person         | 2             |
-      | http://purl.org/net/schemas/space/MissionRole | MissionRole    | 2             |
+      | http://purl.org/net/schemas/space/MissionRole | Mission Role   | 2             |
       | http://purl.org/net/schemas/space/Mission     | Mission        | 1             |
       | http://purl.org/net/schemas/space/Role        | Role           | 2             |
     And exists a class with id "/datasets/apollo13/classes/space:Role"

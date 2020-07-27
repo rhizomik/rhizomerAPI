@@ -18,7 +18,7 @@ Feature: Manage dataset graphs
     And I add the graphs to the dataset "apollo13"
       | http://rhizomik.net/data/nasa-apollo13    |
     And The inference for dataset "apollo13" is set to "false"
-    And The size of dataset "apollo13" data graphs is 23
+    And The size of dataset "apollo13" data graphs is 24
 
   Scenario: Add a graph to a dataset
     When I add the graphs to the dataset "apollo13"
@@ -27,7 +27,7 @@ Feature: Manage dataset graphs
     And The following data graphs are defined for the dataset "apollo13"
       | http://rhizomik.net/data/nasa-apollo13    |
       | http://rhizomik.net/data/nasa-apollo      |
-    And The size of dataset "apollo13" data graphs is 1668
+    And The size of dataset "apollo13" data graphs is 1669
 
   Scenario: Set the dataset graphs
     When The following data graphs are set for dataset "apollo13"
