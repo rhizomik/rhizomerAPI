@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.net.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.CascadeType;
@@ -71,11 +68,13 @@ public class Dataset {
     }
 
     public List<Class> getClassesContaining(String containing, int top) {
-        Stream<Class> selected = classes.stream()
+        Stream<Class> selected = classes.stream();
+        if (!containing.isEmpty())
+            selected = classes.stream()
             .filter(c -> c.getUri().toString().toLowerCase().contains(containing.toLowerCase()) ||
                 c.getLabel().toLowerCase().contains(containing.toLowerCase()));
         if (top >= 0)
-            selected = selected.limit(top);
+            selected = selected.sorted(Comparator.comparingInt(Class::getInstanceCount).reversed()).limit(top);
         return selected.collect(Collectors.toList());
     }
 
