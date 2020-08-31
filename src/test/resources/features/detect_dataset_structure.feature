@@ -12,7 +12,7 @@ Feature: Detect dataset structure
     And The server for dataset "mixed" stores data
       | data                            | graph                                 |
       | data/nasa-apollo13.ttl          | http://rhizomik.net/dataset/apollo13  |
-      | data/rdflicenses.ttl            | http://test.com/rdflicense            |
+      | data/got.ttl                    | http://rhizomik.net/dataset/got       |
     And The following data graphs are set for dataset "mixed"
       | http://rhizomik.net/dataset/apollo13          |
     And The query type for dataset "mixed" is set to "DETAILED"
@@ -62,66 +62,49 @@ Feature: Detect dataset structure
 
   Scenario: Change the dataset graph to another of the server graphs and extract classes
     Given The following data graphs are set for dataset "mixed"
-      | http://test.com/rdflicense                      |
+      | http://rhizomik.net/dataset/got                 |
     When I extract the classes from dataset "mixed"
     Then The retrieved classes are
-      | uri                                             | label       | instanceCount |
-      | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
-      | http://www.w3.org/ns/odrl/2/Constraint          | Constraint  | 10            |
-      | http://www.w3.org/ns/odrl/2/Prohibition         | Prohibition | 18            |
-      | http://www.w3.org/ns/odrl/2/Policy              | Policy      | 175           |
-      | http://www.w3.org/ns/odrl/2/Permission          | Permission  | 104           |
-      | http://www.w3.org/ns/odrl/2/Duty                | Duty        | 104           |
-    And exists a class with id "/datasets/mixed/classes/odrl:Policy"
+      | uri                                             | label              | instanceCount |
+      | http://dbpedia.org/ontology/FictionalCharacter  | FictionalCharacter | 916           |
+      | http://dbpedia.org/ontology/Noble               | Noble              | 430           |
+    And exists a class with id "/datasets/mixed/classes/dbo:Noble"
 
   Scenario: Change the dataset graph to another of the server graphs and extract facets
     Given The following data graphs are set for dataset "mixed"
-      | http://test.com/rdflicense                      |
-    And I create a class in dataset "mixed" with URI "http://www.w3.org/ns/odrl/2/Policy", label "Policy" and instance count 175
-    When I extract the facets for class "odrl:Policy" in dataset "mixed"
+      | http://rhizomik.net/dataset/got                 |
+    And I create a class in dataset "mixed" with URI "http://dbpedia.org/ontology/Noble", label "Noble" and instance count 430
+    When I extract the facets for class "dbo:Noble" in dataset "mixed"
     Then The retrieved facets are
-      | uri                                                 | label             | timesUsed | differentValues | range   | relation   |
-      | http://www.w3.org/ns/odrl/2/prohibition	            |	prohibition	    |	41	|	41	|	odrl:Prohibition|	true	|
-      | http://purl.org/dc/terms/publisher	                |	publisher	    |	168	|	30	|	xsd:string	    |	false	|
-      | http://ns.inria.fr/l4lod/licensingTerms	            |	licensingTerms	|	1	|	1	|	rdfs:Resource	|	true	|
-      | http://www.w3.org/2000/01/rdf-schema#comment	    |	comment	        |	2	|	2	|	xsd:string	    |	false	|
-      | http://purl.org/dc/terms/alternative	            |	alternative	    |	16	|	16	|	xsd:string	    |	false	|
-      | http://www.w3.org/2004/02/skos/core#related	        |	related	        |	2	|	1	|	rdfs:Resource	|	true	|
-      | http://www.w3.org/ns/odrl/2/permission	            |	permission	    |	178	|	178	|	odrl:Permission	|	true	|
-      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type	    |	type	        |	175	|	1	|	rdfs:Resource	|	true	|
-      | http://purl.org/dc/terms/language	                |	language	    |	174	|	33	|	rdfs:Resource	|	true	|
-      | http://purl.org/NET/ms-rights#conditionsOfUse	    |	conditionsOfUse	|	26	|	10	|	rdfs:Resource	|	true	|
-      | http://purl.org/dc/terms/source	                    |	source	        |	169	|	158	|	rdfs:Resource	|	true	|
-      | http://www.w3.org/2000/01/rdf-schema#label	        |	label	        |	178	|	159	|	rdf:langString  |	false	|
-      | http://www.w3.org/2000/01/rdf-schema#seeAlso	    |	seeAlso	        |	145	|	136	|	rdfs:Resource	|	true	|
-      | http://purl.org/dc/terms/creator	                |	creator	        |	7	|	3	|	rdfs:Resource	|	true	|
-      | http://www.w3.org/2000/01/rdf-schema#legalcode	    |	legalcode	    |	2	|	2	|	rdfs:Resource	|	true	|
-      | http://purl.org/dc/terms/hasVersion	                |	hasVersion	    |	164	|	8	|	xsd:string	    |	false	|
-      | http://purl.org/dc/terms/title	                    |	title	        |	20	|	16	|	rdf:langString  |	false	|
-      | http://purl.org/NET/ms-rights#licenseClarinCategory	|	licenseClarinCategory |	1 |	1	|	rdfs:Resource	|	true	|
-      | http://creativecommons.org/ns#jurisdiction	        |	jurisdiction	|	108	|	41	|	rdfs:Resource	|	true	|
-      | http://xmlns.com/foaf/0.1/logo	                    |	logo	        |	15	|	13	|	rdfs:Resource	|	true	|
-      | http://www.w3.org/ns/odrl/2/duty	                |	duty	        |	104	|	104	|	odrl:Duty	    |	true	|
-      | http://www.w3.org/2002/07/owl#sameAs	            |	sameAs	        |	3	|	3	|	rdfs:Resource	|	true	|
-      | http://purl.org/NET/ms-rights#licenseCategory	    |	licenseCategory	|	5	|	3	|	rdfs:Resource	|	true	|
-    And exists a facet with id "/datasets/mixed/classes/odrl:Policy/facets/odrl:prohibition"
+      | uri                                            | label           | timesUsed  | differentValues | range | relation |
+      | http://www.w3.org/2000/01/rdf-schema#label     | label           | 430  | 430 | xsd:string      | false |
+      | http://www.w3.org/2000/01/rdf-schema#comment   | comment         | 50   | 50  | xsd:string      | false |
+      | http://xmlns.com/foaf/0.1/depiction            | depiction       | 50   | 50  | rdfs:Resource   | true  |
+      | http://mydomain.org/ontology/appearsIn         | appearsIn       | 761  | 5   | rdfs:Resource   | true  |
+      | http://dbpedia.org/ontology/allegiance         | allegiance      | 337  | 11  | rdfs:Resource   | true  |
+      | http://dbpedia.org/ontology/lastAppearance     | lastAppearance  | 118  | 5   | rdfs:Resource   | true  |
+      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type| type            | 860  | 2   | rdfs:Resource   | true  |
+      | http://dbpedia.org/property/genre              | genre           | 430  | 2   | xsd:string      | false |
+      | http://dbpedia.org/ontology/deathDate          | deathDate       | 118  | 4   | xsd:gYear       | false |
+      | http://mydomain.org/ontology/deathChapter      | deathChapter    | 109  | 47  | xsd:int         | false |
+      | http://www.w3.org/2002/07/owl#sameAs           | sameAs          | 28   | 28  | rdfs:Resource   | true  |
+      | http://mydomain.org/ontology/bookIntroChapter  | bookIntroChapter| 424  | 69  | xsd:int         | false |
+      | http://www.w3.org/2004/02/skos/core#altLabel   | altLabel        | 50   | 50  | xsd:string      | false |
+      | http://xmlns.com/foaf/0.1/name                 | name            | 430  | 430 | xsd:string      | false |
+    And exists a facet with id "/datasets/mixed/classes/dbo:Noble/facets/dbo:allegiance"
     And The retrieved facet is
-      | uri                                             | label       | timesUsed | differentValues | range            | relation   |
-      | http://www.w3.org/ns/odrl/2/prohibition	        | prohibition | 41	      | 41	            | odrl:Prohibition | true       |
+      | uri                                    | label      | timesUsed | differentValues | range         | relation |
+      | http://dbpedia.org/ontology/allegiance | allegiance | 337	    | 11	          | rdfs:Resource | true     |
 
   Scenario: Recompute classes after changing the dataset graph and clearing dataset classes
     Given I extract the classes from dataset "mixed"
     And The following data graphs are set for dataset "mixed"
-      | http://test.com/rdflicense                      |
+      | http://rhizomik.net/dataset/got                 |
     When I set the dataset "mixed" classes to
-      | uri                                             | label       | instanceCount |
+      | uri                                             | label              | instanceCount |
     And I extract the classes from dataset "mixed"
     Then The retrieved classes are
-      | uri                                             | label       | instanceCount |
-      | http://www.w3.org/2000/01/rdf-schema#Resource   | Resource    | 177           |
-      | http://www.w3.org/ns/odrl/2/Constraint          | Constraint  | 10            |
-      | http://www.w3.org/ns/odrl/2/Prohibition         | Prohibition | 18            |
-      | http://www.w3.org/ns/odrl/2/Policy              | Policy      | 175           |
-      | http://www.w3.org/ns/odrl/2/Permission          | Permission  | 104           |
-      | http://www.w3.org/ns/odrl/2/Duty                | Duty        | 104           |
-    And exists a class with id "/datasets/mixed/classes/odrl:Policy"
+      | uri                                             | label              | instanceCount |
+      | http://dbpedia.org/ontology/FictionalCharacter  | FictionalCharacter | 916           |
+      | http://dbpedia.org/ontology/Noble               | Noble              | 430           |
+    And exists a class with id "/datasets/mixed/classes/dbo:FictionalCharacter"
