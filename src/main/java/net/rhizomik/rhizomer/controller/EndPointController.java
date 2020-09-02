@@ -15,7 +15,6 @@ import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
-import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
 import org.apache.jena.rdf.model.Model;
@@ -42,7 +41,6 @@ public class EndPointController {
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private AnalizeDataset analizeDataset;
-    @Autowired private SPARQLService sparqlService;
     @Autowired private SecurityController securityController;
 
 
@@ -81,8 +79,8 @@ public class EndPointController {
                               @PathVariable Integer endPointId, @PathVariable String datasetId, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
-        SPARQLEndPoint endPoint = getServer(endPointId);
-        logger.info("Updating endpoint: {}", endPoint.getQueryEndPoint());
+        updatedEndPoint.setDataset(dataset);
+        logger.info("Updating endpoint: {}", updatedEndPoint.getQueryEndPoint());
         return endPointRepository.save(updatedEndPoint);
     }
 
