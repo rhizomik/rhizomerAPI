@@ -195,7 +195,10 @@ public class AnalizeDataset {
                             curie = prefixCCMap.abbreviate(new URL(uri).toString());
                         } catch (Exception ignored) {
                         }
-                    rangeValues.add(new Value(value.toString(), count, uri, curie, label));
+                    if (value.isLiteral())
+                        rangeValues.add(new Value(value.asLiteral().getString(), count, uri, curie, label));
+                    else
+                        rangeValues.add(new Value(value.toString(), count, uri, curie, label));
                 }
             }
         });
@@ -216,7 +219,6 @@ public class AnalizeDataset {
                 QuerySolution soln = result.nextSolution();
                 if (soln.contains("?value")) {
                     RDFNode value = soln.get("?value");
-                    // int count = soln.getLiteral("?count").getInt();
                     String label = null;
                     if (soln.contains("?label"))
                         label = soln.getLiteral("?label").getString();
@@ -229,7 +231,10 @@ public class AnalizeDataset {
                             curie = prefixCCMap.abbreviate(new URL(uri).toString());
                         } catch (Exception ignored) {
                         }
-                    rangeValues.add(new Value(value.toString(), 0, uri, curie, label));
+                    if (value.isLiteral())
+                        rangeValues.add(new Value(value.asLiteral().getString(), 0, uri, curie, label));
+                    else
+                        rangeValues.add(new Value(value.toString(), 0, uri, curie, label));
                 }
             }
         });

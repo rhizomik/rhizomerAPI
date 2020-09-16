@@ -196,7 +196,9 @@ public interface Queries {
 
     default String getFilterPatternsOr(MultiValueMap<String, String> filters) {
         StringBuilder filtersPatterns = new StringBuilder();
-        filters.forEach((property, values) -> {
+        filters.forEach((property_range, values) -> {
+            String property = property_range.split(" ")[0];
+            String range = property_range.split(" ")[1];
             String propertyVar = Integer.toUnsignedString(property.hashCode());
             String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " . \n";
             values.removeIf(value -> value.equals("null"));
@@ -213,8 +215,10 @@ public interface Queries {
 
     default String getFilterPatternsAnd(MultiValueMap<String, String> filters) {
         StringBuilder filtersPatterns = new StringBuilder();
-        filters.forEach((property, values) -> {
+        filters.forEach((property_range, values) -> {
             values.forEach(value -> {
+                String property = property_range.split(" ")[0];
+                String range = property_range.split(" ")[1];
                 String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
                 String pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
                 if (!value.equals("null")) {

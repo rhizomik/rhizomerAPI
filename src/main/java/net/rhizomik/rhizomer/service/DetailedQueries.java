@@ -84,15 +84,16 @@ public class DetailedQueries implements Queries {
             getFilterPatternsAnd(filters) +
             "\t\t } \n" +
             "\t } \n" +
-            "\t ?instance ?property ?value . \n" +
-            "\t OPTIONAL { ?value rdfs:label ?label \n" +
+            "\t ?instance ?property ?resource . \n" +
+            "\t OPTIONAL { ?resource rdfs:label ?label \n" +
             "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
-            "\t OPTIONAL { ?value rdfs:label ?label } \n" +
+            "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
+            "\t BIND(?resource AS ?value)\n \n" +
             ( isLiteral ?
-                "\t FILTER( ISLITERAL(?value) && STR(DATATYPE(?value))=\"" + rangeUri + "\" )\n" :
+                "\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :
                 !rangeUri.equals(RDFS.Resource.getURI()) ?
-                    "\t ?value a <" + rangeUri + "> \n" :
-                    "\t OPTIONAL { ?value a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?value) ) \n" ) +
+                    "\t ?resource a <" + rangeUri + "> \n" :
+                    "\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
             "} GROUP BY ?value ?label");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);
@@ -116,16 +117,17 @@ public class DetailedQueries implements Queries {
                 getFilterPatternsAnd(filters) +
                 "\t\t } \n" +
                 "\t } \n" +
-                "\t ?instance ?property ?value . \n" +
-                "\t OPTIONAL { ?value rdfs:label ?label \n" +
+                "\t ?instance ?property ?resource . \n" +
+                "\t OPTIONAL { ?resource rdfs:label ?label \n" +
                 "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
-                "\t OPTIONAL { ?value rdfs:label ?label } \n" +
+                "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
                 ( isLiteral ?
-                    "\t FILTER( ISLITERAL(?value) && STR(DATATYPE(?value))=\"" + rangeUri + "\" )\n" :
+                    "\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :
                     !rangeUri.equals(RDFS.Resource.getURI()) ?
-                        "\t ?value a <" + rangeUri + "> \n" :
-                        "\t OPTIONAL { ?value a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?value) ) \n" ) +
-                "\t FILTER( CONTAINS(LCASE(STR(?value)), LCASE(?containing)) || CONTAINS(LCASE(?label), LCASE(?containing)) ) \n" +
+                        "\t ?resource a <" + rangeUri + "> \n" :
+                        "\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
+                "\t BIND(?resource AS ?value) \n" +
+                "\t FILTER( CONTAINS(LCASE(STR(?resource)), LCASE(?containing)) || CONTAINS(LCASE(?label), LCASE(?containing)) ) \n" +
                 "}");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);
@@ -133,5 +135,29 @@ public class DetailedQueries implements Queries {
         Query query = pQuery.asQuery();
         if (top > 0) query.setLimit(top);
         return query;
+    }
+
+    @Override
+    public String getFilterPatternsAnd(MultiValueMap<String, String> filters) {
+        StringBuilder filtersPatterns = new StringBuilder();
+        filters.forEach((property_range, values) -> {
+            values.forEach(value -> {
+                String propertyUri = property_range.split(" ")[0];
+                String rangeUri = property_range.split(" ")[1];
+                String propertyValueVar = Integer.toUnsignedString(propertyUri.hashCode() + value.hashCode());
+                String pattern = "\t ?instance <" + propertyUri + "> ?v" + propertyValueVar + " . \n";
+                if (!value.equals("null")) {
+                    pattern +=
+                        ( value.startsWith("<") && value.endsWith(">") ?
+                            "\t FILTER( ?v" + propertyValueVar + " = " + value + " )\n" :
+                            "\t FILTER( STR(?v" + propertyValueVar + ") = " + value +
+                                " && ISLITERAL(?v" + propertyValueVar + ") && " +
+                                "DATATYPE(?v" + propertyValueVar + ") = <" + rangeUri + "> )\n"
+                        );
+                }
+                filtersPatterns.append(pattern);
+            });
+        });
+        return filtersPatterns.toString();
     }
 }
