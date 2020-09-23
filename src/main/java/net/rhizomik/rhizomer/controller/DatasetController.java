@@ -3,9 +3,7 @@ package net.rhizomik.rhizomer.controller;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-import java.net.URI;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
+
 import net.rhizomik.rhizomer.model.Admin;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
@@ -23,14 +21,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URLConnection;
 
 @RepositoryRestController
 public class DatasetController {
@@ -118,7 +118,7 @@ public class DatasetController {
 
     @RequestMapping(value = "/datasets/{datasetId}/browse", method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StreamingResponseBody> browseUri(
+    public ResponseEntity<StreamingResponseBody> browseUriData(
         @PathVariable String datasetId,
         @RequestParam(value = "uri") URI resourceUri, Authentication auth) {
         Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
@@ -132,10 +132,34 @@ public class DatasetController {
             .body(stream);
     }
 
+    @RequestMapping(value = "/datasets/{datasetId}/browse", method = RequestMethod.GET)
+    public ResponseEntity<StreamingResponseBody> browseUriContent(
+            @PathVariable String datasetId,
+            @RequestParam(value = "uri") URI resourceUri, Authentication auth) throws Exception {
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+                new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+        securityController.checkPublicOrOwner(dataset, auth);
+        logger.info("Browsing available content at {}", resourceUri);
+        URLConnection connection = resourceUri.toURL().openConnection();
+        StreamingResponseBody stream = outputStream ->
+                this.browseUriContent(outputStream, connection.getInputStream());
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(connection.getContentType()))
+                .body(stream);
+    }
+
     private Dataset getDataset(String datasetId) {
         return datasetRepository
                 .findById(datasetId)
                 .orElseThrow(() ->
                         new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+    }
+
+    private void browseUriContent(OutputStream out, InputStream in) throws IOException {
+        int n;
+        byte[] buffer = new byte[1024];
+        while ((n = in.read(buffer)) != -1) {
+            out.write(buffer, 0, n);
+        }
     }
 }
