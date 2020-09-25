@@ -10,6 +10,7 @@ import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
+import net.rhizomik.rhizomer.service.HttpClient;
 import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
 import org.apache.jena.riot.RDFFormat;
@@ -26,11 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.net.URLConnection;
+import java.net.*;
 
 @RepositoryRestController
 public class DatasetController {
@@ -40,6 +37,7 @@ public class DatasetController {
     @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private SecurityController securityController;
     @Autowired private AnalizeDataset analizeDataset;
+    @Autowired private HttpClient httpClient;
 
     @RequestMapping(value = "/datasets", method = RequestMethod.GET)
     public @ResponseBody
@@ -116,7 +114,7 @@ public class DatasetController {
             .body(stream);
     }
 
-    @RequestMapping(value = "/datasets/{datasetId}/browse", method = RequestMethod.GET,
+    @RequestMapping(value = "/datasets/{datasetId}/browseData", method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> browseUriData(
         @PathVariable String datasetId,
@@ -140,11 +138,9 @@ public class DatasetController {
                 new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Browsing available content at {}", resourceUri);
-        URLConnection connection = resourceUri.toURL().openConnection();
         StreamingResponseBody stream = outputStream ->
-                this.browseUriContent(outputStream, connection.getInputStream());
+                httpClient.loadUrl(resourceUri.toURL(), outputStream);
         return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(connection.getContentType()))
                 .body(stream);
     }
 
@@ -153,13 +149,5 @@ public class DatasetController {
                 .findById(datasetId)
                 .orElseThrow(() ->
                         new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
-    }
-
-    private void browseUriContent(OutputStream out, InputStream in) throws IOException {
-        int n;
-        byte[] buffer = new byte[1024];
-        while ((n = in.read(buffer)) != -1) {
-            out.write(buffer, 0, n);
-        }
     }
 }
