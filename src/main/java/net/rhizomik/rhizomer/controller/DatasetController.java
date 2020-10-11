@@ -13,7 +13,11 @@ import net.rhizomik.rhizomer.service.AnalizeDataset;
 import net.rhizomik.rhizomer.service.HttpClient;
 import net.rhizomik.rhizomer.service.SecurityController;
 import org.apache.commons.lang3.Validate;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.RDFLanguages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +25,18 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 
 @RepositoryRestController
 public class DatasetController {
@@ -102,8 +111,7 @@ public class DatasetController {
     public ResponseEntity<StreamingResponseBody> describeDatasetResource(
         @PathVariable String datasetId,
         @RequestParam(value = "uri") URI resourceUri, Authentication auth) {
-        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
-            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieved description for {}", resourceUri);
         StreamingResponseBody stream = outputStream ->
@@ -114,13 +122,35 @@ public class DatasetController {
             .body(stream);
     }
 
+    @RequestMapping(value = "/datasets/{datasetId}/update", method = RequestMethod.PUT,
+            consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StreamingResponseBody> updateDatasetResource(ServletServerHttpRequest request,
+               @PathVariable String datasetId, @RequestParam(value = "uri") URI resourceUri, Authentication auth)
+            throws IOException {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkOwner(dataset, auth);
+        logger.info("Updating description for {}", resourceUri);
+        Validate.isTrue(endPointRepository.existsByDataset(dataset),
+                "Dataset '%s' does not have at least one endpoint", datasetId);
+        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
+        Validate.isTrue(defaultEndPoint.isWritable(),"Dataset '%s' endpoint is not writable", datasetId);
+        String contentType = request.getServletRequest().getContentType();
+        Validate.notEmpty(contentType, "A Content-Type header should be defined corresponding to the input RDF data syntax");
+        Model model = ModelFactory.createDefaultModel();
+        RDFDataMgr.read(model, request.getBody(), RDFLanguages.contentTypeToLang(contentType));
+        StreamingResponseBody stream = outputStream ->
+                analizeDataset.updateDatasetResource(dataset, defaultEndPoint, resourceUri, model, outputStream, RDFFormat.JSONLD);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(stream);
+    }
+
     @RequestMapping(value = "/datasets/{datasetId}/browseData", method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> browseUriData(
         @PathVariable String datasetId,
         @RequestParam(value = "uri") URI resourceUri, Authentication auth) {
-        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
-            new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+        Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Browsing available data at {}", resourceUri);
         StreamingResponseBody stream = outputStream ->

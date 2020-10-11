@@ -1,6 +1,7 @@
 package net.rhizomik.rhizomer.service;
 
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -31,9 +32,11 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.riot.RiotException;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -304,6 +307,24 @@ public class AnalizeDataset {
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword())));
             RDFDataMgr.write(out, model, format);
         });
+    }
+
+    public void updateDatasetResource(Dataset dataset, SPARQLEndPoint endPoint, URI resource, Model newModel,
+                                      OutputStream out, RDFFormat format) {
+        if (endPoint.isWritable()) {
+            StringWriter newResourceTriples = new StringWriter();
+            RDFDataMgr.write(newResourceTriples, newModel, Lang.NTRIPLES);
+            Model oldModel = sparqlService.queryDescribe(endPoint.getQueryEndPoint(),
+                    queries(dataset).getQueryDescribeResource(resource), endPoint.getGraphs(),
+                    withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+            StringWriter oldResourceTriples = new StringWriter();
+            RDFDataMgr.write(oldResourceTriples, oldModel, Lang.NTRIPLES);
+            UpdateRequest update = queries(dataset)
+                    .getUpdateResource(oldResourceTriples.toString(), newResourceTriples.toString());
+            sparqlService.queryUpdate(endPoint.getUpdateEndPoint(), update,
+                    withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
+            RDFDataMgr.write(out, newModel, format);
+        }
     }
 
     public void browseUri(OutputStream out, URI resourceUri, RDFFormat format) {

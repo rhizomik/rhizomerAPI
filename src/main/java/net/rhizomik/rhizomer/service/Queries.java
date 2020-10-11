@@ -128,6 +128,19 @@ public interface Queries {
             "}");
     }
 
+    default UpdateRequest getUpdateResource(String oldResourceTriples, String newResourceTriples) {
+        return UpdateFactory.create(prefixes +
+                "DELETE { GRAPH ?g { \n" +
+                oldResourceTriples.replaceAll("_:", "?") + "\n" +
+                "} } \n" +
+                "INSERT { GRAPH ?g { \n" +
+                newResourceTriples + "\n" +
+                "} } \n" +
+                "WHERE { GRAPH ?g { \n" +
+                oldResourceTriples.replaceAll("_:", "?") + "\n" +
+                "} }");
+    }
+
     default UpdateRequest getInsertData(SPARQLEndPoint.ServerType serverType, String graph, String data) {
         if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO)
             // Fix Virtuoso bug: https://github.com/openlink/virtuoso-opensource/issues/126
