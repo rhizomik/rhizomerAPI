@@ -1,4 +1,4 @@
-allowed-origins: http://localhost:4200
+allowed-origins: http://new.rhizomik.net
 
 spring:
   jpa:
@@ -7,7 +7,7 @@ spring:
 
 rhizomer:
   default-password: password
-  sparql-timeout: 0
+  sparql-timeout: 120000
   omit:
     properties: wikiPage
     classes: http://www.w3.org/2002/07/owl, http://www.w3.org/1999/02/22-rdf-syntax-ns, http://www.w3.org/2000/01/rdf-schema
