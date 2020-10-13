@@ -9,4 +9,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * Created by http://rhizomik.net/~roberto/
  */
 @RepositoryRestResource(exported = false)
-public interface ClassRepository extends PagingAndSortingRepository<Class, DatasetClassId> {}
+public interface ClassRepository extends PagingAndSortingRepository<Class, DatasetClassId> {
+    Class findByUri(String uri);
+}

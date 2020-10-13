@@ -3,13 +3,10 @@ package net.rhizomik.rhizomer.controller;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-import java.util.List;
-import java.util.Set;
-import javax.validation.Valid;
+
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.Curie;
 import net.rhizomik.rhizomer.model.Dataset;
-import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
@@ -27,14 +24,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.List;
 
 @RepositoryRestController
 public class ClassController {
@@ -58,6 +53,15 @@ public class ClassController {
         if (top >= 0)
             return dataset.getClassesContaining(containing, top);
         return dataset.getClassesContaining(containing);
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/classByUri", method = RequestMethod.GET)
+    public @ResponseBody Class searchDatasetClass(@PathVariable String datasetId,
+            @RequestParam(value = "uri") URI classUri, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        logger.info("Retrieving dataset '{}' class from its URI '{}'", datasetId, classUri);
+        return classRepository.findByUri(classUri.toString());
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}", method = RequestMethod.GET)
