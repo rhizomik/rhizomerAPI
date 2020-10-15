@@ -231,7 +231,7 @@ public interface Queries {
         filters.forEach((property_range, values) -> {
             values.forEach(value -> {
                 String property = property_range.split(" ")[0];
-                String range = property_range.split(" ")[1];
+                String range = property_range.indexOf(" ") > 0 ? property_range.split(" ")[1] : null;
                 String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
                 String pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
                 if (!value.equals("null")) {

@@ -143,7 +143,7 @@ public class DetailedQueries implements Queries {
         filters.forEach((property_range, values) -> {
             values.forEach(value -> {
                 String propertyUri = property_range.split(" ")[0];
-                String rangeUri = property_range.split(" ")[1];
+                String rangeUri = property_range.indexOf(" ") > 0 ? property_range.split(" ")[1] : null;
                 String propertyValueVar = Integer.toUnsignedString(propertyUri.hashCode() + value.hashCode());
                 String pattern = "\t ?instance <" + propertyUri + "> ?v" + propertyValueVar + " . \n";
                 if (!value.equals("null")) {
@@ -151,8 +151,9 @@ public class DetailedQueries implements Queries {
                         ( value.startsWith("<") && value.endsWith(">") ?
                             "\t FILTER( ?v" + propertyValueVar + " = " + value + " )\n" :
                             "\t FILTER( STR(?v" + propertyValueVar + ") = " + value +
-                                " && ISLITERAL(?v" + propertyValueVar + ") && " +
-                                "DATATYPE(?v" + propertyValueVar + ") = <" + rangeUri + "> )\n"
+                                " && ISLITERAL(?v" + propertyValueVar + ")" +
+                                (rangeUri != null ? " && DATATYPE(?v" + propertyValueVar + ") = <" + rangeUri + ">" : "") +
+                                " )\n"
                         );
                 }
                 filtersPatterns.append(pattern);
