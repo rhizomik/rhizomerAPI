@@ -30,14 +30,15 @@ public interface Queries {
     default Query getQueryClassInstances(String classUri,
         MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(
+        pQuery.setCommandText(prefixes +
             "DESCRIBE ?instance \n" +
                 "WHERE { \n" +
                 "\t { SELECT DISTINCT ?instance \n" +
                 "\t\t WHERE { \n" +
                 "\t\t\t ?instance a ?class . \n" +
+                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 getFilterPatternsAnd(filters) +
-                "\t\t } LIMIT " + limit + " OFFSET " + offset + "\n" +
+                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
                 "\t } \n" +
                 "}");
         pQuery.setIri("class", classUri);
@@ -56,8 +57,9 @@ public interface Queries {
                 "\t { SELECT DISTINCT ?instance \n" +
                 "\t\t WHERE { \n" +
                 "\t\t\t ?instance a ?class . \n" +
+                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 getFilterPatternsAnd(filters) +
-                "\t\t } LIMIT " + limit + " OFFSET " + offset + "\n" +
+                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
                 "\t } \n" +
                 "}");
         pQuery.setIri("class", classUri);
