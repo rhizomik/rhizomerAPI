@@ -50,10 +50,14 @@ public class SPARQLService {
         return result;
     }
 
-    public Model queryDescribe(URL sparqlEndpoint, Query query, List<String> graphs, HttpClient creds) {
+    public Model queryDescribe(SPARQLEndPoint endpoint, Query query, List<String> graphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
-        logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, new ArrayList<>(), creds);
+        String queryString = query.toString();
+        if (endpoint.getType() == SPARQLEndPoint.ServerType.VIRTUOSO) {
+            queryString = "DEFINE sql:describe-mode \"CBD\" \n" + queryString;
+        }
+        logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), queryString);
+        QueryExecution q = new QueryEngineHTTP(endpoint.getQueryEndPoint().toString(), queryString, creds);
         ((QueryEngineHTTP) q).addParam("timeout", TIMEOUT);
         return q.execDescribe();
     }

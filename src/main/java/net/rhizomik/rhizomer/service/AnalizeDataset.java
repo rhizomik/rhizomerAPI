@@ -263,9 +263,9 @@ public class AnalizeDataset {
         MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            Model model = sparqlService.queryDescribe(endPoint.getQueryEndPoint(),
-                    queries(dataset).getQueryClassInstances(classUri.toString(), filters, size,size * page),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+            Model model = sparqlService.queryDescribe(endPoint,
+                queries(dataset).getQueryClassInstances(classUri.toString(), filters, size,size * page),
+                endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });
     }
@@ -274,7 +274,7 @@ public class AnalizeDataset {
         MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            Model model = sparqlService.queryDescribe(endPoint.getQueryEndPoint(),
+            Model model = sparqlService.queryDescribe(endPoint,
                     queries(dataset).getQueryClassInstancesLabels(classUri.toString(), filters, size,size * page),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
@@ -299,10 +299,10 @@ public class AnalizeDataset {
 
     public void describeDatasetResource(OutputStream out, Dataset dataset, URI resourceUri, RDFFormat format) {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            Model model = sparqlService.queryDescribe(endPoint.getQueryEndPoint(),
+            Model model = sparqlService.queryDescribe(endPoint,
                     queries(dataset).getQueryDescribeResource(resourceUri), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
-            model.add(sparqlService.queryDescribe(endPoint.getQueryEndPoint(),
+            model.add(sparqlService.queryDescribe(endPoint,
                     queries(dataset).getQueryDescribeResourceLabels(resourceUri), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword())));
             RDFDataMgr.write(out, model, format);
@@ -314,7 +314,7 @@ public class AnalizeDataset {
         if (endPoint.isWritable()) {
             StringWriter newResourceTriples = new StringWriter();
             RDFDataMgr.write(newResourceTriples, newModel, Lang.NTRIPLES);
-            Model oldModel = sparqlService.queryDescribe(endPoint.getQueryEndPoint(),
+            Model oldModel = sparqlService.queryDescribe(endPoint,
                     queries(dataset).getQueryDescribeResource(resource), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             StringWriter oldResourceTriples = new StringWriter();
