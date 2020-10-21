@@ -72,7 +72,7 @@ public class SPARQLService {
 
     public void queryUpdate(URL sparqlEndpoint, UpdateRequest update, HttpClient creds) {
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
-        UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, sparqlEndpoint.toString(), creds);
+        UpdateProcessor processor = UpdateExecutionFactory.createRemoteForm(update, sparqlEndpoint.toString(), creds);
         processor.execute();
     }
 
