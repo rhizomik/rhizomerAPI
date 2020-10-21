@@ -1,4 +1,4 @@
-allowed-origins: http://new.rhizomik.net
+allowed-origins: http://localhost:4200
 
 spring:
   jpa:
