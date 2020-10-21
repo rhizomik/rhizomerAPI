@@ -29,14 +29,11 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 
 @RepositoryRestController
 public class DatasetController {

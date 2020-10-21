@@ -61,7 +61,7 @@ public class ClassController {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieving dataset '{}' class from its URI '{}'", datasetId, classUri);
-        return classRepository.findByUri(classUri.toString());
+        return classRepository.findByDatasetAndUri(dataset, classUri.toString());
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}", method = RequestMethod.GET)
