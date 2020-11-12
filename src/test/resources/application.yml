@@ -9,6 +9,7 @@ spring:
 
 rhizomer:
   default-password: password
+  sparql-timeout: 120000
   omit:
     properties:
     classes:
