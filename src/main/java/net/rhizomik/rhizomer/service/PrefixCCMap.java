@@ -81,14 +81,20 @@ public class PrefixCCMap extends PrefixMapStd {
 
     protected String generatePrefix(String uriStr) throws URISyntaxException {
         java.net.URI uri = new java.net.URI(uriStr);
-        String host = uri.getHost();
-        String[] hostParts = host.split("\\.");
+        String[] candidateParts;
+        if (uri.getHost() != null) {
+            String host = uri.getHost();
+            candidateParts = host.split("\\.");
+        } else {
+            String path = uri.getPath();
+            candidateParts = path.split("/");
+        }
 
         String candidatePrefix = null;
-        if (hostParts.length > 1)
-            candidatePrefix = hostParts[hostParts.length - 2];
+        if (candidateParts.length > 1)
+            candidatePrefix = candidateParts[candidateParts.length - 2];
         else
-            candidatePrefix = hostParts[0];
+            candidatePrefix = candidateParts[0];
 
         if (!this.contains(candidatePrefix))
             return candidatePrefix;
