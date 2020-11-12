@@ -39,9 +39,9 @@ public class SPARQLEndPoint {
     public enum ServerType {
         GENERIC,
         VIRTUOSO,
-        FUSEKI,
         NEPTUNE;
     }
+    private String timeout;
 
     @ManyToOne
     @JsonBackReference
@@ -83,5 +83,12 @@ public class SPARQLEndPoint {
     public List<String> getGraphs() {
         List<String> graphsList = new ArrayList<>(this.graphs);
         return graphsList;
+    }
+
+    public void setTimeout(String timeout) {
+        if (this.type == ServerType.VIRTUOSO)
+            this.timeout = "0";
+        else
+            this.timeout = timeout;
     }
 }

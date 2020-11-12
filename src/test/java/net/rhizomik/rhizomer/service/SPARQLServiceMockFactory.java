@@ -47,7 +47,7 @@ public class SPARQLServiceMockFactory {
         Queries queries = new OptimizedQueries();
         SPARQLService mock = Mockito.mock(SPARQLService.class);
 
-        when(mock.querySelect(any(URL.class), any(Query.class), any()))
+        when(mock.querySelect(any(URL.class), anyString(), any(Query.class), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(1);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
@@ -55,7 +55,7 @@ public class SPARQLServiceMockFactory {
                     return qexec.execSelect();
                 });
 
-        when(mock.querySelect(any(URL.class), any(Query.class), anyList(), any()))
+        when(mock.querySelect(any(URL.class), anyString(), any(Query.class), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(1);
                     List<String> graphs = invocationOnMock.getArgument(2);
@@ -65,7 +65,7 @@ public class SPARQLServiceMockFactory {
                     return qexec.execSelect();
                 });
 
-        when(mock.queryConstruct(any(URL.class), any(Query.class), anyList(), any()))
+        when(mock.queryConstruct(any(URL.class), anyString(), any(Query.class), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(1);
                     List<String> graphs = invocationOnMock.getArgument(2);
@@ -84,7 +84,7 @@ public class SPARQLServiceMockFactory {
             return null;
         }).when(mock).queryUpdate(any(URL.class), any(UpdateRequest.class), any());
 
-        when(mock.countGraphTriples(any(URL.class), anyString(), any()))
+        when(mock.countGraphTriples(any(URL.class), anyString(), anyString(), any()))
                 .thenAnswer(invocationOnMock -> {
                     String graph = invocationOnMock.getArgument(1);
                     if (dataset.containsNamedModel(graph))

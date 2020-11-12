@@ -87,7 +87,7 @@ public class AnalizeDataset {
                         withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
                 targetGraphs.add(dataset.getDatasetInferenceGraph().toString());
             }
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
+            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                     queries(dataset).getQueryClasses(), targetGraphs,
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
@@ -117,7 +117,7 @@ public class AnalizeDataset {
 
     public void detectClassFacets(Class datasetClass) {
         endPointRepository.findByDataset(datasetClass.getDataset()).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
+            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                     queries(datasetClass.getDataset()).getQueryClassFacets(
                             datasetClass.getUri().toString(), datasetClass.getDataset().getSampleSize(),
                             datasetClass.getInstanceCount(), datasetClass.getDataset().getCoverage()),
@@ -176,7 +176,7 @@ public class AnalizeDataset {
         URI facetUri = facetRange.getFacet().getUri();
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
+            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                     queries(dataset).getQueryFacetRangeValues(classUri.toString(), facetUri.toString(),
                             facetRange.getUri().toString(), filters, facetRange.getAllLiteral(),
                             size, size * page, true),
@@ -214,7 +214,7 @@ public class AnalizeDataset {
         URI facetUri = facetRange.getFacet().getUri();
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
+            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                     queries(dataset).getQueryFacetRangeValuesContaining(classUri.toString(), facetUri.toString(),
                             facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
@@ -245,7 +245,7 @@ public class AnalizeDataset {
     }
 
     public List<URI> listServerGraphs(Dataset dataset, SPARQLEndPoint endPoint) {
-        ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
+        ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                 queries(dataset).getQueryGraphs(),
                 withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
         List<URI> graphs = new ArrayList<>();
@@ -263,7 +263,7 @@ public class AnalizeDataset {
         MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            Model model = sparqlService.queryDescribe(endPoint,
+            Model model = sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
                 queries(dataset).getQueryClassInstances(classUri.toString(), filters, size,size * page),
                 endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
@@ -274,7 +274,7 @@ public class AnalizeDataset {
         MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            Model model = sparqlService.queryDescribe(endPoint,
+            Model model = sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryClassInstancesLabels(classUri.toString(), filters, size,size * page),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
@@ -285,7 +285,7 @@ public class AnalizeDataset {
         URI classUri = datasetClass.getUri();
         AtomicInteger count = new AtomicInteger();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(),
+            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                 queries(dataset).getQueryClassInstancesCount(classUri.toString(), filters),
                 endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
@@ -299,10 +299,10 @@ public class AnalizeDataset {
 
     public void describeDatasetResource(OutputStream out, Dataset dataset, URI resourceUri, RDFFormat format) {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            Model model = sparqlService.queryDescribe(endPoint,
+            Model model = sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryDescribeResource(resourceUri), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
-            model.add(sparqlService.queryDescribe(endPoint,
+            model.add(sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryDescribeResourceLabels(resourceUri), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword())));
             RDFDataMgr.write(out, model, format);
@@ -314,7 +314,7 @@ public class AnalizeDataset {
         if (endPoint.isWritable()) {
             StringWriter newResourceTriples = new StringWriter();
             RDFDataMgr.write(newResourceTriples, newModel, Lang.NTRIPLES);
-            Model oldModel = sparqlService.queryDescribe(endPoint,
+            Model oldModel = sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryDescribeResource(resource), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             StringWriter oldResourceTriples = new StringWriter();
@@ -338,7 +338,7 @@ public class AnalizeDataset {
     }
 
     public long countGraphTriples(SPARQLEndPoint endPoint, String graph) {
-        return sparqlService.countGraphTriples(endPoint.getQueryEndPoint(), graph,
+        return sparqlService.countGraphTriples(endPoint.getQueryEndPoint(), endPoint.getTimeout(), graph,
                 withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
     }
 

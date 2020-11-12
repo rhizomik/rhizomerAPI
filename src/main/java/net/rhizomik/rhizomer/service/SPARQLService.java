@@ -15,7 +15,6 @@ import org.apache.jena.update.UpdateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.StringWriter;
@@ -30,27 +29,24 @@ import java.util.List;
 public class SPARQLService {
     private static final Logger logger = LoggerFactory.getLogger(SPARQLService.class);
 
-    @Value("${rhizomer.sparql-timeout:0}")
-    private String TIMEOUT;
-
     @Autowired SPARQLEndPointRepository endPointRepository;
     @Autowired Queries queries;
 
-    public ResultSet querySelect(URL sparqlEndpoint, Query query, HttpClient creds) {
-        return this.querySelect(sparqlEndpoint, query, new ArrayList<>(), creds);
+    public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, HttpClient creds) {
+        return this.querySelect(sparqlEndpoint, timeout, query, new ArrayList<>(), creds);
     }
 
-    public ResultSet querySelect(URL sparqlEndpoint, Query query, List<String> graphs, HttpClient creds) {
+    public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, new ArrayList<>(), creds);
-        ((QueryEngineHTTP) q).addParam("timeout", TIMEOUT);
+        ((QueryEngineHTTP) q).addParam("timeout", timeout);
         ResultSet result = ResultSetFactory.copyResults(q.execSelect());
         q.close();
         return result;
     }
 
-    public Model queryDescribe(SPARQLEndPoint endpoint, Query query, List<String> graphs, HttpClient creds) {
+    public Model queryDescribe(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
         String queryString = query.toString();
         if (endpoint.getType() == SPARQLEndPoint.ServerType.VIRTUOSO) {
@@ -58,15 +54,15 @@ public class SPARQLService {
         }
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), queryString);
         QueryExecution q = new QueryEngineHTTP(endpoint.getQueryEndPoint().toString(), queryString, creds);
-        ((QueryEngineHTTP) q).addParam("timeout", TIMEOUT);
+        ((QueryEngineHTTP) q).addParam("timeout", timeout);
         return q.execDescribe();
     }
 
-    public Model queryConstruct(URL sparqlEndpoint, Query query, List<String> graphs, HttpClient creds) {
+    public Model queryConstruct(URL sparqlEndpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, new ArrayList<>(), creds);
-        ((QueryEngineHTTP) q).addParam("timeout", TIMEOUT);
+        ((QueryEngineHTTP) q).addParam("timeout", timeout);
         return q.execConstruct();
     }
 
@@ -76,10 +72,10 @@ public class SPARQLService {
         processor.execute();
     }
 
-    public long countGraphTriples(URL sparqlEndPoint, String graph, HttpClient creds) {
+    public long countGraphTriples(URL sparqlEndPoint, String timeout, String graph, HttpClient creds) {
         Query countTriples = queries.getQueryCountTriples();
         countTriples.addGraphURI(graph);
-        ResultSet result = querySelect(sparqlEndPoint, countTriples, creds);
+        ResultSet result = querySelect(sparqlEndPoint, timeout, countTriples, creds);
         long count = 0;
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();
@@ -114,25 +110,28 @@ public class SPARQLService {
         if (endPoint.isWritable()) {
             List<String> targetGraphs = endPoint.getGraphs();
             targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-            UpdateRequest update = queries.getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
+            UpdateRequest update = queries
+                    .getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
             queryUpdate(endPoint.getUpdateEndPoint(), update, creds);
         }
     }
 
-    public void inferTypesConstruct(Dataset dataset, SPARQLEndPoint endPoint, HttpClient creds) {
+    public void inferTypesConstruct(Dataset dataset, String timeout, SPARQLEndPoint endPoint, HttpClient creds) {
         if(endPoint.isWritable()) {
             List<String> targetGraphs = endPoint.getGraphs();
             targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
             UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
             queryUpdate(endPoint.getUpdateEndPoint(), createGraph, creds);
-            Model inferredModel = queryConstruct(endPoint.getUpdateEndPoint(), queries.getQueryInferTypes(), targetGraphs, creds);
+            Model inferredModel = queryConstruct(
+                    endPoint.getUpdateEndPoint(), timeout, queries.getQueryInferTypes(), targetGraphs, creds);
             /*File inferenceOut = new File(dataset.getId() + "-inference.ttl");
             try {
                 RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);
             } catch (FileNotFoundException e) {
                 logger.error(e.getMessage());
             }*/
-            loadModel(endPoint.getUpdateEndPoint(), endPoint.getType(), dataset.getDatasetInferenceGraph().toString(), inferredModel, creds);
+            loadModel(endPoint.getUpdateEndPoint(), endPoint.getType(), dataset.getDatasetInferenceGraph().toString(),
+                    inferredModel, creds);
         }
     }
 }

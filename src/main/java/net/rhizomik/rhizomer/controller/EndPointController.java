@@ -24,6 +24,7 @@ import org.apache.jena.riot.RDFLanguages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -37,6 +38,9 @@ import javax.validation.Valid;
 @RepositoryRestController
 public class EndPointController {
     final Logger logger = LoggerFactory.getLogger(EndPointController.class);
+
+    @Value("${rhizomer.sparql-timeout:0}")
+    private String TIMEOUT;
 
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private SPARQLEndPointRepository endPointRepository;
@@ -61,6 +65,8 @@ public class EndPointController {
         securityController.checkOwner(dataset, auth);
         logger.info("Adding endpoint to dataset: {}", datasetId);
         endPoint.setDataset(dataset);
+        if (endPoint.getTimeout() == null)
+            endPoint.setTimeout(TIMEOUT);
         return endPointRepository.save(endPoint);
     }
 
@@ -79,8 +85,10 @@ public class EndPointController {
                               @PathVariable Integer endPointId, @PathVariable String datasetId, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
-        updatedEndPoint.setDataset(dataset);
         logger.info("Updating endpoint: {}", updatedEndPoint.getQueryEndPoint());
+        updatedEndPoint.setDataset(dataset);
+        if (updatedEndPoint.getTimeout() == null)
+            updatedEndPoint.setTimeout(TIMEOUT);
         return endPointRepository.save(updatedEndPoint);
     }
 
