@@ -40,7 +40,8 @@ public class SPARQLService {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, new ArrayList<>(), creds);
-        ((QueryEngineHTTP) q).addParam("timeout", timeout);
+        if (timeout != null)
+            ((QueryEngineHTTP) q).addParam("timeout", timeout);
         ResultSet result = ResultSetFactory.copyResults(q.execSelect());
         q.close();
         return result;
@@ -54,7 +55,10 @@ public class SPARQLService {
         }
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), queryString);
         QueryExecution q = new QueryEngineHTTP(endpoint.getQueryEndPoint().toString(), queryString, creds);
-        ((QueryEngineHTTP) q).addParam("timeout", timeout);
+        if (timeout != null)
+            ((QueryEngineHTTP) q).addParam("timeout", timeout);
+        else
+            ((QueryEngineHTTP) q).setAcceptHeader("application/n-triples"); // Workaround for MarkLogic
         return q.execDescribe();
     }
 
@@ -62,7 +66,10 @@ public class SPARQLService {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, new ArrayList<>(), creds);
-        ((QueryEngineHTTP) q).addParam("timeout", timeout);
+        if (timeout != null)
+            ((QueryEngineHTTP) q).addParam("timeout", timeout);
+        else
+            ((QueryEngineHTTP) q).setAcceptHeader("application/n-triples"); // Workaround for MarkLogic
         return q.execConstruct();
     }
 
