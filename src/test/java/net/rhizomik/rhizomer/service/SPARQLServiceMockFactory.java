@@ -49,7 +49,7 @@ public class SPARQLServiceMockFactory {
 
         when(mock.querySelect(any(URL.class), anyString(), any(Query.class), any()))
                 .thenAnswer(invocationOnMock -> {
-                    Query query = invocationOnMock.getArgument(1);
+                    Query query = invocationOnMock.getArgument(2);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
                     QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
                     return qexec.execSelect();
@@ -57,8 +57,8 @@ public class SPARQLServiceMockFactory {
 
         when(mock.querySelect(any(URL.class), anyString(), any(Query.class), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
-                    Query query = invocationOnMock.getArgument(1);
-                    List<String> graphs = invocationOnMock.getArgument(2);
+                    Query query = invocationOnMock.getArgument(2);
+                    List<String> graphs = invocationOnMock.getArgument(3);
                     graphs.forEach(query::addGraphURI);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
                     QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
@@ -67,8 +67,8 @@ public class SPARQLServiceMockFactory {
 
         when(mock.queryConstruct(any(URL.class), anyString(), any(Query.class), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
-                    Query query = invocationOnMock.getArgument(1);
-                    List<String> graphs = invocationOnMock.getArgument(2);
+                    Query query = invocationOnMock.getArgument(2);
+                    List<String> graphs = invocationOnMock.getArgument(3);
                     Model queryDataset = ModelFactory.createDefaultModel();
                     graphs.forEach(graph -> queryDataset.add(dataset.getNamedModel(graph)));
                     graphs.forEach(query::addGraphURI);
@@ -86,7 +86,7 @@ public class SPARQLServiceMockFactory {
 
         when(mock.countGraphTriples(any(URL.class), anyString(), anyString(), any()))
                 .thenAnswer(invocationOnMock -> {
-                    String graph = invocationOnMock.getArgument(1);
+                    String graph = invocationOnMock.getArgument(2);
                     if (dataset.containsNamedModel(graph))
                         return dataset.getNamedModel(graph).size();
                     else
