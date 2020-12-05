@@ -101,18 +101,18 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
     }
 
     @Override
-    public Query getQueryClassInstances(String classUri, MultiValueMap<String, String> filters,
-                                        int limit, int offset) {
+    public Query getQueryClassInstances(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "DESCRIBE ?instance \n" +
                 "WHERE { \n" +
-                "hint:Query hint:joinOrder \"Ordered\" .\n" +
                 "\t { SELECT DISTINCT ?instance \n" +
                 "\t\t WHERE { \n" +
+                "\t\t\t hint:Query hint:joinOrder \"Ordered\" .\n" +
                 "\t\t\t ?instance a ?class . \n" +
+                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 getFilterPatternsAnd(filters) +
-                "\t\t } LIMIT " + limit + " OFFSET " + offset + "\n" +
+                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
                 "\t } \n" +
                 "}");
         pQuery.setIri("class", classUri);
@@ -126,17 +126,28 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "CONSTRUCT { ?resource rdfs:label ?label } \n" +
-                "WHERE { \n" +
-                "hint:Query hint:joinOrder \"Ordered\" .\n" +
-                "\t { SELECT DISTINCT ?instance \n" +
-                "\t\t WHERE { \n" +
-                "\t\t\t ?instance a ?class . \n" +
-                getFilterPatternsAnd(filters) +
-                "\t\t } LIMIT " + limit + " OFFSET " + offset + "\n" +
-                "\t } \n" +
+                "WHERE { { \n" +
                 "\t ?instance ?property ?resource . \n" +
                 "\t ?resource rdfs:label ?label .\n" +
-                "}");
+                "\t { SELECT DISTINCT ?instance \n" +
+                "\t\t WHERE { \n" +
+                "\t\t\t hint:Query hint:joinOrder \"Ordered\" .\n" +
+                "\t\t\t ?instance a ?class . \n" +
+                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                getFilterPatternsAnd(filters) +
+                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
+                "\t } } UNION { { \n" +
+                "\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
+                "\t ?anon ?property ?resource .\n" +
+                "\t ?resource rdfs:label ?label . \n" +
+                "\t { SELECT DISTINCT ?instance \n" +
+                "\t\t WHERE { \n" +
+                "\t\t\t hint:Query hint:joinOrder \"Ordered\" .\n" +
+                "\t\t\t ?instance a ?class . \n" +
+                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                getFilterPatternsAnd(filters) +
+                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
+                "} } } }");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
         return query;
