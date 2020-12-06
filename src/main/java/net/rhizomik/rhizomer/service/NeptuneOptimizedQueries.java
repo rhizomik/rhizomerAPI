@@ -125,29 +125,24 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
                                               int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-                "CONSTRUCT { ?resource rdfs:label ?label } \n" +
-                "WHERE { { \n" +
-                "\t ?instance ?property ?resource . \n" +
-                "\t ?resource rdfs:label ?label .\n" +
-                "\t { SELECT DISTINCT ?instance \n" +
-                "\t\t WHERE { \n" +
-                "\t\t\t hint:Query hint:joinOrder \"Ordered\" .\n" +
-                "\t\t\t ?instance a ?class . \n" +
-                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-                getFilterPatternsAnd(filters) +
-                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
-                "\t } } UNION { { \n" +
-                "\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
-                "\t ?anon ?property ?resource .\n" +
-                "\t ?resource rdfs:label ?label . \n" +
-                "\t { SELECT DISTINCT ?instance \n" +
-                "\t\t WHERE { \n" +
-                "\t\t\t hint:Query hint:joinOrder \"Ordered\" .\n" +
-                "\t\t\t ?instance a ?class . \n" +
-                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-                getFilterPatternsAnd(filters) +
-                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
-                "} } } }");
+            "CONSTRUCT { ?resource rdfs:label ?label } \n" +
+            "WHERE { \n" +
+            "\t { SELECT DISTINCT ?instance \n" +
+            "\t\t WHERE { \n" +
+            "\t\t\t hint:Query hint:joinOrder \"Ordered\" .\n" +
+            "\t\t\t ?instance a ?class . \n" +
+            "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+            getFilterPatternsAnd(filters) +
+            "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
+            "\t } \n" +
+            "\t { \n" +
+            "\t\t ?instance ?property ?resource . \n" +
+            "\t\t ?resource rdfs:label ?label . \n" +
+            " } UNION { \n" +
+            "\t\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
+            "\t\t ?anon ?property ?resource .\n" +
+            "\t\t ?resource rdfs:label ?label . \n" +
+            "} }");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
         return query;
