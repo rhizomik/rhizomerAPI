@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import net.rhizomik.rhizomer.model.Curie;
 import net.rhizomik.rhizomer.model.Dataset;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.net.URI;
@@ -14,6 +15,7 @@ import java.net.URI;
 @Embeddable
 public class DatasetClassFacetId implements Serializable {
     DatasetClassId datasetClassId;
+    @Column(length = 128)
     String facetCurie;
 
     public DatasetClassFacetId() {}
