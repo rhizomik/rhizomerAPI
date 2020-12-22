@@ -5,10 +5,7 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.rhizomik.rhizomer.model.*;
@@ -307,6 +304,40 @@ public class AnalizeDataset {
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword())));
             RDFDataMgr.write(out, model, format);
         });
+    }
+
+    public Collection<IncomingFacet> detectDatasetResourceIncomingFacets(Dataset dataset, URI resourceUri) {
+        HashMap<String, IncomingFacet> incomingFacets = new HashMap();
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
+            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+                    queries(dataset).getQueryResourceIncomingFacets(resourceUri),
+                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+            while (result.hasNext()) {
+                QuerySolution soln = result.nextSolution();
+                if (!soln.contains("?range")) continue;
+                Resource range = soln.getResource("?range");
+                if (!soln.contains("?prop")) continue;
+                Resource property = soln.getResource("?prop");
+                if (isOmittedProperty(property.getURI())) continue;
+                String propertyLabel = property.getLocalName();
+                if (soln.contains("?proplabel"))
+                    propertyLabel = soln.get("?proplabel").toString();
+                int uses = soln.getLiteral("?uses").getInt();
+                if (!soln.contains("?domain")) continue;
+                Resource domain = soln.getResource("?domain");
+                String domainLabel = domain.getLocalName();
+                if (soln.contains("?domainlabel"))
+                    domainLabel = soln.get("?domainlabel").toString();
+                int count = soln.getLiteral("?count").getInt();
+
+                IncomingFacet incomingFacet = incomingFacets.getOrDefault(property.getURI(),
+                        new IncomingFacet(range.getURI(), property.getURI(), propertyLabel, uses));
+                IncomingFacet.Domain incomingDomain = new IncomingFacet.Domain(domain.getURI(), domainLabel, count);
+                incomingFacet.addDomain(incomingDomain);
+                incomingFacets.putIfAbsent(property.getURI(), incomingFacet);
+            }
+        });
+        return incomingFacets.values();
     }
 
     public void updateDatasetResource(Dataset dataset, SPARQLEndPoint endPoint, URI resource, Model newModel,

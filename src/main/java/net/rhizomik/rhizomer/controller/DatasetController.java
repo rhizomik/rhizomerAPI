@@ -4,9 +4,7 @@ package net.rhizomik.rhizomer.controller;
  * Created by http://rhizomik.net/~roberto/
  */
 
-import net.rhizomik.rhizomer.model.Admin;
-import net.rhizomik.rhizomer.model.Dataset;
-import net.rhizomik.rhizomer.model.SPARQLEndPoint;
+import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.AnalizeDataset;
@@ -34,6 +32,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.*;
+import java.util.Collection;
+import java.util.List;
 
 @RepositoryRestController
 public class DatasetController {
@@ -104,19 +104,30 @@ public class DatasetController {
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/describe", method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StreamingResponseBody> describeDatasetResource(
-        @PathVariable String datasetId,
-        @RequestParam(value = "uri") URI resourceUri, Authentication auth) {
+            @PathVariable String datasetId,
+            @RequestParam(value = "uri") URI resourceUri, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieved description for {}", resourceUri);
         StreamingResponseBody stream = outputStream ->
-            analizeDataset.describeDatasetResource(outputStream,
-                dataset, resourceUri, RDFFormat.JSONLD);
+                analizeDataset.describeDatasetResource(outputStream,
+                        dataset, resourceUri, RDFFormat.JSONLD);
         return ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(stream);
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(stream);
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/incoming", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody Collection<IncomingFacet> datasetResourceIncomingFacets(
+            @PathVariable String datasetId,
+            @RequestParam(value = "uri") URI resourceUri, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        logger.info("Retrieve incoming facets for {}", resourceUri);
+        return analizeDataset.detectDatasetResourceIncomingFacets(dataset, resourceUri);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/update", method = RequestMethod.PUT,
