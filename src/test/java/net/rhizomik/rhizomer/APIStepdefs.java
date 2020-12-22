@@ -3,7 +3,7 @@ package net.rhizomik.rhizomer;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -16,7 +16,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.jsonpath.JsonPath;
+import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -556,6 +559,16 @@ public class APIStepdefs {
                 .andExpect(status().isOk());
     }
 
+    @When("^I extract the incoming facets from dataset \"([^\"]*)\" for resource$")
+    public void iExtractTheIncomingFacetsFromDatasetForResources(String datasetId, List<URI> resources) throws Throwable {
+        assertThat("A resource URI is required", resources.size(), greaterThan(0));
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/incoming?uri={resource}", datasetId, resources.get(0))
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+    }
+
     @When("^I retrieve facet range \"([^\"]*)\" values$")
     public void iRetrieveFacetRangesValues(String facetRangeId, List<ExpectedRangeValue> expectedRangeValues) throws Throwable {
         String json = mockMvc.perform(get(facetRangeId + "/values")
@@ -605,5 +618,22 @@ public class APIStepdefs {
         String json = this.result.andReturn().getResponse().getContentAsString();
         ExpectedFacet actualFacet = mapper.readValue(json, ExpectedFacet.class);
         assertThat(actualFacet, is(expectedFacets.get(0)));
+    }
+
+    @Then("^The retrieved incoming facets are")
+    public void theRetrievedIncomingFacetAre(List<Map<String, String>> expectedIncomings) throws Throwable {
+        expectedIncomings.forEach(expectedIncoming -> {
+            try {
+                String facetPath = "$[?(@.curie == '" + expectedIncoming.get("curie") + "')]";
+                String domainPath = facetPath + ".domains[?(@.curie == '" + expectedIncoming.get("domain-curie") + "')]";
+                this.result.andExpect(jsonPath(facetPath + ".rangeCurie", hasItem(expectedIncoming.get("range-curie"))));
+                this.result.andExpect(jsonPath(facetPath + ".label", hasItem(expectedIncoming.get("label"))));
+                this.result.andExpect(jsonPath(facetPath + ".uses", hasItem(Integer.parseInt(expectedIncoming.get("uses")))));
+                this.result.andExpect(jsonPath(domainPath + ".label", hasItem(expectedIncoming.get("domain-label"))));
+                this.result.andExpect(jsonPath(domainPath + ".count", hasItem(Integer.parseInt(expectedIncoming.get("count")))));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
