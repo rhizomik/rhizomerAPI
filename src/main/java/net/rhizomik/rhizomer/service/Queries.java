@@ -102,6 +102,28 @@ public interface Queries {
         return query;
     }
 
+    default Query getQueryResourceIncomingFacets(URI resourceUri) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+            "SELECT (SAMPLE(?class) as ?range) ?prop ?proplabel ?uses ?domain ?domainlabel (COUNT(?s) AS ?count) \n" +
+            "WHERE { \n" +
+            "\t { SELECT ?class ?prop ?proplabel (COUNT(?s) AS ?uses) \n" +
+            "\t\t WHERE { \n" +
+            "\t\t\t ?s ?prop ?resource . \n" +
+            "\t\t\t ?resource a ?class . \n" +
+            "\t\t\t FILTER NOT EXISTS { ?subclass rdfs:subClassOf ?class } \n" +
+            "\t\t\t OPTIONAL { ?prop rdfs:label ?proplabel FILTER LANGMATCHES(LANG(?proplabel), \"en\")  } \n" +
+            "\t\t\t OPTIONAL { ?prop rdfs:label ?proplabel } \n" +
+            "\t } GROUP BY ?class ?prop ?proplabel } \n" +
+            "\t ?s ?prop ?resource ; a ?domain . \n" +
+            "\t OPTIONAL { ?domain rdfs:label ?domainlabel FILTER LANGMATCHES(LANG(?domainlabel), \"en\")  } \n" +
+            "\t OPTIONAL { ?domain rdfs:label ?domainlabel } \n" +
+            "} GROUP BY ?prop ?proplabel ?domain ?domainlabel ?uses");
+        pQuery.setIri("resource", resourceUri.toString());
+        Query query = pQuery.asQuery();
+        return query;
+    }
+
     default Query getQueryInferTypes() {
         return QueryFactory.create(prefixes +
             "CONSTRUCT { ?i a ?type } \n" +
