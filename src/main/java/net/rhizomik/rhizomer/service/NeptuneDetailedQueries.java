@@ -2,6 +2,7 @@ package net.rhizomik.rhizomer.service;
 
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
+import org.apache.jena.vocabulary.RDFS;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
@@ -9,7 +10,7 @@ import org.springframework.util.MultiValueMap;
  * Created by http://rhizomik.net/~roberto/
  */
 @Service
-public class NeptuneOptimizedQueries extends OptimizedQueries {
+public class NeptuneDetailedQueries extends DetailedQueries {
     String prefixes =
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
             "PREFIX hint: <http://aws.amazon.com/neptune/vocab/v01/QueryHints#> \n" ;
@@ -19,23 +20,27 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         if (sampleSize > 0 && coverage > 0.0) {
             pQuery.setCommandText(prefixes +
-                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
+                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
                 "WHERE { \n" +
                 "hint:Query hint:joinOrder \"Ordered\" .\n" +
                 "\t { { SELECT ?instance WHERE { ?instance a ?class } OFFSET 0 "+"LIMIT "+sampleSize+" } \n" +
                 addSamples(classCount, sampleSize, coverage) + " } \n" +
                 "\t ?instance ?property ?object \n" +
+                "\t OPTIONAL { ?object a ?type }\n" +
+                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "} GROUP BY ?property");
+                "} GROUP BY ?property ?range");
         } else {
             pQuery.setCommandText(prefixes +
-                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
+                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
                 "WHERE { \n" +
                 "hint:Query hint:joinOrder \"Ordered\" .\n" +
                 "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
                 "\t ?instance ?property ?object \n" +
+                "\t OPTIONAL { ?object a ?type }\n" +
+                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "} GROUP BY ?property");
+                "} GROUP BY ?property ?range");
         }
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
@@ -59,7 +64,12 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
             "\t OPTIONAL { ?resource rdfs:label ?label \n" +
             "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
             "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
-            "\t BIND( str(?resource) AS ?value)\n \n" +
+            "\t BIND(?resource AS ?value)\n \n" +
+            ( isLiteral ?
+                "\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :
+                !rangeUri.equals(RDFS.Resource.getURI()) ?
+                    "\t ?resource a <" + rangeUri + "> \n" :
+                    "\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
             "} GROUP BY ?value ?label");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);
@@ -75,21 +85,26 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
             MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-            "SELECT DISTINCT ?value ?label \n" +
-            "WHERE { \n" +
-            "hint:Query hint:joinOrder \"Ordered\" .\n" +
-            "\t { SELECT DISTINCT ?instance " +
-            "\t\t WHERE { \n" +
-            "\t\t\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(filters) +
-            "\t\t } \n" +
-            "\t } \n" +
-            "\t ?instance ?property ?resource . \n" +
-            "\t OPTIONAL { ?resource rdfs:label ?label \n" +
-            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
-            "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
-            "\t BIND( str(?resource) AS ?value) \n" +
-            "\t FILTER( CONTAINS(LCASE(?value), LCASE(?containing)) || CONTAINS(LCASE(?label), LCASE(?containing)) ) \n" +
+                "SELECT DISTINCT ?value ?label \n" +
+                "WHERE { \n" +
+                "hint:Query hint:joinOrder \"Ordered\" .\n" +
+                "\t { SELECT DISTINCT ?instance " +
+                "\t\t WHERE { \n" +
+                "\t\t\t ?instance a ?class . \n" +
+                getFilterPatternsAnd(filters) +
+                "\t\t } \n" +
+                "\t } \n" +
+                "\t ?instance ?property ?resource . \n" +
+                "\t OPTIONAL { ?resource rdfs:label ?label \n" +
+                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+                "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
+                ( isLiteral ?
+                    "\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :
+                    !rangeUri.equals(RDFS.Resource.getURI()) ?
+                        "\t ?resource a <" + rangeUri + "> \n" :
+                        "\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
+                "\t BIND(?resource AS ?value) \n" +
+                "\t FILTER( CONTAINS(LCASE(STR(?resource)), LCASE(?containing)) || CONTAINS(LCASE(?label), LCASE(?containing)) ) \n" +
                 "}");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);
