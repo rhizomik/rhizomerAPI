@@ -52,6 +52,8 @@ public class SPARQLService {
         String queryString = query.toString();
         if (endpoint.getType() == SPARQLEndPoint.ServerType.VIRTUOSO) {
             queryString = "DEFINE sql:describe-mode \"CBD\" \n" + queryString;
+        } else if (endpoint.getType() == SPARQLEndPoint.ServerType.STARDOG) {
+            queryString = "#pragma describe.strategy cbd \n" + queryString;
         }
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), queryString);
         QueryExecution q = new QueryEngineHTTP(endpoint.getQueryEndPoint().toString(), queryString, creds);

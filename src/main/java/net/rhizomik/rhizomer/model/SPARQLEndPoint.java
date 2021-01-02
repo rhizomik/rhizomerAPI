@@ -40,7 +40,8 @@ public class SPARQLEndPoint {
         GENERIC,
         VIRTUOSO,
         MARKLOGIC,
-        NEPTUNE;
+        NEPTUNE,
+        STARDOG;
     }
     private String timeout;
 
