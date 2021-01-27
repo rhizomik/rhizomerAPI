@@ -39,7 +39,7 @@ import javax.validation.Valid;
 public class EndPointController {
     final Logger logger = LoggerFactory.getLogger(EndPointController.class);
 
-    @Value("${rhizomer.sparql-timeout:0}")
+    @Value("${rhizomer.sparql-timeout:300000}")
     private String TIMEOUT;
 
     @Autowired private DatasetRepository datasetRepository;
