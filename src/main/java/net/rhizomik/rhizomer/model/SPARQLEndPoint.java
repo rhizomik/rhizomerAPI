@@ -90,8 +90,6 @@ public class SPARQLEndPoint {
     public void setTimeout(String timeout) {
         if (this.type == ServerType.VIRTUOSO)
             this.timeout = "0";
-        else if (this.type == ServerType.MARKLOGIC)
-            this.timeout = null;
         else
             this.timeout = timeout;
     }

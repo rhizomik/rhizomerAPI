@@ -275,7 +275,7 @@ public class AnalizeDataset {
         MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            Model model = sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
+            Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryClassInstancesLabels(classUri.toString(), filters, size,size * page),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);

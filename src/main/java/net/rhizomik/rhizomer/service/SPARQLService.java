@@ -40,6 +40,7 @@ public class SPARQLService {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, new ArrayList<>(), creds);
+        //((QueryEngineHTTP) q).setAcceptHeader("application/*");
         if (timeout != null)
             ((QueryEngineHTTP) q).addParam("timeout", timeout);
         ResultSet result = ResultSetFactory.copyResults(q.execSelect());
@@ -56,21 +57,24 @@ public class SPARQLService {
             queryString = "#pragma describe.strategy cbd \n" + queryString;
         }
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), queryString);
-        QueryExecution q = new QueryEngineHTTP(endpoint.getQueryEndPoint().toString(), queryString, creds);
+        QueryEngineHTTP q = new QueryEngineHTTP(endpoint.getQueryEndPoint().toString(), queryString, creds);
+        //q.setAcceptHeader("application/*");
         if (timeout != null)
-            ((QueryEngineHTTP) q).addParam("timeout", timeout);
-        else
-            ((QueryEngineHTTP) q).setAcceptHeader("application/n-triples"); // Workaround for MarkLogic
+            q.addParam("timeout", timeout);
+        if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)
+            q.setAcceptHeader("application/n-triples"); // Workaround for MarkLogic
         return q.execDescribe();
     }
 
-    public Model queryConstruct(URL sparqlEndpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
+    public Model queryConstruct(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
-        logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, new ArrayList<>(), creds);
+        logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), query);
+        QueryExecution q = QueryExecutionFactory.sparqlService(
+                endpoint.getQueryEndPoint().toString(), query, graphs, new ArrayList<>(), creds);
+        //((QueryEngineHTTP) q).setAcceptHeader("application/*");
         if (timeout != null)
             ((QueryEngineHTTP) q).addParam("timeout", timeout);
-        else
+        if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)
             ((QueryEngineHTTP) q).setAcceptHeader("application/n-triples"); // Workaround for MarkLogic
         return q.execConstruct();
     }
@@ -132,7 +136,7 @@ public class SPARQLService {
             UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
             queryUpdate(endPoint.getUpdateEndPoint(), createGraph, creds);
             Model inferredModel = queryConstruct(
-                    endPoint.getUpdateEndPoint(), timeout, queries.getQueryInferTypes(), targetGraphs, creds);
+                    endPoint, timeout, queries.getQueryInferTypes(), targetGraphs, creds);
             /*File inferenceOut = new File(dataset.getId() + "-inference.ttl");
             try {
                 RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);

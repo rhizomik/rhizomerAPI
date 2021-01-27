@@ -65,7 +65,7 @@ public class SPARQLServiceMockFactory {
                     return qexec.execSelect();
                 });
 
-        when(mock.queryConstruct(any(URL.class), anyString(), any(Query.class), anyList(), any()))
+        when(mock.queryConstruct(any(SPARQLEndPoint.class), anyString(), any(Query.class), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(2);
                     List<String> graphs = invocationOnMock.getArgument(3);
