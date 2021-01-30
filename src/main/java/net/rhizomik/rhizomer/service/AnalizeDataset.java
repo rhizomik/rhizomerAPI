@@ -141,11 +141,15 @@ public class AnalizeDataset {
                     else
                         allLiteralBoolean = (allLiteral.getInt() != 0);
                 }
+                String label = property.getLocalName();
+                if (soln.contains("?label"))
+                    label = soln.getLiteral("?label").getString();
                 try {
                     URI propertyUri = new URI(property.getURI());
                     DatasetClassFacetId datasetClassFacetId = new DatasetClassFacetId(datasetClass.getId(), propertyUri);
+                    String finalLabel = label;
                     Facet detectedFacet = facetRepository.findById(datasetClassFacetId).orElseGet(() -> {
-                        Facet newFacet = facetRepository.save(new Facet(datasetClass, propertyUri, property.getLocalName()));
+                        Facet newFacet = facetRepository.save(new Facet(datasetClass, propertyUri, finalLabel));
                         datasetClass.addFacet(newFacet);
                         logger.info("Added detected Facet {} to Class {} in Dataset",
                                 newFacet.getId().getFacetCurie(), datasetClass.getId().getClassCurie(),
@@ -154,6 +158,8 @@ public class AnalizeDataset {
                     });
                     URI rangeUri = new URI(range);
                     String rangeLabel = prefixCCMap.localName(range);
+                    if (soln.contains("?rlabel"))
+                        rangeLabel = soln.getLiteral("?rlabel").getString();
                     Range detectedRange = new Range(detectedFacet, rangeUri, rangeLabel, uses, values, allLiteralBoolean);
                     detectedFacet.addRange(rangeRepository.save(detectedRange));
                     facetRepository.save(detectedFacet);
@@ -325,13 +331,13 @@ public class AnalizeDataset {
                 if (isOmittedProperty(property.getURI())) continue;
                 String propertyLabel = property.getLocalName();
                 if (soln.contains("?proplabel"))
-                    propertyLabel = soln.get("?proplabel").toString();
+                    propertyLabel = soln.getLiteral("?proplabel").getString();
                 int uses = soln.getLiteral("?uses").getInt();
                 if (!soln.contains("?domain")) continue;
                 Resource domain = soln.getResource("?domain");
                 String domainLabel = domain.getLocalName();
                 if (soln.contains("?domainlabel"))
-                    domainLabel = soln.get("?domainlabel").toString();
+                    domainLabel = soln.getLiteral("?domainlabel").getString();
                 int count = soln.getLiteral("?count").getInt();
 
                 IncomingFacet incomingFacet = incomingFacets.getOrDefault(property.getURI(),

@@ -19,22 +19,26 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         if (sampleSize > 0 && coverage > 0.0) {
             pQuery.setCommandText(prefixes +
-                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
+                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) \n" +
                 "WHERE { \n" +
                 "hint:Query hint:joinOrder \"Ordered\" .\n" +
                 "\t { { SELECT ?instance WHERE { ?instance a ?class } OFFSET 0 "+"LIMIT "+sampleSize+" } \n" +
                 addSamples(classCount, sampleSize, coverage) + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
                 "} GROUP BY ?property");
         } else {
             pQuery.setCommandText(prefixes +
-                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
+                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) \n" +
                 "WHERE { \n" +
                 "hint:Query hint:joinOrder \"Ordered\" .\n" +
                 "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
                 "} GROUP BY ?property");
         }
         pQuery.setIri("class", classUri);
@@ -140,6 +144,9 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
             " } UNION { \n" +
             "\t\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
             "\t\t ?anon ?property ?resource .\n" +
+            "\t\t ?resource rdfs:label ?label . \n" +
+            " } UNION { \n" +
+            "\t\t ?instance ?resource ?object . \n" +
             "\t\t ?resource rdfs:label ?label . \n" +
             "} }");
         pQuery.setIri("class", classUri);

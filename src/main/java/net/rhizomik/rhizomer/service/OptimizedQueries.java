@@ -45,21 +45,25 @@ public class OptimizedQueries implements Queries {
     public Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         if (sampleSize > 0 && coverage > 0.0) {
-            pQuery.setCommandText(
-                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
+            pQuery.setCommandText(prefixes +
+                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) \n" +
                 "WHERE { \n" +
                 "\t { { SELECT ?instance WHERE { ?instance a ?class } OFFSET 0 "+"LIMIT "+sampleSize+" } \n" +
                 addSamples(classCount, sampleSize, coverage) + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
                 "} GROUP BY ?property");
         } else {
-            pQuery.setCommandText(
-                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
+            pQuery.setCommandText(prefixes +
+                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) \n" +
                 "WHERE { \n" +
                 "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
                 "} GROUP BY ?property");
         }
         pQuery.setIri("class", classUri);

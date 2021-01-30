@@ -20,7 +20,8 @@ public class NeptuneDetailedQueries extends DetailedQueries {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         if (sampleSize > 0 && coverage > 0.0) {
             pQuery.setCommandText(prefixes +
-                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
+                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) " +
+                "       (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) (SAMPLE(?rlabels) AS ?rlabel) \n" +
                 "WHERE { \n" +
                 "hint:Query hint:joinOrder \"Ordered\" .\n" +
                 "\t { { SELECT ?instance WHERE { ?instance a ?class } OFFSET 0 "+"LIMIT "+sampleSize+" } \n" +
@@ -29,10 +30,15 @@ public class NeptuneDetailedQueries extends DetailedQueries {
                 "\t OPTIONAL { ?object a ?type }\n" +
                 "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
+                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
+                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
                 "} GROUP BY ?property ?range");
         } else {
             pQuery.setCommandText(prefixes +
-                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) \n" +
+                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) " +
+                "       (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) (SAMPLE(?rlabels) AS ?rlabel) \n" +
                 "WHERE { \n" +
                 "hint:Query hint:joinOrder \"Ordered\" .\n" +
                 "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
@@ -40,6 +46,10 @@ public class NeptuneDetailedQueries extends DetailedQueries {
                 "\t OPTIONAL { ?object a ?type }\n" +
                 "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
+                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
+                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
+                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
                 "} GROUP BY ?property ?range");
         }
         pQuery.setIri("class", classUri);
@@ -48,7 +58,7 @@ public class NeptuneDetailedQueries extends DetailedQueries {
 
     @Override
     public Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
-            MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
+        MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "SELECT ?value ?label (COUNT(?value) AS ?count) \n" +
@@ -82,7 +92,7 @@ public class NeptuneDetailedQueries extends DetailedQueries {
 
     @Override
     public Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
-            MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top) {
+        MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "SELECT DISTINCT ?value ?label \n" +
@@ -135,8 +145,8 @@ public class NeptuneDetailedQueries extends DetailedQueries {
     }
 
     @Override
-    public Query getQueryClassInstancesLabels(String classUri, MultiValueMap<String, String> filters,
-                                              int limit, int offset) {
+    public Query getQueryClassInstancesLabels(String classUri,
+        MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "CONSTRUCT { ?resource rdfs:label ?label } \n" +
@@ -155,6 +165,9 @@ public class NeptuneDetailedQueries extends DetailedQueries {
             " } UNION { \n" +
             "\t\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
             "\t\t ?anon ?property ?resource .\n" +
+            "\t\t ?resource rdfs:label ?label . \n" +
+            " } UNION { \n" +
+            "\t\t ?instance ?resource ?object . \n" +
             "\t\t ?resource rdfs:label ?label . \n" +
             "} }");
         pQuery.setIri("class", classUri);

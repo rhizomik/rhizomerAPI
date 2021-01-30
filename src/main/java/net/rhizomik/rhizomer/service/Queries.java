@@ -66,6 +66,9 @@ public interface Queries {
             "\t\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
             "\t\t ?anon ?property ?resource .\n" +
             "\t\t ?resource rdfs:label ?label . \n" +
+            " } UNION { \n" +
+            "\t\t ?instance ?resource ?object . \n" +
+            "\t\t ?resource rdfs:label ?label . \n" +
             "} }");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
@@ -96,6 +99,9 @@ public interface Queries {
             "\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
             "\t ?anon ?property ?resource .\n" +
             "\t ?resource rdfs:label ?label . \n" +
+            " } UNION { \n" +
+            "\t\t ?instance ?resource ?object . \n" +
+            "\t\t ?resource rdfs:label ?label . \n" +
             "} }");
         pQuery.setIri("instance", resourceUri.toString());
         Query query = pQuery.asQuery();
