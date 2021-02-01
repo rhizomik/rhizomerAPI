@@ -12,6 +12,7 @@ public class ExpectedFacet {
     public String label;
     public int timesUsed;
     public int differentValues;
+    public String domainURI;
     public String range;
     public boolean relation;
 
@@ -23,6 +24,7 @@ public class ExpectedFacet {
         this.label = datasetFacet.getLabel();
         this.timesUsed = datasetFacet.getTimesUsed();
         this.differentValues = datasetFacet.getDifferentValues();
+        this.domainURI = datasetFacet.getDomainURI();
         this.range = datasetFacet.getRange();
         this.relation = datasetFacet.isRelation();
     }
@@ -49,6 +51,7 @@ public class ExpectedFacet {
                 ", label='" + label + '\'' +
                 ", timesUsed=" + timesUsed +
                 ", differentValues=" + differentValues +
+                ", domainURI='" + domainURI + '\'' +
                 ", range='" + range + '\'' +
                 ", relation=" + relation +
                 '}';

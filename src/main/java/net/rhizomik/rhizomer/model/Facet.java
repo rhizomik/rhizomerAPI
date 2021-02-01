@@ -97,6 +97,8 @@ public class Facet {
 
     public Class getDomain() { return domain; }
 
+    public String getDomainURI() { return domain.getUri().toString(); }
+
     public void setDomain(Class domain) {
         this.domain = domain;
         this.id.setDatasetClassId(domain.getId());
