@@ -55,11 +55,11 @@ public class DetailedQueries implements Queries {
                 "\t ?instance ?property ?object \n" +
                 "\t OPTIONAL { ?object a ?type }\n" +
                 "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
-                "\t BIND(if(isLiteral(?object), 1, 0) AS ?isLiteral) \n" +
+                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
                 "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
                 "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
+                "\t OPTIONAL { ?type rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
+                "\t OPTIONAL { ?type rdfs:label ?rlabels } \n" +
                 "} GROUP BY ?property ?range");
         } else {
             pQuery.setCommandText(prefixes +
@@ -70,11 +70,11 @@ public class DetailedQueries implements Queries {
                 "\t ?instance ?property ?object \n" +
                 "\t OPTIONAL { ?object a ?type }\n" +
                 "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
-                "\t BIND(if(isLiteral(?object), 1, 0) AS ?isLiteral) \n" +
+                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
                 "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
                 "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
+                "\t OPTIONAL { ?type rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
+                "\t OPTIONAL { ?type rdfs:label ?rlabels } \n" +
                 "} GROUP BY ?property ?range");
         }
         pQuery.setIri("class", classUri);

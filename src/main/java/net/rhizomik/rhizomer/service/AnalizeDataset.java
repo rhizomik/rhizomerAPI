@@ -34,6 +34,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.riot.RiotException;
 import org.apache.jena.update.UpdateRequest;
+import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,9 +129,9 @@ public class AnalizeDataset {
                 if (!soln.contains("?property")) continue;
                 Resource property = soln.getResource("?property");
                 if (isOmittedProperty(property.getURI())) continue;
-                String range = XSD.xstring.toString();
+                Resource range = XSD.xstring;
                 if (soln.contains("?range"))
-                    range = soln.get("?range").toString();
+                    range = soln.getResource("?range");
                 int uses = soln.getLiteral("?uses").getInt();
                 int values = soln.getLiteral("?values").getInt();
                 boolean allLiteralBoolean = false;
@@ -156,9 +157,9 @@ public class AnalizeDataset {
                                 datasetClass.getDataset().getId());
                         return newFacet;
                     });
-                    URI rangeUri = new URI(range);
-                    String rangeLabel = prefixCCMap.localName(range);
-                    if (soln.contains("?rlabel"))
+                    URI rangeUri = new URI(range.getURI());
+                    String rangeLabel = prefixCCMap.localName(range.getURI());
+                    if (soln.contains("?rlabel") && !range.getURI().startsWith(XSD.NS) && !range.equals(RDFS.Resource))
                         rangeLabel = soln.getLiteral("?rlabel").getString();
                     Range detectedRange = new Range(detectedFacet, rangeUri, rangeLabel, uses, values, allLiteralBoolean);
                     detectedFacet.addRange(rangeRepository.save(detectedRange));
