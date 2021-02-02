@@ -58,8 +58,8 @@ public class DetailedQueries implements Queries {
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
                 "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
                 "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
-                "\t OPTIONAL { ?type rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
-                "\t OPTIONAL { ?type rdfs:label ?rlabels } \n" +
+                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
+                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
                 "} GROUP BY ?property ?range");
         } else {
             pQuery.setCommandText(prefixes +
@@ -73,8 +73,8 @@ public class DetailedQueries implements Queries {
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
                 "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
                 "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
-                "\t OPTIONAL { ?type rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
-                "\t OPTIONAL { ?type rdfs:label ?rlabels } \n" +
+                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
+                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
                 "} GROUP BY ?property ?range");
         }
         pQuery.setIri("class", classUri);
