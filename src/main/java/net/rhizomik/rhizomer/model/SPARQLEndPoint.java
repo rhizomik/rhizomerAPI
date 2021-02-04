@@ -86,11 +86,4 @@ public class SPARQLEndPoint {
         List<String> graphsList = new ArrayList<>(this.graphs);
         return graphsList;
     }
-
-    public void setTimeout(String timeout) {
-        if (this.type == ServerType.VIRTUOSO)
-            this.timeout = "0";
-        else
-            this.timeout = timeout;
-    }
 }
