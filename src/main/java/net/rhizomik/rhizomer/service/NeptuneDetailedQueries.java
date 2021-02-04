@@ -21,10 +21,8 @@ public class NeptuneDetailedQueries extends DetailedQueries {
         return QueryFactory.create(prefixes +
                 "SELECT ?class ?label (COUNT(DISTINCT ?instance) as ?n) \n" +
                 "WHERE { \n" +
-                "hint:Query hint:joinOrder \"Ordered\" .\n" +
-                "\t { ?instance a ?class . FILTER ( !isBlank(?class) ) " +
-                "\t } UNION \n" +
-                "\t { ?instance ?p ?o . FILTER(NOT EXISTS {?instance a ?c} ) BIND(rdfs:Resource AS ?class) } \n" +
+                "\t hint:Query hint:joinOrder \"Ordered\" .\n" +
+                "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
                 "\t OPTIONAL { ?class rdfs:label ?label \n" +
                 "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
                 "\t OPTIONAL { ?class rdfs:label ?label } \n" +
