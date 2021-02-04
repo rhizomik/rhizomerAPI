@@ -60,6 +60,7 @@ public class AnalizeDataset {
     @Autowired private DetailedQueries detailedQueries;
     @Autowired private NeptuneOptimizedQueries neptuneOptimizedQueries;
     @Autowired private NeptuneDetailedQueries neptuneDetailedQueries;
+    @Autowired private VirtuosoDetailedQueries virtuosoDetailedQueries;
     @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
@@ -71,6 +72,8 @@ public class AnalizeDataset {
         if (queryType == QueryType.DETAILED) {
             if (serverType == SPARQLEndPoint.ServerType.NEPTUNE)
                 return neptuneDetailedQueries;
+            else if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO)
+                return virtuosoDetailedQueries;
             else
                 return detailedQueries;
         } else {
