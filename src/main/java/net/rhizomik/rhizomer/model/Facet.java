@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,7 +80,7 @@ public class Facet {
     public void addRange(Range range) { ranges.add(range); }
 
     public String getRange() {
-        List<Range> selectedRanges = ranges.stream().sorted((r1, r2) -> Integer.compare(r1.getTimesUsed(), r2.getTimesUsed()))
+        List<Range> selectedRanges = ranges.stream().sorted(Comparator.comparingInt(Range::getTimesUsed).reversed())
                 .limit(2).collect(Collectors.toList());
         if (selectedRanges.size() == 0) {
             if (isRelation())
