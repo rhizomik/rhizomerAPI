@@ -2,6 +2,7 @@ package net.rhizomik.rhizomer.service;
 
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.vocabulary.RDFS;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -14,6 +15,21 @@ public class NeptuneDetailedQueries extends DetailedQueries {
     String prefixes =
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
             "PREFIX hint: <http://aws.amazon.com/neptune/vocab/v01/QueryHints#> \n" ;
+
+    @Override
+    public Query getQueryClasses() {
+        return QueryFactory.create(prefixes +
+                "SELECT ?class ?label (COUNT(DISTINCT ?instance) as ?n) \n" +
+                "WHERE { \n" +
+                "hint:Query hint:joinOrder \"Ordered\" .\n" +
+                "\t { ?instance a ?class . FILTER ( !isBlank(?class) ) " +
+                "\t } UNION \n" +
+                "\t { ?instance ?p ?o . FILTER(NOT EXISTS {?instance a ?c} ) BIND(rdfs:Resource AS ?class) } \n" +
+                "\t OPTIONAL { ?class rdfs:label ?label \n" +
+                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+                "\t OPTIONAL { ?class rdfs:label ?label } \n" +
+                "} GROUP BY ?class ?label");
+    }
 
     @Override
     public Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage) {
