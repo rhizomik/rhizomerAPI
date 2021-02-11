@@ -1,6 +1,7 @@
 package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import net.rhizomik.rhizomer.model.id.DatasetClassFacetId;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
@@ -74,6 +75,12 @@ public class Facet {
 
     public void setLabel(String label) { this.label = label; }
 
+    public List<Range> getRanges(float relevance, long instancesCount) {
+        return this.ranges.stream()
+                .filter(range -> ((float)range.getTimesUsed() / instancesCount) > relevance)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     @JsonIgnore
     public List<Range> getRanges() { return ranges; }
 
@@ -124,5 +131,34 @@ public class Facet {
                 ", isRelation=" + isRelation() +
                 ", rangesCuries=" + ranges.toString() +
                 '}';
+    }
+
+    @Data
+    public static class Relation {
+        URI classUri;
+        String classLabel;
+        String classCurie;
+        URI propertyUri;
+        String propertyLabel;
+        String propertyCurie;
+        URI rangeUri;
+        String rangeLabel;
+        String rangeCurie;
+        int uses;
+
+        public Relation(URI classUri, String classLabel, String classCurie,
+                            URI propertyUri, String propertyLabel, String propertyCurie,
+                            URI rangeUri, String rangeLabel, String rangeCurie, int uses) {
+            this.classUri = classUri;
+            this.classLabel = classLabel;
+            this.classCurie = classCurie;
+            this.propertyUri = propertyUri;
+            this.propertyLabel = propertyLabel;
+            this.propertyCurie = propertyCurie;
+            this.rangeUri = rangeUri;
+            this.rangeLabel = rangeLabel;
+            this.rangeCurie = rangeCurie;
+            this.uses = uses;
+        }
     }
 }

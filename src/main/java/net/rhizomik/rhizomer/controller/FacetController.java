@@ -3,10 +3,9 @@ package net.rhizomik.rhizomer.controller;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
+import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.model.Class;
-import net.rhizomik.rhizomer.model.Curie;
-import net.rhizomik.rhizomer.model.Dataset;
-import net.rhizomik.rhizomer.model.Facet;
+import net.rhizomik.rhizomer.model.Facet.Relation;
 import net.rhizomik.rhizomer.model.id.DatasetClassFacetId;
 import net.rhizomik.rhizomer.model.id.DatasetClassId;
 import net.rhizomik.rhizomer.repository.ClassRepository;
@@ -25,8 +24,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RepositoryRestController
 public class FacetController {
@@ -41,9 +42,8 @@ public class FacetController {
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets", method = RequestMethod.GET)
     public @ResponseBody List<Facet> listClassFacets(Authentication auth,
-        @PathVariable String datasetId,
-        @PathVariable String classCurie,
-        @RequestParam(value="relevance", defaultValue="0") float relevance) {
+                @PathVariable String datasetId, @PathVariable String classCurie,
+                @RequestParam(value="relevance", defaultValue="0") float relevance) {
         Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
             new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkPublicOrOwner(dataset, auth);
@@ -56,9 +56,33 @@ public class FacetController {
         return datasetClass.getFacets(relevance);
     }
 
+    @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/relations", method = RequestMethod.GET)
+    public @ResponseBody List<Relation> listClassRelations(Authentication auth,
+                 @PathVariable String datasetId, @PathVariable String classCurie,
+                 @RequestParam(value="relevance", defaultValue="0") float relevance) {
+        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
+                new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
+        securityController.checkPublicOrOwner(dataset, auth);
+        DatasetClassId datasetClassId = new DatasetClassId(dataset, new Curie(classCurie));
+        Class datasetClass = classRepository.findById(datasetClassId).orElseThrow(() ->
+                new NullPointerException(String.format("Class with id '%s' not found", datasetClassId)));
+        logger.info("Retrieving relations for Class {} in Dataset {}", classCurie, datasetId);
+        if (datasetClass.getFacets().isEmpty() && endPointRepository.existsByDataset(dataset))
+            analiseDataset.detectClassFacets(datasetClass);
+        List<Facet> facets = datasetClass.getFacets(relevance);
+        return facets.stream().flatMap(facet ->
+                facet.getRanges(relevance, datasetClass.getInstanceCount()).stream()
+                        .filter(Range::isRelation)
+                        .map(range -> new Relation(
+                                datasetClass.getUri(), datasetClass.getLabel(), classCurie,
+                                facet.getUri(), facet.getLabel(), facet.getCurie(),
+                                range.getUri(), range.getLabel(), range.getCurie(), range.getTimesUsed()))
+        ).collect(Collectors.toCollection(ArrayList::new));
+    }
+
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}", method = RequestMethod.GET)
     public @ResponseBody Facet retrieveClassFacet(@PathVariable String datasetId,
-        @PathVariable String classCurie, @PathVariable String facetCurie, Authentication auth) {
+                @PathVariable String classCurie, @PathVariable String facetCurie, Authentication auth) {
         Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
             new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkPublicOrOwner(dataset, auth);
@@ -76,7 +100,7 @@ public class FacetController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Facet createClassFacet(@Valid @RequestBody Facet newFacet, @PathVariable String datasetId,
-        @PathVariable String classCurie, Authentication auth) {
+                @PathVariable String classCurie, Authentication auth) {
         Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
             new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);
@@ -93,7 +117,7 @@ public class FacetController {
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets", method = RequestMethod.PUT)
     public @ResponseBody List<Facet> updateClassFacets(@Valid @RequestBody List<Facet> newFacets,
-        @PathVariable String datasetId, @PathVariable String classCurie, Authentication auth) {
+                @PathVariable String datasetId, @PathVariable String classCurie, Authentication auth) {
         Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
             new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkOwner(dataset, auth);

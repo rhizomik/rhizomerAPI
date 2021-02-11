@@ -68,6 +68,8 @@ Feature: Detect dataset structure
       | uri                                             | label              | instanceCount |
       | http://dbpedia.org/ontology/FictionalCharacter  | FictionalCharacter | 916           |
       | http://dbpedia.org/ontology/Noble               | Noble              | 430           |
+      | http://dbpedia.org/ontology/Book                | Book               | 5             |
+      | http://dbpedia.org/ontology/Organisation        | Organisation       | 11            |
     And exists a class with id "/datasets/mixed/classes/dbo:Noble"
 
   Scenario: Change the dataset graph to another of the server graphs and extract facets
@@ -80,9 +82,9 @@ Feature: Detect dataset structure
       | http://www.w3.org/2000/01/rdf-schema#label     | label           | 430  | 430 | xsd:string      | false |
       | http://www.w3.org/2000/01/rdf-schema#comment   | comment         | 50   | 50  | xsd:string      | false |
       | http://xmlns.com/foaf/0.1/depiction            | depiction       | 50   | 50  | rdfs:Resource   | true  |
-      | http://mydomain.org/ontology/appearsIn         | appearsIn       | 761  | 5   | rdfs:Resource   | true  |
-      | http://dbpedia.org/ontology/allegiance         | allegiance      | 337  | 11  | rdfs:Resource   | true  |
-      | http://dbpedia.org/ontology/lastAppearance     | lastAppearance  | 118  | 5   | rdfs:Resource   | true  |
+      | http://mydomain.org/ontology/appearsIn         | appearsIn       | 761  | 5   | dbo:Book        | true  |
+      | http://dbpedia.org/ontology/allegiance         | allegiance      | 337  | 11  | dbo:Organisation| true  |
+      | http://dbpedia.org/ontology/lastAppearance     | lastAppearance  | 118  | 5   | dbo:Book        | true  |
       | http://www.w3.org/1999/02/22-rdf-syntax-ns#type| type            | 860  | 2   | rdfs:Resource   | true  |
       | http://dbpedia.org/property/genre              | genre           | 430  | 2   | xsd:string      | false |
       | http://dbpedia.org/ontology/deathDate          | deathDate       | 118  | 4   | xsd:gYear       | false |
@@ -93,8 +95,8 @@ Feature: Detect dataset structure
       | http://xmlns.com/foaf/0.1/name                 | name            | 430  | 430 | xsd:string      | false |
     And exists a facet with id "/datasets/mixed/classes/dbo:Noble/facets/dbo:allegiance"
     And The retrieved facet is
-      | uri                                    | label      | timesUsed | differentValues | range         | relation |
-      | http://dbpedia.org/ontology/allegiance | allegiance | 337	    | 11	          | rdfs:Resource | true     |
+      | uri                                    | label      | timesUsed | differentValues | range            | relation |
+      | http://dbpedia.org/ontology/allegiance | allegiance | 337	    | 11	          | dbo:Organisation | true     |
 
   Scenario: Recompute classes after changing the dataset graph and clearing dataset classes
     Given I extract the classes from dataset "mixed"
@@ -107,4 +109,6 @@ Feature: Detect dataset structure
       | uri                                             | label              | instanceCount |
       | http://dbpedia.org/ontology/FictionalCharacter  | FictionalCharacter | 916           |
       | http://dbpedia.org/ontology/Noble               | Noble              | 430           |
+      | http://dbpedia.org/ontology/Book                | Book               | 5             |
+      | http://dbpedia.org/ontology/Organisation        | Organisation       | 11            |
     And exists a class with id "/datasets/mixed/classes/dbo:FictionalCharacter"

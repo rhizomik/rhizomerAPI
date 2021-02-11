@@ -9,6 +9,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.*;
+import net.rhizomik.rhizomer.model.ExpectedRelationship;
 import net.rhizomik.rhizomer.repository.ClassRepository;
 import net.rhizomik.rhizomer.repository.DatasetRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
@@ -551,6 +552,14 @@ public class APIStepdefs {
                 .andExpect(status().isOk());
     }
 
+    @When("^I extract the relations for class \"([^\"]*)\" in dataset \"([^\"]*)\"$")
+    public void iExtractTheRelationsForClassInDataset(String classCurie, String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/classes/{classCurie}/relations", datasetId, classCurie)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()))
+                .andExpect(status().isOk());
+    }
+
     @When("^I extract the incoming facets from dataset \"([^\"]*)\" for resource$")
     public void iExtractTheIncomingFacetsFromDatasetForResources(String datasetId, List<URI> resources) throws Throwable {
         assertThat("A resource URI is required", resources.size(), greaterThan(0));
@@ -603,6 +612,13 @@ public class APIStepdefs {
         String json = this.result.andReturn().getResponse().getContentAsString();
         List<ExpectedFacet> actualFacets = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ExpectedFacet.class));
         assertThat(actualFacets, containsInAnyOrder(expectedFacets.toArray()));
+    }
+
+    @Then("^The retrieved relationships are$")
+    public void theRetrievedRelationsAre(List<ExpectedRelationship> expectedRelations) throws Throwable {
+        String json = this.result.andReturn().getResponse().getContentAsString();
+        List<ExpectedRelationship> actualRelations = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ExpectedRelationship.class));
+        assertThat(actualRelations, containsInAnyOrder(expectedRelations.toArray()));
     }
 
     @Then("^The retrieved facet is")
