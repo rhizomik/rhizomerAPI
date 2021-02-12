@@ -146,7 +146,7 @@ public class AnalizeDataset {
                         allLiteralBoolean = (allLiteral.getInt() != 0);
                 }
                 String label = property.getLocalName();
-                if (soln.contains("?label"))
+                if (soln.contains("?label") && soln.getLiteral("?label").getString().length() > 0)
                     label = soln.getLiteral("?label").getString();
                 try {
                     URI propertyUri = new URI(property.getURI());
@@ -155,19 +155,20 @@ public class AnalizeDataset {
                     Facet detectedFacet = facetRepository.findById(datasetClassFacetId).orElseGet(() -> {
                         Facet newFacet = facetRepository.save(new Facet(datasetClass, propertyUri, finalLabel));
                         datasetClass.addFacet(newFacet);
-                        logger.info("Added detected Facet {} to Class {} in Dataset",
+                        logger.info("Added detected Facet {} to Class {} in Dataset {}",
                                 newFacet.getId().getFacetCurie(), datasetClass.getId().getClassCurie(),
                                 datasetClass.getDataset().getId());
                         return newFacet;
                     });
                     URI rangeUri = new URI(range.getURI());
                     String rangeLabel = prefixCCMap.localName(range.getURI());
-                    if (soln.contains("?rlabel") && !range.getURI().startsWith(XSD.NS) && !range.equals(RDFS.Resource))
+                    if (soln.contains("?rlabel") && !range.getURI().startsWith(XSD.NS) && !range.equals(RDFS.Resource)
+                        && soln.getLiteral("?rlabel").getString().length() > 0)
                         rangeLabel = soln.getLiteral("?rlabel").getString();
                     Range detectedRange = new Range(detectedFacet, rangeUri, rangeLabel, uses, values, allLiteralBoolean);
                     detectedFacet.addRange(rangeRepository.save(detectedRange));
                     facetRepository.save(detectedFacet);
-                    logger.info("Added detected Range {} to Facet {} for Class {} in Dataset",
+                    logger.info("Added detected Range {} to Facet {} for Class {} in Dataset {}",
                             detectedRange.getId().getRangeCurie(), detectedFacet.getId().getFacetCurie(),
                             datasetClass.getId().getClassCurie(), datasetClass.getDataset().getId());
                 } catch (URISyntaxException e) {
