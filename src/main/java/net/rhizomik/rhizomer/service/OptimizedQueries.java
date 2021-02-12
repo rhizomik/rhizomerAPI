@@ -17,7 +17,7 @@ public class OptimizedQueries implements Queries {
     @Override
     public Query getQueryClasses() {
         return QueryFactory.create(prefixes +
-            "SELECT ?class ?label (COUNT(?instance) as ?n) \n" +
+            "SELECT ?class ?label (COUNT(DISTINCT ?instance) as ?n) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
             "\t OPTIONAL { ?class rdfs:label ?label \n" +
