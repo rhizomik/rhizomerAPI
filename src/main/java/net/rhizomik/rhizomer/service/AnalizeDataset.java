@@ -21,6 +21,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.jena.atlas.web.TypedInputStream;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -33,6 +34,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.riot.RiotException;
+import org.apache.jena.riot.web.HttpOp;
 import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
@@ -376,7 +378,9 @@ public class AnalizeDataset {
     public void browseUri(OutputStream out, URI resourceUri, RDFFormat format) {
         Model model = ModelFactory.createDefaultModel();
         try {
-            RDFDataMgr.read(model, resourceUri.toString());
+            String acceptHeader = "text/turtle,application/n-triples;q=0.9,application/rdf+xml;q=0.7,application/trig,application/n-quads;q=0.9,text/x-nquads;q=0.8,application/x-trig;q=0.7,application/ld+json;q=0.6";
+            TypedInputStream is = HttpOp.execHttpGet(resourceUri.toString(), acceptHeader);
+            model.read(is, null);
         } catch (RiotException e) {
             logger.info("Unable to retrieve RDF from {}: {}", resourceUri, e.getMessage());
         }
