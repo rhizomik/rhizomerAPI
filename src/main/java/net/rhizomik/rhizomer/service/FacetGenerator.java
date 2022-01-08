@@ -164,30 +164,6 @@ public class FacetGenerator {
 
     public FacetGenerator() {}
 
-    private void createDB(String path, int facetHash) throws ClassNotFoundException, SQLException {
-        String filePath = path+="facets-"+facetHash+".db";
-
-        if(!fileExists(filePath)) {
-            Class.forName("org.sqlite.JDBC"); // TODO: get db class from web.xml
-            conn = DriverManager.getConnection("jdbc:sqlite:" + filePath);
-            System.out.println("File \""+filePath+"\" created, generating facets");
-            Statement stat = conn.createStatement();
-            stat.execute("CREATE TABLE if not exists class_summary(class varchar(255), num_instances int, " +
-                    "primary key(class))");
-            /*stat.execute("CREATE TABLE if not exists property_summary(id int auto_increment, " +
-                    "class varchar(255), property varchar(255), num_instances int, different_values int, " +
-                    "entropy float, value_range varchar(255), value_type varchar(255), primary key(id))");
-            */
-            stat.execute("CREATE TABLE if not exists property_summary(id int auto_increment, " +
-                    "class varchar(255), property varchar(255), num_instances int, different_values int, " +
-                    "max_value int, max_cardinality int, value_range varchar(255), value_type varchar(255), is_inverse boolean, primary key(id))");
-            stat.close();
-            generateFacets();
-        }
-        else
-            System.out.println("File \""+filePath+"\" already exists");
-    }
-
     private void generateFacets() throws SQLException{
         ArrayList<String> classes = getClasses();
 
