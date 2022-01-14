@@ -322,7 +322,7 @@ public class AnalizeDataset {
     }
 
     public Collection<IncomingFacet> detectDatasetResourceIncomingFacets(Dataset dataset, URI resourceUri) {
-        HashMap<String, IncomingFacet> incomingFacets = new HashMap();
+        HashMap<String, IncomingFacet> incomingFacets = new HashMap<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                     queries(dataset).getQueryResourceIncomingFacets(resourceUri),
