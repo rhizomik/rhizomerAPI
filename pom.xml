@@ -85,25 +85,25 @@
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
 			<scope>test</scope>
-			<version>2.3.1</version>
+			<version>7.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-junit</artifactId>
 			<scope>test</scope>
-			<version>2.3.1</version>
+			<version>7.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-spring</artifactId>
 			<scope>test</scope>
-			<version>2.3.1</version>
+			<version>7.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jayway.jsonpath</groupId>
 			<artifactId>json-path</artifactId>
 			<scope>test</scope>
-			<version>2.4.0</version>
+			<version>2.6.0</version>
 		</dependency>
 
 		<!-- Semantic Web -->

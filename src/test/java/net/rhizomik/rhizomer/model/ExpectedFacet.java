@@ -18,6 +18,15 @@ public class ExpectedFacet {
 
     public ExpectedFacet() {}
 
+    public ExpectedFacet(String uri, String label, int timesUsed, int differentValues, boolean relation, String range) {
+        this.uri = uri;
+        this.label = label;
+        this.timesUsed = timesUsed;
+        this.differentValues = differentValues;
+        this.relation = relation;
+        this.range = range;
+    }
+
     public ExpectedFacet(Facet datasetFacet) {
         this.uri = datasetFacet.getId().toString();
         this.curie = id.split("/")[4];

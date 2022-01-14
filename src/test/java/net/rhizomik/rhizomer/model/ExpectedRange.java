@@ -16,6 +16,14 @@ public class ExpectedRange {
 
     public ExpectedRange() {}
 
+    public ExpectedRange(String uri, String label, int timesUsed, int differentValues, boolean isRelation) {
+        this.uri = uri;
+        this.label = label;
+        this.timesUsed = timesUsed;
+        this.differentValues = differentValues;
+        this.isRelation = isRelation;
+    }
+
     public ExpectedRange(Range datasetRange) {
         this.uri = datasetRange.getId().toString();
         this.curie = id.split("/")[4];

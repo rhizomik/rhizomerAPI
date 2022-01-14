@@ -17,6 +17,14 @@ public class ExpectedClass {
 
     public ExpectedClass() {}
 
+    public ExpectedClass(String id, String uri, String label, String curie, int instanceCount) {
+        this.id = id;
+        this.uri = uri;
+        this.curie = curie;
+        this.label = label;
+        this.instanceCount = instanceCount;
+    }
+
     public ExpectedClass(Class datasetClass) {
         this.id = datasetClass.getId().toString();
         this.uri = datasetClass.getUri().toString();
