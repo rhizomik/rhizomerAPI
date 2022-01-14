@@ -2,9 +2,7 @@ package net.rhizomik.rhizomer.service;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,11 +14,7 @@ import net.rhizomik.rhizomer.repository.FacetRepository;
 import net.rhizomik.rhizomer.repository.RangeRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.Queries.QueryType;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClients;
+import java.net.http.HttpClient;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -430,9 +424,12 @@ public class AnalizeDataset {
 
     private HttpClient withCreds(String username, String password) {
         if (username == null || password == null )
-            return null;
-        BasicCredentialsProvider credsProv = new BasicCredentialsProvider();
-        credsProv.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-        return HttpClients.custom().setDefaultCredentialsProvider(credsProv).build();
+            return HttpClient.newHttpClient();
+        return HttpClient.newBuilder().authenticator(new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password.toCharArray());
+            }
+        }).build();
     }
 }
