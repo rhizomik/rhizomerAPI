@@ -42,6 +42,24 @@ public class DetailedQueries implements Queries {
         return query;
     }
 
+    // PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    //
+    // SELECT  ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) AS ?allLiteral) (SAMPLE(?labels) AS ?label) (SAMPLE(?rlabels) AS ?rlabel)
+    // FROM <https://rhizomik.net>
+    // FROM NAMED <https://rhizomik.net/ontologies>
+    // WHERE
+    //  { { SELECT  ?instance WHERE { ?instance  a  <http://vivoweb.org/ontology/core#ConferencePoster> } }
+    //    ?instance  ?property  ?object
+    //    OPTIONAL { ?object  a   ?type FILTER(?type != rdfs:Resource) }
+    //    BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range)
+    //    BIND(isLiteral(?object) AS ?isLiteral)
+    //    OPTIONAL { GRAPH <https://rhizomik.net/ontologies> { ?property  rdfs:label  ?labels FILTER langMatches(lang(?labels), "en") } }
+    //  	OPTIONAL { GRAPH <https://rhizomik.net/ontologies> { ?property  rdfs:label  ?labels } }
+    //    OPTIONAL { GRAPH <https://rhizomik.net/ontologies> { ?range  rdfs:label  ?rlabels FILTER langMatches(lang(?rlabels), "en") } }
+    //    OPTIONAL { GRAPH <https://rhizomik.net/ontologies> { ?range  rdfs:label  ?rlabels } }
+    //  }
+    // GROUP BY ?property ?range
+
     @Override
     public Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();

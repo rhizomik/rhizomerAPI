@@ -3,13 +3,14 @@ package net.rhizomik.rhizomer.service;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
-import org.apache.http.client.HttpClient;
+import java.net.http.HttpClient;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
-import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
+import org.apache.jena.sparql.exec.http.UpdateExecutionHTTPBuilder;
 import org.apache.jena.update.UpdateProcessor;
 import org.apache.jena.update.UpdateRequest;
 import org.slf4j.Logger;
@@ -39,12 +40,14 @@ public class SPARQLService {
     public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(sparqlEndpoint.toString(), query, graphs, new ArrayList<>(), creds);
-        //((QueryEngineHTTP) q).setAcceptHeader("application/*");
+        QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
+        qBuilder.query(query).endpoint(sparqlEndpoint.toString()).httpClient(creds);
+        graphs.forEach(qBuilder::addDefaultGraphURI);
         if (timeout != null)
-            ((QueryEngineHTTP) q).addParam("timeout", timeout);
-        ResultSet result = ResultSetFactory.copyResults(q.execSelect());
-        q.close();
+            qBuilder.param("timeout", timeout);
+        QueryExecutionHTTP qExec = qBuilder.build();
+        ResultSet result = ResultSetFactory.copyResults(qExec.execSelect());
+        qExec.close();
         return result;
     }
 
@@ -57,31 +60,34 @@ public class SPARQLService {
             queryString = "#pragma describe.strategy cbd \n" + queryString;
         }
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), queryString);
-        QueryEngineHTTP q = new QueryEngineHTTP(endpoint.getQueryEndPoint().toString(), queryString, creds);
-        //q.setAcceptHeader("application/*");
+        QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
+        qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
+        graphs.forEach(qBuilder::addDefaultGraphURI);
         if (timeout != null)
-            q.addParam("timeout", timeout);
+            qBuilder.param("timeout", timeout);
         if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)
-            q.setAcceptHeader("application/n-triples"); // Workaround for MarkLogic
-        return q.execDescribe();
+            qBuilder.acceptHeader("application/n-triples"); // Workaround for MarkLogic
+        return qBuilder.build().execDescribe();
     }
 
     public Model queryConstruct(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), query);
-        QueryExecution q = QueryExecutionFactory.sparqlService(
-                endpoint.getQueryEndPoint().toString(), query, graphs, new ArrayList<>(), creds);
-        //((QueryEngineHTTP) q).setAcceptHeader("application/*");
+        QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
+        qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
+        graphs.forEach(qBuilder::addDefaultGraphURI);
         if (timeout != null)
-            ((QueryEngineHTTP) q).addParam("timeout", timeout);
+            qBuilder.param("timeout", timeout);
         if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)
-            ((QueryEngineHTTP) q).setAcceptHeader("application/n-triples"); // Workaround for MarkLogic
-        return q.execConstruct();
+            qBuilder.acceptHeader("application/n-triples"); // Workaround for MarkLogic
+        return qBuilder.build().execConstruct();
     }
 
     public void queryUpdate(URL sparqlEndpoint, UpdateRequest update, HttpClient creds) {
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, update.toString());
-        UpdateProcessor processor = UpdateExecutionFactory.createRemoteForm(update, sparqlEndpoint.toString(), creds);
+        UpdateExecutionHTTPBuilder uBuilder = UpdateExecutionHTTPBuilder.create();
+        uBuilder.update(update).endpoint(sparqlEndpoint.toString()).httpClient(creds);
+        UpdateProcessor processor = uBuilder.build();
         processor.execute();
     }
 

@@ -25,8 +25,8 @@ public class PrefixCCMap extends PrefixMapStd {
     private static final Logger logger = LoggerFactory.getLogger(PrefixCCMap.class);
 
     @Override
-    public boolean contains(String prefix) {
-        if (super.contains(prefix))
+    public boolean containsPrefix(String prefix) {
+        if (super.containsPrefix(prefix))
             return true;
 
         String prefixccUri = prefixCCNamespaceLookup(prefix);
@@ -96,11 +96,11 @@ public class PrefixCCMap extends PrefixMapStd {
         else
             candidatePrefix = candidateParts[0];
 
-        if (!this.contains(candidatePrefix))
+        if (!this.containsPrefix(candidatePrefix))
             return candidatePrefix;
         else {
             int version = 1;
-            while(this.contains(candidatePrefix+"_"+version))
+            while(this.containsPrefix(candidatePrefix+"_"+version))
                 version++;
             return candidatePrefix+"_"+version;
         }

@@ -2,11 +2,14 @@ package net.rhizomik.rhizomer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.Before;
+import io.cucumber.java.DataTableType;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.cucumber.spring.CucumberContextConfiguration;
 import net.rhizomik.rhizomer.model.Class;
 import net.rhizomik.rhizomer.model.*;
 import net.rhizomik.rhizomer.model.ExpectedRelationship;
@@ -51,6 +54,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -58,7 +62,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -67,6 +71,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Created by http://rhizomik.net/~roberto/
  */
+@CucumberContextConfiguration
 @ContextConfiguration(
     classes = {RhizomerAPIApplication.class, APIStepdefs.SPARQLServiceMockConfig.class},
     loader = SpringBootContextLoader.class
@@ -122,6 +127,41 @@ public class APIStepdefs {
         // Clear authentication credentials at the start of every test.
         currentPassword = "";
         currentUsername = "";
+    }
+
+    @DataTableType
+    public ExpectedClass expectedClassEntry(Map<String, String> entry) {
+        return new ExpectedClass(entry.get("id"), entry.get("uri"), entry.get("label"),
+                entry.get("curie"), Integer.parseInt(entry.get("instanceCount")));
+    }
+
+    @DataTableType
+    public ExpectedFacet expectedFacetEntry(Map<String, String> entry) {
+        return new ExpectedFacet(entry.get("uri"), entry.get("label"),
+                Integer.parseInt(entry.getOrDefault("timesUsed", "0")),
+                Integer.parseInt(entry.getOrDefault("differentValues", "0")),
+                Boolean.parseBoolean(entry.get("relation")),
+                entry.get("range"));
+    }
+
+    @DataTableType
+    public ExpectedRange expectedRangeEntry(Map<String, String> entry) {
+        return new ExpectedRange(entry.get("uri"), entry.get("label"),
+                Integer.parseInt(entry.getOrDefault("timesUsed", "0")),
+                Integer.parseInt(entry.getOrDefault("differentValues", "0")),
+                Boolean.parseBoolean(entry.get("isRelation")));
+    }
+
+    @DataTableType
+    public ExpectedRangeValue expectedRangeValueEntry(Map<String, String> entry) {
+        return new ExpectedRangeValue(entry.get("value"), entry.get("curie"), entry.get("uri"), entry.get("label"),
+                Integer.parseInt(entry.getOrDefault("count", "0")));
+    }
+
+    @DataTableType
+    public ExpectedRelationship expectedRelationship(Map<String, String> entry) {
+        return new ExpectedRelationship(entry.get("classCurie"), entry.get("propertyCurie"), entry.get("rangeCurie"),
+                Integer.parseInt(entry.getOrDefault("uses", "0")));
     }
 
     @Given("^I login as \"([^\"]*)\" with password \"([^\"]*)\"$")
@@ -420,78 +460,77 @@ public class APIStepdefs {
     }
 
     @Then("^The retrieved graphs are$")
-    public void theRetrievedGraphsAre(List<URI> expectedGraphs) throws Throwable {
+    public void theRetrievedGraphsAre(DataTable expectedGraphs) throws Throwable {
         String json = this.result.andReturn().getResponse().getContentAsString();
-        List<URI> actualGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, URI.class));
-        assertThat(actualGraphs, containsInAnyOrder(expectedGraphs.toArray()));
+        List<String> actualGraphs = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+        assertThat(actualGraphs, containsInAnyOrder(expectedGraphs.asList().toArray()));
     }
 
     @When("^I add ontologies to the dataset \"([^\"]*)\"$")
-    public void iAddTheOntologyToTheDataset(String datasetId, List<String> ontologies) throws Throwable {
-        String ontologiesJson = mapper.writeValueAsString(ontologies);
+    public void iAddTheOntologyToTheDataset(String datasetId, DataTable ontologies) throws Throwable {
+        String ontologiesJson = mapper.writeValueAsString(ontologies.asList());
         this.result = mockMvc.perform(post("/datasets/{datasetId}/ontologies", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ontologiesJson)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         this.result.andExpect(status().isCreated());
-        this.result.andExpect(jsonPath("$", hasItems(ontologies.toArray())));
+        this.result.andExpect(jsonPath("$", hasItems(ontologies.asList().toArray())));
     }
 
     @When("^I add the graphs to the dataset \"([^\"]*)\"$")
-    public void iAddTheGraphToTheDataset(String datasetId, List<String> graphs) throws Throwable {
-        String graphsJson = mapper.writeValueAsString(graphs);
+    public void iAddTheGraphToTheDataset(String datasetId, DataTable graphs) throws Throwable {
+        String graphsJson = mapper.writeValueAsString(graphs.asList());
         this.result = mockMvc.perform(post("/datasets/{id}/endpoints/{id}/graphs", datasetId, endPointId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(graphsJson)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         this.result.andExpect(status().isCreated());
-        this.result.andExpect(jsonPath("$", hasItems(graphs.toArray())));
+        this.result.andExpect(jsonPath("$", hasItems(graphs.asList().toArray())));
     }
 
     @And("^The following ontologies are set for dataset \"([^\"]*)\"$")
-    public void theFollowingOntologiesAreSetForDataset(String datasetId, List<String> ontologies) throws Throwable {
-        ontologies = ontologies.stream().filter(s -> s.length()>0).collect(Collectors.toList());
-        String ontologiesJson = mapper.writeValueAsString(ontologies);
+    public void theFollowingOntologiesAreSetForDataset(String datasetId, DataTable ontologies) throws Throwable {
+        String ontologiesJson = mapper.writeValueAsString(ontologies.asList());
         this.result = mockMvc.perform(put("/datasets/{datasetId}/ontologies", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(ontologiesJson)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         this.result.andExpect(status().isOk());
-        this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.asList().toArray())));
     }
 
     @When("^The following data graphs are set for dataset \"([^\"]*)\"$")
-    public void theFollowingDataGraphsAreSetForDataset(String datasetId, List<String> graphs) throws Throwable {
-        graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
-        String graphsJson = mapper.writeValueAsString(graphs);
+    public void theFollowingDataGraphsAreSetForDataset(String datasetId, DataTable graphs) throws Throwable {
+        List<String> validGraphs = graphs.asList().stream().filter(Objects::nonNull).collect(Collectors.toList());
+        String graphsJson = mapper.writeValueAsString(validGraphs);
         this.result = mockMvc.perform(put("/datasets/{datasetId}/endpoints/{id}/graphs", datasetId, endPointId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(graphsJson)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         this.result.andExpect(status().isOk());
-        this.result.andExpect(jsonPath("$", containsInAnyOrder(graphs.toArray())));
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(validGraphs.toArray())));
     }
 
     @And("^The following ontologies are defined for the dataset \"([^\"]*)\"$")
-    public void theFollowingOntologiesAreDefinedForTheDataset(String datasetId, List<String> ontologies) throws Throwable {
-        ontologies = ontologies.stream().filter(s -> s.length()>0).collect(Collectors.toList());
+    public void theFollowingOntologiesAreDefinedForTheDataset(String datasetId, DataTable ontologies) throws Throwable {
+        List<String> validOntologies = ontologies.asList().stream().filter(Objects::nonNull).collect(Collectors.toList());
         this.result = mockMvc.perform(get("/datasets/{datasetId}/ontologies", datasetId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
-        this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.toArray())));
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(validOntologies.toArray())));
     }
 
     @And("^The following data graphs are defined for the dataset \"([^\"]*)\"$")
-    public void theFollowingDataGraphsAreDefinedForTheDataset(String datasetId, List<String> graphs) throws Throwable {
-        graphs = graphs.stream().filter(s -> s.length()>0).collect(Collectors.toList());
+    public void theFollowingDataGraphsAreDefinedForTheDataset(String datasetId, DataTable graphs) throws Throwable {
+        List<String> validGraphs = graphs.asList().stream().filter(Objects::nonNull).collect(Collectors.toList());
         this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/graphs", datasetId, endPointId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
-        this.result.andExpect(jsonPath("$", containsInAnyOrder(graphs.toArray())));
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(validGraphs.toArray())));
     }
 
     @And("^The size of dataset \"([^\"]*)\" ontologies graph is (\\d+)$")
@@ -561,9 +600,10 @@ public class APIStepdefs {
     }
 
     @When("^I extract the incoming facets from dataset \"([^\"]*)\" for resource$")
-    public void iExtractTheIncomingFacetsFromDatasetForResources(String datasetId, List<URI> resources) throws Throwable {
-        assertThat("A resource URI is required", resources.size(), greaterThan(0));
-        this.result = mockMvc.perform(get("/datasets/{datasetId}/incoming?uri={resource}", datasetId, resources.get(0))
+    public void iExtractTheIncomingFacetsFromDatasetForResources(String datasetId, DataTable resources) throws Throwable {
+        assertThat("A resource URI is required", resources.asList().size(), greaterThan(0));
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/incoming?uri={resource}", datasetId,
+                        resources.asList().get(0))
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()))
                 .andDo(MockMvcResultHandlers.print())
@@ -583,7 +623,7 @@ public class APIStepdefs {
     }
 
     @When("^I set the dataset \"([^\"]*)\" classes to$")
-    public void iClearDatasetClasses(String datasetId, List<Class> newClasses) throws Throwable {
+    public void iClearDatasetClasses(String datasetId, List<ExpectedClass> newClasses) throws Throwable {
         String json = mapper.writeValueAsString(newClasses);
         this.result = mockMvc.perform(put("/datasets/{datasetId}/classes", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -12,6 +12,14 @@ public class ExpectedRangeValue {
 
     public ExpectedRangeValue() {}
 
+    public ExpectedRangeValue(String value, String curie, String uri, String label, int count) {
+        this.value = value;
+        this.count = count;
+        this.uri = uri;
+        this.curie = curie;
+        this.label = label;
+    }
+
     public String getValue() { return value; }
 
     public int getCount() { return count; }

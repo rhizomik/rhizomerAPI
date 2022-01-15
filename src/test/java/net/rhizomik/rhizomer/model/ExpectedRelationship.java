@@ -17,4 +17,11 @@ public class ExpectedRelationship {
     int uses;
 
     public ExpectedRelationship() {}
+
+    public ExpectedRelationship(String classCurie, String propertyCurie, String rangeCurie, int uses) {
+        this.classCurie = classCurie;
+        this.propertyCurie = propertyCurie;
+        this.rangeCurie = rangeCurie;
+        this.uses = uses;
+    }
 }
