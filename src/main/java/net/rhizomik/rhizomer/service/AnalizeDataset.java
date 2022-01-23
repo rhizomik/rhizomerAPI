@@ -308,7 +308,7 @@ public class AnalizeDataset {
             Model model = sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryDescribeResource(resourceUri), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
-            model.add(sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
+            model.add(sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryDescribeResourceLabels(resourceUri), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword())));
             RDFDataMgr.write(out, model, format);
