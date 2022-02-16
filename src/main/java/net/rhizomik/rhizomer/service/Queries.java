@@ -19,7 +19,8 @@ import org.springframework.util.MultiValueMap;
 @Service
 public interface Queries {
     String prefixes =
-            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n";
+            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
+            "PREFIX foaf: <http://xmlns.com/foaf/0.1/> \n" ;
 
     enum QueryType { OPTIMIZED, DETAILED }
 
@@ -27,8 +28,8 @@ public interface Queries {
 
     Query getQueryClassInstancesCount(String classUri, MultiValueMap<String, String> filters);
 
-    default Query getQueryClassInstances(String classUri,
-        MultiValueMap<String, String> filters, int limit, int offset) {
+    default
+    Query getQueryClassDescriptions(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "DESCRIBE ?instance \n" +
@@ -46,8 +47,34 @@ public interface Queries {
         return query;
     }
 
-    default Query getQueryClassInstancesLabels(String classUri,
-        MultiValueMap<String, String> filters, int limit, int offset) {
+    default
+    Query getQueryClassInstances(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+                "CONSTRUCT { \n" +
+                "\t ?instance a ?class; \n" +
+                "\t\t rdfs:label ?label; \n" +
+                "\t\t foaf:depiction ?depiction; \n" +
+                "\t\t rdfs:comment ?comment . \n" +
+                "} WHERE { \n" +
+                "\t { SELECT DISTINCT ?instance \n" +
+                "\t\t WHERE { \n" +
+                "\t\t\t ?instance a ?class . \n" +
+                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                getFilterPatternsAnd(filters) +
+                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
+                "} \n" +
+                "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                "\t\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
+                "\t\t OPTIONAL { ?instance rdfs:comment ?comment } \n" +
+                "}");
+        pQuery.setIri("class", classUri);
+        Query query = pQuery.asQuery();
+        return query;
+    }
+
+    default
+    Query getQueryClassInstancesLabels(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "CONSTRUCT { ?resource rdfs:label ?label } \n" +

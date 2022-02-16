@@ -265,19 +265,30 @@ public class AnalizeDataset {
         return graphs;
     }
 
-    public void retrieveClassInstances(OutputStream out, Dataset dataset, Class datasetClass,
-        MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
+    public void retrieveClassDescriptions(OutputStream out, Dataset dataset, Class datasetClass,
+                    MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
-                queries(dataset).getQueryClassInstances(classUri.toString(), filters, size,size * page),
+                queries(dataset).getQueryClassDescriptions(classUri.toString(), filters, size,size * page),
                 endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });
     }
 
+    public void retrieveClassInstances(OutputStream out, Dataset dataset, Class datasetClass,
+                                       MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
+        URI classUri = datasetClass.getUri();
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
+            Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
+                    queries(dataset).getQueryClassInstances(classUri.toString(), filters, size,size * page),
+                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+            RDFDataMgr.write(out, model, format);
+        });
+    }
+
     public void getLinkedResourcesLabels(OutputStream out, Dataset dataset, Class datasetClass,
-        MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
+                    MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
