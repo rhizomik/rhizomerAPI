@@ -39,7 +39,7 @@ public interface Queries {
                 "\t\t\t ?instance a ?class . \n" +
                 "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 getFilterPatternsAnd(filters) +
-                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
+                "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
                 "\t } \n" +
                 "}");
         pQuery.setIri("class", classUri);
@@ -62,7 +62,7 @@ public interface Queries {
                 "\t\t\t ?instance a ?class . \n" +
                 "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 getFilterPatternsAnd(filters) +
-                "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
+                "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
                 "} \n" +
                 "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 "\t\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
@@ -84,7 +84,7 @@ public interface Queries {
             "\t\t\t ?instance a ?class . \n" +
             "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
             getFilterPatternsAnd(filters) +
-            "\t\t } ORDER BY LCASE(?label) LIMIT " + limit + " OFFSET " + offset + " \n" +
+            "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
             "\t } \n" +
             "\t { \n" +
             "\t\t ?instance ?property ?resource . \n" +
