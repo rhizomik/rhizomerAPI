@@ -143,7 +143,7 @@ public interface Queries {
             "\t { SELECT ?class ?prop ?proplabel (COUNT(DISTINCT ?s) AS ?uses) \n" +
             "\t\t WHERE { \n" +
             "\t\t\t ?s ?prop ?resource . \n" +
-            "\t\t\t ?resource a ?class . \n" +
+            "\t\t\t OPTIONAL { ?resource a ?class } \n" +
             "\t\t\t FILTER NOT EXISTS { ?subclass rdfs:subClassOf ?class . ?resource a ?subclass } \n" +
             "\t\t\t OPTIONAL { ?prop rdfs:label ?proplabel FILTER LANGMATCHES(LANG(?proplabel), \"en\")  } \n" +
             "\t\t\t OPTIONAL { ?prop rdfs:label ?proplabel } \n" +

@@ -28,6 +28,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.riot.RiotException;
 import org.apache.jena.update.UpdateRequest;
+import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.XSD;
 import org.slf4j.Logger;
@@ -334,8 +335,9 @@ public class AnalizeDataset {
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
-                if (!soln.contains("?range")) continue;
-                Resource range = soln.getResource("?range");
+                Resource range = OWL.Thing;
+                if (soln.contains("?range"))
+                    range = soln.getResource("?range");
                 if (!soln.contains("?prop")) continue;
                 Resource property = soln.getResource("?prop");
                 if (isOmittedProperty(property.getURI())) continue;
