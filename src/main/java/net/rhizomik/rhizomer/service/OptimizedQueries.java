@@ -27,21 +27,6 @@ public class OptimizedQueries implements Queries {
     }
 
     @Override
-    public Query getQueryClassInstancesCount(String classUri,
-        MultiValueMap<String, String> filters) {
-        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(
-            "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
-            "WHERE { \n" +
-            "\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(filters) +
-            "}");
-        pQuery.setIri("class", classUri);
-        Query query = pQuery.asQuery();
-        return query;
-    }
-
-    @Override
     public Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         if (sampleSize > 0 && coverage > 0.0) {

@@ -26,7 +26,19 @@ public interface Queries {
 
     Query getQueryClasses();
 
-    Query getQueryClassInstancesCount(String classUri, MultiValueMap<String, String> filters);
+    default
+    Query getQueryClassInstancesCount(String classUri, MultiValueMap<String, String> filters) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(
+                "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
+                        "WHERE { \n" +
+                        "\t ?instance a ?class . \n" +
+                        getFilterPatternsAnd(filters) +
+                        "}");
+        pQuery.setIri("class", classUri);
+        Query query = pQuery.asQuery();
+        return query;
+    }
 
     default
     Query getQueryClassDescriptions(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
