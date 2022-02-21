@@ -288,6 +288,64 @@ public class AnalizeDataset {
         });
     }
 
+    public int retrieveSearchInstancesCount(Dataset dataset, String text) {
+        AtomicInteger count = new AtomicInteger();
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
+            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+                    queries(dataset).getQuerySearchInstancesCount(text),
+                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+            while (result.hasNext()) {
+                QuerySolution soln = result.nextSolution();
+                if (soln.contains("?n"))
+                    count.addAndGet(soln.getLiteral("?n").getInt());
+            }
+        });
+        return count.get();
+    }
+
+    public void searchInstances(OutputStream out, Dataset dataset, String text,
+                                int page, int size, RDFFormat format) {
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
+            Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
+                    queries(dataset).getQuerySearchInstances(text, size,size * page),
+                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+            RDFDataMgr.write(out, model, format);
+        });
+    }
+
+    public List<Value> searchInstancesTypeFacetValues(Dataset dataset, String text, int page, int size) {
+        List<Value> rangeValues = new ArrayList<>();
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
+            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+                queries(dataset).getQuerySearchTypeFacet(text, size, size * page, true),
+                endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+            while (result.hasNext()) {
+                QuerySolution soln = result.nextSolution();
+                if (soln.contains("?class")) {
+                    RDFNode value = soln.get("?class");
+                    int count = soln.getLiteral("?count").getInt();
+                    String label = null;
+                    if (soln.contains("?label"))
+                        label = soln.getLiteral("?label").getString();
+                    String uri = null;
+                    if (value.isResource())
+                        uri = value.asResource().getURI();
+                    String curie = null;
+                    if (uri != null)
+                        try {
+                            curie = prefixCCMap.abbreviate(new URL(uri).toString());
+                        } catch (Exception ignored) {
+                        }
+                    if (value.isLiteral())
+                        rangeValues.add(new Value(value.asLiteral().getString(), count, uri, curie, label));
+                    else
+                        rangeValues.add(new Value(value.toString(), count, uri, curie, label));
+                }
+            }
+        });
+        return rangeValues;
+    }
+
     public void getLinkedResourcesLabels(OutputStream out, Dataset dataset, Class datasetClass,
                     MultiValueMap<String, String> filters, int page, int size, RDFFormat format) {
         URI classUri = datasetClass.getUri();
