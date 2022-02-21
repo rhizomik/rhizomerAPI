@@ -86,6 +86,67 @@ public interface Queries {
     }
 
     default
+    Query getQuerySearchInstancesCount(String text) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(
+                "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
+                "WHERE { \n" +
+                "\t ?instance a ?class ; ?property ?value \n" +
+                "\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
+                "}");
+        pQuery.setLiteral("text", text.toLowerCase());
+        Query query = pQuery.asQuery();
+        return query;
+    }
+
+    default
+    Query getQuerySearchInstances(String text, int limit, int offset) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+                "CONSTRUCT { \n" +
+                "\t ?instance a ?class; \n" +
+                "\t\t rdfs:label ?label; \n" +
+                "\t\t foaf:depiction ?depiction; \n" +
+                "\t\t ?property ?value . \n" +
+                "} WHERE { \n" +
+                "\t { SELECT DISTINCT ?instance \n" +
+                "\t\t WHERE { \n" +
+                "\t\t\t ?instance a ?class ; ?property ?value \n" +
+                "\t\t\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
+                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
+                "} \n" +
+                "\t\t ?instance a ?class ; ?property ?value \n" +
+                "\t\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
+                "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                "\t\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
+                "}");
+        pQuery.setLiteral("text", text.toLowerCase());
+        Query query = pQuery.asQuery();
+        return query;
+    }
+
+    default
+    Query getQuerySearchTypeFacet(String text, int limit, int offset, boolean ordered) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+                "SELECT ?class ?label (COUNT(DISTINCT ?instance) AS ?count) \n" +
+                "WHERE { \n" +
+                "\t ?instance a ?class ; ?property ?value \n" +
+                "\t\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
+                "\t OPTIONAL { ?class rdfs:label ?label \n" +
+                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+                "\t OPTIONAL { ?class rdfs:label ?label } \n" +
+                "} GROUP BY ?class ?label");
+        pQuery.setLiteral("text", text.toLowerCase());
+        Query query = pQuery.asQuery();
+        if (limit > 0) query.setLimit(limit);
+        if (offset > 0) query.setOffset(offset);
+        if (ordered) query.addOrderBy("count", -1);
+        return query;
+    }
+
+    default
     Query getQueryClassInstancesLabels(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
