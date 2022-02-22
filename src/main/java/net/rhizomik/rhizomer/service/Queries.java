@@ -26,7 +26,19 @@ public interface Queries {
 
     Query getQueryClasses();
 
-    Query getQueryClassInstancesCount(String classUri, MultiValueMap<String, String> filters);
+    default
+    Query getQueryClassInstancesCount(String classUri, MultiValueMap<String, String> filters) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(
+                "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
+                        "WHERE { \n" +
+                        "\t ?instance a ?class . \n" +
+                        getFilterPatternsAnd(filters) +
+                        "}");
+        pQuery.setIri("class", classUri);
+        Query query = pQuery.asQuery();
+        return query;
+    }
 
     default
     Query getQueryClassDescriptions(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
@@ -70,6 +82,67 @@ public interface Queries {
                 "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
+        return query;
+    }
+
+    default
+    Query getQuerySearchInstancesCount(String text) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(
+                "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
+                "WHERE { \n" +
+                "\t ?instance a ?class ; ?property ?value \n" +
+                "\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
+                "}");
+        pQuery.setLiteral("text", text.toLowerCase());
+        Query query = pQuery.asQuery();
+        return query;
+    }
+
+    default
+    Query getQuerySearchInstances(String text, int limit, int offset) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+                "CONSTRUCT { \n" +
+                "\t ?instance a ?class; \n" +
+                "\t\t rdfs:label ?label; \n" +
+                "\t\t foaf:depiction ?depiction; \n" +
+                "\t\t ?property ?value . \n" +
+                "} WHERE { \n" +
+                "\t { SELECT DISTINCT ?instance \n" +
+                "\t\t WHERE { \n" +
+                "\t\t\t ?instance a ?class ; ?property ?value \n" +
+                "\t\t\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
+                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
+                "} \n" +
+                "\t\t ?instance a ?class ; ?property ?value \n" +
+                "\t\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
+                "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                "\t\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
+                "}");
+        pQuery.setLiteral("text", text.toLowerCase());
+        Query query = pQuery.asQuery();
+        return query;
+    }
+
+    default
+    Query getQuerySearchTypeFacet(String text, int limit, int offset, boolean ordered) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+                "SELECT ?class ?label (COUNT(DISTINCT ?instance) AS ?count) \n" +
+                "WHERE { \n" +
+                "\t ?instance a ?class ; ?property ?value \n" +
+                "\t\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
+                "\t OPTIONAL { ?class rdfs:label ?label \n" +
+                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+                "\t OPTIONAL { ?class rdfs:label ?label } \n" +
+                "} GROUP BY ?class ?label");
+        pQuery.setLiteral("text", text.toLowerCase());
+        Query query = pQuery.asQuery();
+        if (limit > 0) query.setLimit(limit);
+        if (offset > 0) query.setOffset(offset);
+        if (ordered) query.addOrderBy("count", -1);
         return query;
     }
 
@@ -299,15 +372,26 @@ public interface Queries {
             values.forEach(value -> {
                 String property = property_range.split(" ")[0];
                 String range = property_range.indexOf(" ") > 0 ? property_range.split(" ")[1] : null;
-                String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
-                String pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
-                if (!value.equals("null")) {
-                    pattern += "FILTER ( STR(?v" + propertyValueVar + ") = " +
-                            value.replaceAll("[<>]", "\"") + " ) \n";
-                }
-                filtersPatterns.append(pattern);
+                filtersPatterns.append(convertFilterToSparqlPattern(property, range, value));
             });
         });
         return filtersPatterns.toString();
+    }
+
+    default String convertFilterToSparqlPattern(String property, String range, String value) {
+        String pattern = "";
+        if (property.equalsIgnoreCase("urn:rhz:contains")) {
+            pattern += "\t ?instance ?anyProperty ?text . FILTER ( CONTAINS(LCASE(STR(?text)), "
+                    + value.toLowerCase() + ") )";
+        }
+        else {
+            String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
+            pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
+            if (!value.equals("null")) {
+                pattern += "FILTER ( STR(?v" + propertyValueVar + ") = " +
+                        value.replaceAll("[<>]", "\"") + " ) \n";
+            }
+        }
+        return pattern;
     }
 }

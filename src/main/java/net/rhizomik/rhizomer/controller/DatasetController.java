@@ -119,6 +119,45 @@ public class DatasetController {
                 .body(stream);
     }
 
+    @RequestMapping(value = "/datasets/{datasetId}/search", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StreamingResponseBody> searchInstances(
+            @PathVariable String datasetId,
+            @RequestParam(value = "text") String text,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        logger.info("Search instances containing {}", text);
+        StreamingResponseBody stream = outputStream ->
+            analizeDataset.searchInstances(outputStream, dataset, text, page, size, RDFFormat.JSONLD);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(stream);
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/searchCount", method = RequestMethod.GET)
+    public @ResponseBody int retrieveClassFacetedInstancesCount(
+            @PathVariable String datasetId, @RequestParam(value = "text") String text, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        logger.info("Count instances containing {}", text);
+        return analizeDataset.retrieveSearchInstancesCount(dataset, text);
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/searchTypes", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<Value> searchTypesFacet(
+            @PathVariable String datasetId,
+            @RequestParam(value = "text") String text,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        logger.info("Retrieve search types facet for {}", text);
+        return analizeDataset.searchInstancesTypeFacetValues(dataset, text, page, size);
+    }
+
     @RequestMapping(value = "/datasets/{datasetId}/incoming", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Collection<IncomingFacet> datasetResourceIncomingFacets(

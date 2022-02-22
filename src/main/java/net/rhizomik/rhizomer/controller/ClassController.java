@@ -38,7 +38,7 @@ public class ClassController {
     @Autowired private DatasetRepository datasetRepository;
     @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
-    @Autowired private AnalizeDataset analiseDataset;
+    @Autowired private AnalizeDataset analizeDataset;
     @Autowired private SecurityController securityController;
 
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.GET)
@@ -49,7 +49,7 @@ public class ClassController {
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieving top {} classes in Dataset {} containing '{}'", top, datasetId, containing);
         if (dataset.getClasses().isEmpty() && endPointRepository.existsByDataset(dataset))
-            analiseDataset.detectDatasetClasses(dataset);
+            analizeDataset.detectDatasetClasses(dataset);
         if (top >= 0)
             return dataset.getClassesContaining(containing, top);
         return dataset.getClassesContaining(containing);
@@ -88,7 +88,7 @@ public class ClassController {
         filters.remove("page");
         filters.remove("size");
         StreamingResponseBody stream = outputStream ->
-                analiseDataset.retrieveClassInstances(outputStream,
+                analizeDataset.retrieveClassInstances(outputStream,
                         dataset, datasetClass, filters, page, size, RDFFormat.JSONLD);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +109,7 @@ public class ClassController {
         filters.remove("page");
         filters.remove("size");
         StreamingResponseBody stream = outputStream ->
-            analiseDataset.retrieveClassDescriptions(outputStream,
+            analizeDataset.retrieveClassDescriptions(outputStream,
                 dataset, datasetClass, filters, page, size, RDFFormat.JSONLD);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -130,7 +130,7 @@ public class ClassController {
         filters.remove("page");
         filters.remove("size");
         StreamingResponseBody stream = outputStream ->
-            analiseDataset.getLinkedResourcesLabels(outputStream,
+            analizeDataset.getLinkedResourcesLabels(outputStream,
                 dataset, datasetClass, filters, page, size, RDFFormat.JSONLD);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +145,7 @@ public class ClassController {
         securityController.checkPublicOrOwner(dataset, auth);
         Class datasetClass = getClass(classCurie, dataset);
         logger.info("Retrieved instances count for Class {} in Dataset {}", classCurie, datasetId);
-        return analiseDataset.retrieveClassInstancesCount(dataset, datasetClass, filters);
+        return analizeDataset.retrieveClassInstancesCount(dataset, datasetClass, filters);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.POST)

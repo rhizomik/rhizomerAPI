@@ -28,39 +28,6 @@ public class DetailedQueries implements Queries {
     }
 
     @Override
-    public Query getQueryClassInstancesCount(String classUri,
-        MultiValueMap<String, String> filters) {
-        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(
-            "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
-            "WHERE { \n" +
-            "\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(filters) +
-            "}");
-        pQuery.setIri("class", classUri);
-        Query query = pQuery.asQuery();
-        return query;
-    }
-
-    // PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    //
-    // SELECT  ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) AS ?allLiteral) (SAMPLE(?labels) AS ?label) (SAMPLE(?rlabels) AS ?rlabel)
-    // FROM <https://rhizomik.net>
-    // FROM NAMED <https://rhizomik.net/ontologies>
-    // WHERE
-    //  { { SELECT  ?instance WHERE { ?instance  a  <http://vivoweb.org/ontology/core#ConferencePoster> } }
-    //    ?instance  ?property  ?object
-    //    OPTIONAL { ?object  a   ?type FILTER(?type != rdfs:Resource) }
-    //    BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range)
-    //    BIND(isLiteral(?object) AS ?isLiteral)
-    //    OPTIONAL { GRAPH <https://rhizomik.net/ontologies> { ?property  rdfs:label  ?labels FILTER langMatches(lang(?labels), "en") } }
-    //  	OPTIONAL { GRAPH <https://rhizomik.net/ontologies> { ?property  rdfs:label  ?labels } }
-    //    OPTIONAL { GRAPH <https://rhizomik.net/ontologies> { ?range  rdfs:label  ?rlabels FILTER langMatches(lang(?rlabels), "en") } }
-    //    OPTIONAL { GRAPH <https://rhizomik.net/ontologies> { ?range  rdfs:label  ?rlabels } }
-    //  }
-    // GROUP BY ?property ?range
-
-    @Override
     public Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         if (sampleSize > 0 && coverage > 0.0) {
@@ -166,27 +133,26 @@ public class DetailedQueries implements Queries {
     }
 
     @Override
-    public String getFilterPatternsAnd(MultiValueMap<String, String> filters) {
-        StringBuilder filtersPatterns = new StringBuilder();
-        filters.forEach((property_range, values) -> {
-            values.forEach(value -> {
-                String propertyUri = property_range.split(" ")[0];
-                String rangeUri = property_range.indexOf(" ") > 0 ? property_range.split(" ")[1] : null;
-                String propertyValueVar = Integer.toUnsignedString(propertyUri.hashCode() + value.hashCode());
-                String pattern = "\t ?instance <" + propertyUri + "> ?v" + propertyValueVar + " . \n";
-                if (!value.equals("null")) {
-                    pattern +=
+    public String convertFilterToSparqlPattern(String property, String range, String value) {
+        String pattern = "";
+        if (property.equalsIgnoreCase("urn:rhz:contains")) {
+            pattern += "\t ?instance ?anyProperty ?text . FILTER ( CONTAINS(LCASE(STR(?text)), "
+                    + value.toLowerCase() + ") )";
+        }
+        else {
+            String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
+            pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
+            if (!value.equals("null")) {
+                pattern +=
                         ( value.startsWith("<") && value.endsWith(">") ?
-                            "\t FILTER( ?v" + propertyValueVar + " = " + value + " )\n" :
-                            "\t FILTER( STR(?v" + propertyValueVar + ") = " + value +
-                                " && ISLITERAL(?v" + propertyValueVar + ")" +
-                                (rangeUri != null ? " && DATATYPE(?v" + propertyValueVar + ") = <" + rangeUri + ">" : "") +
-                                " )\n"
+                                "\t FILTER( ?v" + propertyValueVar + " = " + value + " )\n" :
+                                "\t FILTER( STR(?v" + propertyValueVar + ") = " + value +
+                                        " && ISLITERAL(?v" + propertyValueVar + ")" +
+                                        (range != null ? " && DATATYPE(?v" + propertyValueVar + ") = <" + range + ">" : "") +
+                                        " )\n"
                         );
-                }
-                filtersPatterns.append(pattern);
-            });
-        });
-        return filtersPatterns.toString();
+            }
+        }
+        return pattern;
     }
 }
