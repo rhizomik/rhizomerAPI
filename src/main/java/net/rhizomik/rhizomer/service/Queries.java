@@ -372,15 +372,26 @@ public interface Queries {
             values.forEach(value -> {
                 String property = property_range.split(" ")[0];
                 String range = property_range.indexOf(" ") > 0 ? property_range.split(" ")[1] : null;
-                String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
-                String pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
-                if (!value.equals("null")) {
-                    pattern += "FILTER ( STR(?v" + propertyValueVar + ") = " +
-                            value.replaceAll("[<>]", "\"") + " ) \n";
-                }
-                filtersPatterns.append(pattern);
+                filtersPatterns.append(convertFilterToSparqlPattern(property, range, value));
             });
         });
         return filtersPatterns.toString();
+    }
+
+    default String convertFilterToSparqlPattern(String property, String range, String value) {
+        String pattern = "";
+        if (property.equalsIgnoreCase("urn:rhz:contains")) {
+            pattern += "\t ?instance ?anyProperty ?text . FILTER ( CONTAINS(LCASE(STR(?text)), "
+                    + value.toLowerCase() + ") )";
+        }
+        else {
+            String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
+            pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
+            if (!value.equals("null")) {
+                pattern += "FILTER ( STR(?v" + propertyValueVar + ") = " +
+                        value.replaceAll("[<>]", "\"") + " ) \n";
+            }
+        }
+        return pattern;
     }
 }
