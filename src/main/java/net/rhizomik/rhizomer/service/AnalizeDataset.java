@@ -303,11 +303,10 @@ public class AnalizeDataset {
         return count.get();
     }
 
-    public void searchInstances(OutputStream out, Dataset dataset, String text,
-                                int page, int size, RDFFormat format) {
+    public void searchInstances(OutputStream out, Dataset dataset, String text, int size, RDFFormat format) {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
-                    queries(dataset).getQuerySearchInstances(text, size,size * page),
+                    queries(dataset).getQuerySearchInstances(text, size),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });

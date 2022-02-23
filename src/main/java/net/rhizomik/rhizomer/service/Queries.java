@@ -100,7 +100,7 @@ public interface Queries {
     }
 
     default
-    Query getQuerySearchInstances(String text, int limit, int offset) {
+    Query getQuerySearchInstances(String text, int limit) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "CONSTRUCT { \n" +
@@ -108,21 +108,18 @@ public interface Queries {
                 "\t\t rdfs:label ?label; \n" +
                 "\t\t foaf:depiction ?depiction; \n" +
                 "\t\t ?property ?value . \n" +
+                "\t ?value rdfs:label ?valueLabel; \n" +
                 "} WHERE { \n" +
-                "\t { SELECT DISTINCT ?instance \n" +
-                "\t\t WHERE { \n" +
-                "\t\t\t ?instance a ?class ; ?property ?value \n" +
-                "\t\t\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
-                "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-                "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
-                "} \n" +
-                "\t\t ?instance a ?class ; ?property ?value \n" +
-                "\t\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
-                "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-                "\t\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
+                "\t ?instance a ?class ; ?property ?value \n" +
+                "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
+                "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), ?text) ) || \n" +
+                "\t\t CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
+                "\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                "\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
                 "}");
         pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();
+        if (limit > 0) query.setLimit(limit);
         return query;
     }
 
