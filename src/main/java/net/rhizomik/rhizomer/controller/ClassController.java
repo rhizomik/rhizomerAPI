@@ -31,7 +31,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-@RepositoryRestController
+@RestController
 public class ClassController {
     final Logger logger = LoggerFactory.getLogger(ClassController.class);
 

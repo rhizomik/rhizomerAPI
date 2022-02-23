@@ -35,7 +35,7 @@ import java.net.*;
 import java.util.Collection;
 import java.util.List;
 
-@RepositoryRestController
+@RestController
 public class DatasetController {
     final Logger logger = LoggerFactory.getLogger(DatasetController.class);
 
@@ -124,13 +124,12 @@ public class DatasetController {
     public ResponseEntity<StreamingResponseBody> searchInstances(
             @PathVariable String datasetId,
             @RequestParam(value = "text") String text,
-            @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Search instances containing {}", text);
         StreamingResponseBody stream = outputStream ->
-            analizeDataset.searchInstances(outputStream, dataset, text, page, size, RDFFormat.JSONLD);
+            analizeDataset.searchInstances(outputStream, dataset, text, size, RDFFormat.JSONLD);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(stream);

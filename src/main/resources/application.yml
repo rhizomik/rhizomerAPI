@@ -4,6 +4,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  mvc:
+    async:
+      request-timeout: 300000
 
 rhizomer:
   default-password: password
