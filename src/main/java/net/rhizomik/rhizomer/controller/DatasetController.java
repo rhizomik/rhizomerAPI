@@ -19,11 +19,9 @@ import org.apache.jena.riot.RDFLanguages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -31,6 +29,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.*;
 import java.util.Collection;
 import java.util.List;
@@ -170,8 +169,9 @@ public class DatasetController {
 
     @RequestMapping(value = "/datasets/{datasetId}/update", method = RequestMethod.PUT,
             consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StreamingResponseBody> updateDatasetResource(ServletServerHttpRequest request,
-               @PathVariable String datasetId, @RequestParam(value = "uri") URI resourceUri, Authentication auth)
+    public ResponseEntity<StreamingResponseBody> updateDatasetResource(InputStream content,
+            @PathVariable String datasetId, @RequestParam(value = "uri") URI resourceUri,
+            @RequestHeader("Content-Type") String contentType, Authentication auth)
             throws IOException {
         Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
@@ -180,10 +180,9 @@ public class DatasetController {
                 "Dataset '%s' does not have at least one endpoint", datasetId);
         SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
         Validate.isTrue(defaultEndPoint.isWritable(),"Dataset '%s' endpoint is not writable", datasetId);
-        String contentType = request.getServletRequest().getContentType();
         Validate.notEmpty(contentType, "A Content-Type header should be defined corresponding to the input RDF data syntax");
         Model model = ModelFactory.createDefaultModel();
-        RDFDataMgr.read(model, request.getBody(), RDFLanguages.contentTypeToLang(contentType));
+        RDFDataMgr.read(model, content, RDFLanguages.contentTypeToLang(contentType));
         StreamingResponseBody stream = outputStream ->
                 analizeDataset.updateDatasetResource(dataset, defaultEndPoint, resourceUri, model, outputStream, RDFFormat.JSONLD);
         return ResponseEntity.ok()
