@@ -107,41 +107,45 @@ public class PrefixCCMap extends PrefixMapStd {
     }
 
     protected String prefixCCNamespaceLookup(String prefix) {
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            String response = restTemplate.getForObject("http://prefix.cc/{prefix}.file.{format}", String.class, prefix, "txt");
-            String[] pair = response.split("\\s");
-            if (pair.length == 2)
-                return pair[1];
-        } catch (RestClientException e) {
-            switch (prefix) {
-                case "rdf": return RDF.getURI();
-                case "rdfs": return RDFS.getURI();
-                case "owl": return OWL.getURI();
-                case "xsd": return XSD.getURI();
-                case "foaf": return FOAF.getURI();
-                default: logger.info("Prefix {} not found in http://prefix.cc \n", prefix);
+        switch (prefix) {
+            case "rdf": return RDF.getURI();
+            case "rdfs": return RDFS.getURI();
+            case "owl": return OWL.getURI();
+            case "xsd": return XSD.getURI();
+            case "foaf": return FOAF.getURI();
+            default: {
+                RestTemplate restTemplate = new RestTemplate();
+                try {
+                    String response = restTemplate.getForObject("http://prefix.cc/{prefix}.file.{format}", String.class, prefix, "txt");
+                    String[] pair = response.split("\\s");
+                    if (pair.length == 2)
+                        return pair[1];
+                } catch (RestClientException e) {
+                    logger.info("Prefix {} not found in http://prefix.cc \n", prefix);
+                }
             }
         }
         return null;
     }
 
     protected String prefixCCReverseLookup(String uri) {
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            String response = restTemplate.getForObject("http://prefix.cc/reverse?uri={uri}&format={format}", String.class, uri, "txt");
-            String[] pair = response.split("\\s");
-            if (pair.length == 2)
-                return pair[0];
-        } catch (RestClientException e) {
-            switch (uri) {
-                case "http://www.w3.org/1999/02/22-rdf-syntax-ns#": return "rdf";
-                case "http://www.w3.org/2000/01/rdf-schema#": return "rdfs";
-                case "http://www.w3.org/2002/07/owl#": return "owl";
-                case "http://www.w3.org/2001/XMLSchema#": return "xsd";
-                case "http://xmlns.com/foaf/0.1/": return "foaf";
-                case "http://purl.org/net/schemas/space/": return "space";
-                default: logger.info("Prefix for URI {} not found in http://prefix.cc", uri);
+        switch (uri) {
+            case "http://www.w3.org/1999/02/22-rdf-syntax-ns#": return "rdf";
+            case "http://www.w3.org/2000/01/rdf-schema#": return "rdfs";
+            case "http://www.w3.org/2002/07/owl#": return "owl";
+            case "http://www.w3.org/2001/XMLSchema#": return "xsd";
+            case "http://xmlns.com/foaf/0.1/": return "foaf";
+            case "http://purl.org/net/schemas/space/": return "space";
+            default: {
+                RestTemplate restTemplate = new RestTemplate();
+                try {
+                    String response = restTemplate.getForObject("http://prefix.cc/reverse?uri={uri}&format={format}", String.class, uri, "txt");
+                    String[] pair = response.split("\\s");
+                    if (pair.length == 2)
+                        return pair[0];
+                } catch (RestClientException e) {
+                    logger.info("Prefix for URI {} not found in http://prefix.cc", uri);
+                }
             }
         }
         return null;
