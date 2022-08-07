@@ -9,20 +9,19 @@
 
 <http://purl.org/net/schemas/space> rdf:type owl:Ontology .
 
-
 space:Mission
 	rdf:type owl:Class ;
     rdfs:label "Mission"^^xsd:string .
 
 	space:missionRole rdf:type owl:ObjectProperty ;
-        rdfs:label "missionRole"^^xsd:string ;
+        rdfs:label "mission role"^^xsd:string ;
         rdfs:domain space:Mission ;
         rdfs:range space:MissionRole .
 
 
 space:MissionRole
 	rdf:type owl:Class ;
-    rdfs:label "MissionRole"^^xsd:string .
+    rdfs:label "Mission Role"^^xsd:string .
 
 	space:actor
 		rdf:type owl:ObjectProperty ;

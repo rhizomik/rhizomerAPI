@@ -8,8 +8,6 @@
 @prefix space: <http://purl.org/net/schemas/space/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-space:MissionRole rdfs:label "Mission Role" .
-
 <http://data.kasabi.com/dataset/nasa/mission/apollo-13>
   rdf:type space:Mission ;
   dct:title "Apollo 13" ;
