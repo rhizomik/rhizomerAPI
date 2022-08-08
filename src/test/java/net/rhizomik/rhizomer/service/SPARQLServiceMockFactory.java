@@ -6,6 +6,7 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import net.rhizomik.rhizomer.model.Dataset;
@@ -118,14 +119,14 @@ public class SPARQLServiceMockFactory {
         }).when(mock).clearGraph(any(URL.class), anyString(), any());
 
         doAnswer(invocationOnMock -> {
-            Dataset dataset = invocationOnMock.getArgument(0);
+            URI targetGraph = invocationOnMock.getArgument(0);
             SPARQLEndPoint endPoint = invocationOnMock.getArgument(1);
             List<String> targetGraphs = endPoint.getGraphs();
-            targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-            UpdateRequest update = queries.getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
+            targetGraphs.addAll(endPoint.getOntologyGraphs());
+            UpdateRequest update = queries.getUpdateInferTypes(targetGraphs, targetGraph.toString());
             mock.queryUpdate(endPoint.getQueryEndPoint(), update, null);
             return null;
-        }).when(mock).inferTypes(any(Dataset.class), any(SPARQLEndPoint.class), any());
+        }).when(mock).inferTypes(any(URI.class), any(SPARQLEndPoint.class), any());
 
         return mock;
     }

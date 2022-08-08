@@ -83,7 +83,7 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             List<String> targetGraphs = endPoint.getGraphs();
             if (dataset.isInferenceEnabled()) {
-                sparqlService.inferTypes(dataset, endPoint,
+                sparqlService.inferTypes(dataset.getDatasetInferenceGraph(), endPoint,
                         withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
                 targetGraphs.add(dataset.getDatasetInferenceGraph().toString());
             }

@@ -3,6 +3,8 @@ package net.rhizomik.rhizomer.service;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
+
+import java.net.URI;
 import java.net.http.HttpClient;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -125,32 +127,12 @@ public class SPARQLService {
         queryUpdate(sparqlEndPoint, clearGraph, creds);
     }
 
-    public void inferTypes(Dataset dataset, SPARQLEndPoint endPoint, HttpClient creds) {
+    public void inferTypes(URI targetGraph, SPARQLEndPoint endPoint, HttpClient creds) {
         if (endPoint.isWritable()) {
-            List<String> targetGraphs = endPoint.getGraphs();
-            targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-            UpdateRequest update = queries
-                    .getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
+            List<String> sourceGraphs = endPoint.getGraphs();
+            sourceGraphs.addAll(endPoint.getOntologyGraphs());
+            UpdateRequest update = queries.getUpdateInferTypes(sourceGraphs, targetGraph.toString());
             queryUpdate(endPoint.getUpdateEndPoint(), update, creds);
-        }
-    }
-
-    public void inferTypesConstruct(Dataset dataset, String timeout, SPARQLEndPoint endPoint, HttpClient creds) {
-        if(endPoint.isWritable()) {
-            List<String> targetGraphs = endPoint.getGraphs();
-            targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-            UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
-            queryUpdate(endPoint.getUpdateEndPoint(), createGraph, creds);
-            Model inferredModel = queryConstruct(
-                    endPoint, timeout, queries.getQueryInferTypes(), targetGraphs, creds);
-            /*File inferenceOut = new File(dataset.getId() + "-inference.ttl");
-            try {
-                RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);
-            } catch (FileNotFoundException e) {
-                logger.error(e.getMessage());
-            }*/
-            loadModel(endPoint.getUpdateEndPoint(), endPoint.getType(), dataset.getDatasetInferenceGraph().toString(),
-                    inferredModel, creds);
         }
     }
 }
