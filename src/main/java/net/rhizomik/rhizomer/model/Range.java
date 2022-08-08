@@ -65,7 +65,7 @@ public class Range {
 
     public boolean isRelation() { return !allLiteral; }
 
-    public void setIsRelation(boolean isRelation) { this.allLiteral = !isRelation; }
+    public void setRelation(boolean isRelation) { this.allLiteral = !isRelation; }
 
     public DatasetClassFacetRangeId getId() { return id; }
 

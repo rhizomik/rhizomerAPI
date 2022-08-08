@@ -66,6 +66,18 @@ public class SPARQLServiceMockFactory {
                     return qexec.execSelect();
                 });
 
+        when(mock.querySelect(any(URL.class), anyString(), any(Query.class), anyList(), anyList(), any()))
+                .thenAnswer(invocationOnMock -> {
+                    Query query = invocationOnMock.getArgument(2);
+                    List<String> graphs = invocationOnMock.getArgument(3);
+                    List<String> namedGraphs = invocationOnMock.getArgument(4);
+                    graphs.forEach(query::addGraphURI);
+                    namedGraphs.forEach(query::addNamedGraphURI);
+                    logger.info("Sending to {} query: \n{}", "mockServer", query);
+                    QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
+                    return qexec.execSelect();
+                });
+
         when(mock.queryConstruct(any(SPARQLEndPoint.class), anyString(), any(Query.class), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(2);

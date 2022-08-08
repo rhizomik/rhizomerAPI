@@ -20,9 +20,9 @@ public class OptimizedQueries implements Queries {
             "SELECT ?class ?label (COUNT(DISTINCT ?instance) as ?n) \n" +
             "WHERE { \n" +
             "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
-            "\t OPTIONAL { ?class rdfs:label ?label \n" +
-            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
-            "\t OPTIONAL { ?class rdfs:label ?label } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?label \n" +
+            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\") } } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?label } } \n" +
             "} GROUP BY ?class ?label");
     }
 
@@ -37,8 +37,8 @@ public class OptimizedQueries implements Queries {
                 addSamples(classCount, sampleSize, coverage) + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\") } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels } } \n" +
                 "} GROUP BY ?property");
         } else {
             pQuery.setCommandText(prefixes +
@@ -47,8 +47,8 @@ public class OptimizedQueries implements Queries {
                 "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\") } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels } } \n" +
                 "} GROUP BY ?property");
         }
         pQuery.setIri("class", classUri);

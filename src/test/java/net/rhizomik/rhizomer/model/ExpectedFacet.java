@@ -18,13 +18,15 @@ public class ExpectedFacet {
 
     public ExpectedFacet() {}
 
-    public ExpectedFacet(String uri, String label, int timesUsed, int differentValues, boolean relation, String range) {
+    public ExpectedFacet(String uri, String label, int timesUsed, int differentValues, boolean relation, String range,
+                         String domainURI) {
         this.uri = uri;
         this.label = label;
         this.timesUsed = timesUsed;
         this.differentValues = differentValues;
         this.relation = relation;
         this.range = range;
+        this.domainURI = domainURI;
     }
 
     public ExpectedFacet(Facet datasetFacet) {

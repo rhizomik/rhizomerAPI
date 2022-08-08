@@ -25,14 +25,14 @@ Feature: Describe resource in dataset
       | http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr |
     Then The retrieved incoming facets are
       | range-curie | curie       | label  | uses | domain-curie      | domain-label | count |
-      | foaf:Person | space:actor | actor  | 1    | space:MissionRole | Mission Role | 1     |
+      | foaf:Person | space:actor | actor  | 1    | space:MissionRole | MissionRole  | 1     |
 
   Scenario: Extracts one incoming facets with one domain and two uses
     When I extract the incoming facets from dataset "apollo" for resource
       | http://data.kasabi.com/dataset/nasa/mission/apollo-13 |
     Then The retrieved incoming facets are
       | range-curie   | curie         | label   | uses | domain-curie      | domain-label | count |
-      | space:Mission | space:mission | mission | 2    | space:MissionRole | Mission Role | 2     |
+      | space:Mission | space:mission | mission | 2    | space:MissionRole | MissionRole  | 2     |
 
   Scenario: Extracts two incoming facets with one domain each and one use
     When I extract the incoming facets from dataset "apollo" for resource

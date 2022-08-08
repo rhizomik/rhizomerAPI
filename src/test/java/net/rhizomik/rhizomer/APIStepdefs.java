@@ -140,16 +140,15 @@ public class APIStepdefs {
         return new ExpectedFacet(entry.get("uri"), entry.get("label"),
                 Integer.parseInt(entry.getOrDefault("timesUsed", "0")),
                 Integer.parseInt(entry.getOrDefault("differentValues", "0")),
-                Boolean.parseBoolean(entry.get("relation")),
-                entry.get("range"));
+                Boolean.parseBoolean(entry.get("relation")), entry.get("range"), entry.get("domainURI"));
     }
 
     @DataTableType
     public ExpectedRange expectedRangeEntry(Map<String, String> entry) {
-        return new ExpectedRange(entry.get("uri"), entry.get("label"),
+        return new ExpectedRange(entry.get("uri"), entry.get("label"), entry.get("curie"),
                 Integer.parseInt(entry.getOrDefault("timesUsed", "0")),
                 Integer.parseInt(entry.getOrDefault("differentValues", "0")),
-                Boolean.parseBoolean(entry.get("isRelation")));
+                Boolean.parseBoolean(entry.get("relation")));
     }
 
     @DataTableType
@@ -630,8 +629,20 @@ public class APIStepdefs {
                 .andExpect(status().isOk());
     }
 
+    @When("^I retrieve facet \"([^\"]*)\" ranges$")
+    public void iRetrieveFacetRange(String facetId, List<ExpectedRange> expectedRange) throws Throwable {
+        String json = mockMvc.perform(get(facetId + "/ranges")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(authenticate()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        List<ExpectedRange> actualRange = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ExpectedRange.class));
+        assertThat(actualRange, containsInAnyOrder(expectedRange.toArray()));
+    }
+
     @When("^I retrieve facet range \"([^\"]*)\" values$")
-    public void iRetrieveFacetRangesValues(String facetRangeId, List<ExpectedRangeValue> expectedRangeValues) throws Throwable {
+    public void iRetrieveFacetRangeValues(String facetRangeId, List<ExpectedRangeValue> expectedRangeValues) throws Throwable {
         String json = mockMvc.perform(get(facetRangeId + "/values")
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()))

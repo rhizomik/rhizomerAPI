@@ -36,15 +36,21 @@ public class SPARQLService {
     @Autowired Queries queries;
 
     public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, HttpClient creds) {
-        return this.querySelect(sparqlEndpoint, timeout, query, new ArrayList<>(), creds);
+        return this.querySelect(sparqlEndpoint, timeout, query, new ArrayList<>(), new ArrayList<>(), creds);
     }
 
     public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
+        return this.querySelect(sparqlEndpoint, timeout, query, graphs, new ArrayList<>(), creds);
+    }
+
+    public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, List<String> graphs,
+                                 List<String> namedGraphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
         qBuilder.query(query).endpoint(sparqlEndpoint.toString()).httpClient(creds);
         graphs.forEach(qBuilder::addDefaultGraphURI);
+        namedGraphs.forEach(qBuilder::addNamedGraphURI);
         if (timeout != null)
             qBuilder.param("timeout", timeout);
         QueryExecutionHTTP qExec = qBuilder.build();

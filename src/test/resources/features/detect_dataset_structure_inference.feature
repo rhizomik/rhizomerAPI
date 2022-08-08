@@ -57,3 +57,7 @@ Feature: Detect dataset structure considering inference
     And The retrieved facet is
       | uri                                           | label        | timesUsed | differentValues | range             | relation   |
       | http://purl.org/net/schemas/space/missionRole | mission role | 2         | 2               | space:MissionRole | true       |
+    And I retrieve facet "/datasets/apollo13/classes/space:Mission/facets/space:missionRole" ranges
+      | uri                                             | label        | timesUsed | differentValues | curie             | relation |
+      | http://purl.org/net/schemas/space/MissionRole   | Mission Role | 2         | 2               | space:MissionRole | true     |
+

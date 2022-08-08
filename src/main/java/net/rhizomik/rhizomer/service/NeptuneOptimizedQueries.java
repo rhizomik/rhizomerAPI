@@ -27,8 +27,8 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
                 addSamples(classCount, sampleSize, coverage) + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\") } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels } } \n" +
                 "} GROUP BY ?property");
         } else {
             pQuery.setCommandText(prefixes +
@@ -38,8 +38,8 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
                 "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
                 "\t ?instance ?property ?object \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\") } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels } } \n" +
                 "} GROUP BY ?property");
         }
         pQuery.setIri("class", classUri);

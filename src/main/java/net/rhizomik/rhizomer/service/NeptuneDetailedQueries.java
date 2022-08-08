@@ -24,9 +24,9 @@ public class NeptuneDetailedQueries extends DetailedQueries {
                 "WHERE { \n" +
                 "\t hint:Query hint:joinOrder \"Ordered\" .\n" +
                 "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
-                "\t OPTIONAL { ?class rdfs:label ?label \n" +
-                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
-                "\t OPTIONAL { ?class rdfs:label ?label } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?label \n" +
+                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?label } } \n" +
                 "} GROUP BY ?class ?label");
     }
 
@@ -45,10 +45,10 @@ public class NeptuneDetailedQueries extends DetailedQueries {
                 "\t OPTIONAL { ?object a ?type }\n" +
                 "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\") } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\") } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?range rdfs:label ?rlabels } } \n" +
                 "} GROUP BY ?property ?range");
         } else {
             pQuery.setCommandText(prefixes +
@@ -61,10 +61,10 @@ public class NeptuneDetailedQueries extends DetailedQueries {
                 "\t OPTIONAL { ?object a ?type }\n" +
                 "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
                 "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\") } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\") } } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?range rdfs:label ?rlabels } } \n" +
                 "} GROUP BY ?property ?range");
         }
         pQuery.setIri("class", classUri);

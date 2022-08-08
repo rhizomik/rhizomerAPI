@@ -88,7 +88,7 @@ public class AnalizeDataset {
                 targetGraphs.add(dataset.getDatasetInferenceGraph().toString());
             }
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(dataset).getQueryClasses(), targetGraphs,
+                    queries(dataset).getQueryClasses(), targetGraphs, endPoint.getOntologyGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
@@ -121,7 +121,8 @@ public class AnalizeDataset {
                     queries(datasetClass.getDataset()).getQueryClassFacets(
                             datasetClass.getUri().toString(), datasetClass.getDataset().getSampleSize(),
                             datasetClass.getInstanceCount(), datasetClass.getDataset().getCoverage()),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 if (!soln.contains("?property")) continue;
