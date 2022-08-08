@@ -474,24 +474,6 @@ public class AnalizeDataset {
         }
     }
 
-    public void clearOntologies(Dataset dataset, SPARQLEndPoint endPoint) {
-        if (endPoint.isWritable()) {
-            sparqlService.clearGraph(endPoint.getUpdateEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
-                    withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
-        }
-    }
-
-    public void loadOntologies(Dataset dataset, SPARQLEndPoint endPoint, Set<String> ontologies) {
-        if (endPoint.isWritable()) {
-            ontologies.forEach(ontologyUriStr -> {
-                sparqlService.loadURI(endPoint.getUpdateEndPoint(), endPoint.getType(),
-                        dataset.getDatasetOntologiesGraph().toString(), ontologyUriStr,
-                        withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
-                dataset.addDatasetOntology(ontologyUriStr);
-            });
-        }
-    }
-
     private HttpClient withCreds(String username, String password) {
         if (username == null || password == null )
             return HttpClient.newHttpClient();

@@ -12,8 +12,11 @@ Feature: Describe resource in dataset
     And The server for dataset "apollo" stores data
       | data                            | graph                                 |
       | data/nasa-apollo13.ttl          | http://rhizomik.net/dataset/apollo13  |
+      | data/nasa-schema.ttl            | http://rhizomik.net/schema/nasa       |
     And The following data graphs are set for dataset "apollo"
       | http://rhizomik.net/dataset/apollo13          |
+    And I add the graphs to the dataset "apollo" ontologies
+      | http://rhizomik.net/schema/nasa         |
     And The query type for dataset "apollo" is set to "DETAILED"
     And The inference for dataset "apollo" is set to "false"
 

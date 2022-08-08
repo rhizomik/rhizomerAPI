@@ -95,7 +95,6 @@ public class DatasetController {
         if (endPointRepository.existsByDataset(dataset)) {
             logger.info("Deleting endpoints for dataset {}", datasetId);
             SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
-            analizeDataset.dropGraph(defaultEndPoint, dataset.getDatasetOntologiesGraph().toString());
             analizeDataset.dropGraph(defaultEndPoint, dataset.getDatasetInferenceGraph().toString());
             endPointRepository.deleteByDataset(dataset);
         }

@@ -490,16 +490,16 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", hasItems(graphs.asList().toArray())));
     }
 
-    @And("^The following ontologies are set for dataset \"([^\"]*)\"$")
-    public void theFollowingOntologiesAreSetForDataset(String datasetId, DataTable ontologies) throws Throwable {
-        String ontologiesJson = mapper.writeValueAsString(ontologies.asList());
-        this.result = mockMvc.perform(put("/datasets/{datasetId}/ontologies", datasetId)
+    @When("^I add the graphs to the dataset \"([^\"]*)\" ontologies$")
+    public void iAddTheGraphToTheDatasetOntologies(String datasetId, DataTable graphs) throws Throwable {
+        String graphsJson = mapper.writeValueAsString(graphs.asList());
+        this.result = mockMvc.perform(post("/datasets/{id}/endpoints/{id}/ontologies", datasetId, endPointId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(ontologiesJson)
+                .content(graphsJson)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
-        this.result.andExpect(status().isOk());
-        this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.asList().toArray())));
+        this.result.andExpect(status().isCreated());
+        this.result.andExpect(jsonPath("$", hasItems(graphs.asList().toArray())));
     }
 
     @When("^The following data graphs are set for dataset \"([^\"]*)\"$")
@@ -515,10 +515,23 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", containsInAnyOrder(validGraphs.toArray())));
     }
 
+    @When("^The following ontology graphs are set for dataset \"([^\"]*)\"$")
+    public void theFollowingOntologyGraphsAreSetForDataset(String datasetId, DataTable graphs) throws Throwable {
+        List<String> validGraphs = graphs.asList().stream().filter(Objects::nonNull).collect(Collectors.toList());
+        String graphsJson = mapper.writeValueAsString(validGraphs);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/endpoints/{id}/ontologies", datasetId, endPointId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(graphsJson)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
+        this.result.andExpect(status().isOk());
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(validGraphs.toArray())));
+    }
+
     @And("^The following ontologies are defined for the dataset \"([^\"]*)\"$")
     public void theFollowingOntologiesAreDefinedForTheDataset(String datasetId, DataTable ontologies) throws Throwable {
         List<String> validOntologies = ontologies.asList().stream().filter(Objects::nonNull).collect(Collectors.toList());
-        this.result = mockMvc.perform(get("/datasets/{datasetId}/ontologies", datasetId)
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/endpoints/{id}/ontologies", datasetId, endPointId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         this.result.andExpect(jsonPath("$", containsInAnyOrder(validOntologies.toArray())));
@@ -533,20 +546,27 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", containsInAnyOrder(validGraphs.toArray())));
     }
 
-    @And("^The size of dataset \"([^\"]*)\" ontologies graph is (\\d+)$")
-    @Transactional
-    public void theSizeOfDatasetOntologiesGraphIs(String datasetId, long expectedSize) throws Throwable {
-        Dataset dataset = datasetRepository.findById(datasetId).get();
-        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
-        long actualSize = analizeDataset.countGraphTriples(defaultEndPoint, dataset.getDatasetOntologiesGraph().toString());
-        assertThat(actualSize, is(expectedSize));
-    }
-
     @And("^The size of dataset \"([^\"]*)\" data graphs is (\\d+)$")
     @Transactional
     public void theSizeOfDatasetGraphsIs(String datasetId, long expectedSize) throws Throwable {
         Dataset dataset = datasetRepository.findById(datasetId).get();
         this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/graphs", datasetId, endPointId)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
+        String json = this.result.andReturn().getResponse().getContentAsString();
+        List<String> datasetGraphs = mapper.readValue(json,
+                mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
+        long actualSize = datasetGraphs.stream().mapToLong(
+                graph -> analizeDataset.countGraphTriples(defaultEndPoint, graph)).sum();
+        assertThat(actualSize, is(expectedSize));
+    }
+
+    @And("^The size of dataset \"([^\"]*)\" ontology graphs is (\\d+)$")
+    @Transactional
+    public void theSizeOfDatasetOntologyGraphsIs(String datasetId, long expectedSize) throws Throwable {
+        Dataset dataset = datasetRepository.findById(datasetId).get();
+        this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/ontologies", datasetId, endPointId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         String json = this.result.andReturn().getResponse().getContentAsString();

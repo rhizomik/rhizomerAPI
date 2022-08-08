@@ -37,8 +37,6 @@ public class Dataset {
     private double coverage = 0.0;
     private boolean isPublic = false;
 
-    @ElementCollection
-    private Set<String> datasetOntologies = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset", cascade = CascadeType.ALL)
     @OrderBy("instanceCount DESC")
     private List<Class> classes = new ArrayList<>();
@@ -48,11 +46,6 @@ public class Dataset {
 
     public Dataset(String id) {
         this.id = id;
-    }
-
-    public Dataset(String id, Set<String> ontologies) throws MalformedURLException {
-        this.id = id;
-        this.datasetOntologies = ontologies;
     }
 
     @JsonIgnore
@@ -84,13 +77,6 @@ public class Dataset {
 
     public void removeClass(Class aClass) { classes.remove(aClass); }
 
-    public void addDatasetOntology(String ontology) { this.datasetOntologies.add(ontology); }
-
-    @JsonIgnore
-    public List<String> getDatasetOntologies() { return new ArrayList<>(datasetOntologies); }
-
-    public void setDatasetOntologies(Set<String> datasetOntologies) { this.datasetOntologies = datasetOntologies; }
-
     @JsonIgnore
     public URI getDatasetUri() {
         URI datasetURI = null;
@@ -100,17 +86,6 @@ public class Dataset {
             logger.error(e.getMessage());
         }
         return datasetURI;
-    }
-
-    @JsonIgnore
-    public URI getDatasetOntologiesGraph() {
-        URI datasetOntologiesGraphURI = null;
-        try {
-            datasetOntologiesGraphURI = new URI(getDatasetUri()+"/ontologies");
-        } catch (URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-        return datasetOntologiesGraphURI;
     }
 
     @JsonIgnore

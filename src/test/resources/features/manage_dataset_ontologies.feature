@@ -9,31 +9,35 @@ Feature: Manage dataset ontologies
     Given I login as "user" with password "password"
     And There is a new dataset by "user" with id "apollo13"
     And The dataset "apollo13" has a mock server
-    And The following ontologies are set for dataset "apollo13"
-      | data/nasa-schema.ttl            |
-    And The size of dataset "apollo13" ontologies graph is 27
+    And The server for dataset "apollo13" stores data
+      | data                            | graph                                 |
+      | data/nasa-schema.ttl            | http://rhizomik.net/schema/nasa       |
+      | data/foaf.rdf                   | http://xmlns.com/foaf/0.1/            |
+    And I add the graphs to the dataset "apollo13" ontologies
+      | http://rhizomik.net/schema/nasa            |
+    And The size of dataset "apollo13" ontology graphs is 27
 
   Scenario: Add an ontology to a dataset
-    When I add ontologies to the dataset "apollo13"
-      | data/foaf.rdf                   |
+    When I add the graphs to the dataset "apollo13" ontologies
+      | http://xmlns.com/foaf/0.1/      |
     Then the response status is 201
     And The following ontologies are defined for the dataset "apollo13"
-      | data/nasa-schema.ttl            |
-      | data/foaf.rdf                   |
-    And The size of dataset "apollo13" ontologies graph is 658
+      | http://rhizomik.net/schema/nasa            |
+      | http://xmlns.com/foaf/0.1/                 |
+    And The size of dataset "apollo13" ontology graphs is 658
 
   Scenario: Set the dataset ontologies
-    When The following ontologies are set for dataset "apollo13"
-      | data/foaf.rdf                   |
+    When The following ontology graphs are set for dataset "apollo13"
+      | http://xmlns.com/foaf/0.1/                 |
     Then the response status is 200
     And The following ontologies are defined for the dataset "apollo13"
-      | data/foaf.rdf                   |
-    And The size of dataset "apollo13" ontologies graph is 631
+      | http://xmlns.com/foaf/0.1/                 |
+    And The size of dataset "apollo13" ontology graphs is 631
 
   Scenario: Clear dataset ontologies
-    When The following ontologies are set for dataset "apollo13"
+    When The following ontology graphs are set for dataset "apollo13"
       |                                 |
     Then the response status is 200
     And The following ontologies are defined for the dataset "apollo13"
       |                                 |
-    And The size of dataset "apollo13" ontologies graph is 0
+    And The size of dataset "apollo13" ontology graphs is 0
