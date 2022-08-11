@@ -11,6 +11,7 @@
 <http://data.kasabi.com/dataset/nasa/mission/apollo-13>
   rdf:type space:Mission ;
   dct:title "Apollo 13" ;
+  rdfs:label "Apollo 13" ;
   space:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander> ;
   space:missionRole <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot> ;
   owl:sameAs <http://dbpedia.org/resource/Apollo_13> ;
@@ -21,18 +22,29 @@
   space:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
   space:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> ;
   rdfs:label "Apollo 13 Mission Commander" ;
+  rdfs:label "Comandante de la Misión Apollo 13"@es ;
+.
+<http://data.kasabi.com/dataset/nasa/roles/mission-commander>
+  rdfs:label "Mission Commander" ;
+  rdfs:label "Comandante de la Misión"@es ;
 .
 <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot>
   rdf:type space:MissionRole ;
   space:actor <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr> ;
   space:mission <http://data.kasabi.com/dataset/nasa/mission/apollo-13> ;
   space:role <http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot> ;
-  rdfs:label "Apollo 13 Lunar Module Pilot" ;
+  rdfs:label "Apollo 13 Lunar Module Pilot"@en ;
+  rdfs:label "Piloto del Módulo Lunar Apollo 13"@es ;
+.
+<http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot>
+  rdfs:label "Lunar Module Pilot"@en ;
+  rdfs:label "Piloto del Módulo Lunar"@es ;
 .
 <http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr>
   rdf:type foaf:Person ;
   space:performed <http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot> ;
   foaf:name "Fred Wallace Haise, Jr." ;
+  rdfs:label "Fred Wallace Haise, Jr." ;
 .
 <http://data.kasabi.com/dataset/nasa/person/jamesarthurlovelljr>
   rdf:type foaf:Person ;
@@ -40,4 +52,5 @@
   owl:sameAs <http://dbpedia.org/resource/Jim_Lovell> ;
   foaf:name "James A. Lowell, Jr"^^xsd:string ;
   foaf:name "James Arthur Lovell, Jr." ;
+  rdfs:label "James Arthur Lovell, Jr." ;
 .

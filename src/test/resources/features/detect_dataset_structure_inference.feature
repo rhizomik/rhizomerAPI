@@ -37,6 +37,7 @@ Feature: Detect dataset structure considering inference
       | uri                                             | label     | timesUsed | differentValues | range           | relation   |
       | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
       | http://purl.org/net/schemas/space/performed     | performed | 2       | 2               | space:MissionRole | true       |
+      | http://www.w3.org/2000/01/rdf-schema#label      | label     | 2         | 2               | xsd:string        | false      |
       | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type      | 2       | 1               | rdfs:Resource     | true       |
       | http://www.w3.org/2002/07/owl#sameAs            | sameAs    | 1       | 1               | rdfs:Resource     | true       |
     And exists a facet with id "/datasets/apollo13/classes/foaf:Person/facets/foaf:name"
@@ -51,6 +52,7 @@ Feature: Detect dataset structure considering inference
       | uri                                             | label        | timesUsed | differentValues | range             | relation   |
       | http://purl.org/net/schemas/space/missionRole   | mission role | 2         | 2               | space:MissionRole | true       |
       | http://purl.org/dc/terms/title                  | title        | 1         | 1               | xsd:string        | false      |
+      | http://www.w3.org/2000/01/rdf-schema#label      | label        | 1         | 1               | xsd:string        | false      |
       | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type         | 1         | 1               | rdfs:Resource     | true       |
       | http://www.w3.org/2002/07/owl#sameAs            | sameAs       | 1         | 1               | rdfs:Resource     | true       |
     And exists a facet with id "/datasets/apollo13/classes/space:Mission/facets/space:missionRole"

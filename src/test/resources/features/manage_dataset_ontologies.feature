@@ -15,7 +15,7 @@ Feature: Manage dataset ontologies
       | data/foaf.rdf                   | http://xmlns.com/foaf/0.1/            |
     And I add the graphs to the dataset "apollo13" ontologies
       | http://rhizomik.net/schema/nasa            |
-    And The size of dataset "apollo13" ontology graphs is 27
+    And The size of dataset "apollo13" ontology graphs is 36
 
   Scenario: Add an ontology to a dataset
     When I add the graphs to the dataset "apollo13" ontologies
@@ -24,7 +24,7 @@ Feature: Manage dataset ontologies
     And The following ontologies are defined for the dataset "apollo13"
       | http://rhizomik.net/schema/nasa            |
       | http://xmlns.com/foaf/0.1/                 |
-    And The size of dataset "apollo13" ontology graphs is 658
+    And The size of dataset "apollo13" ontology graphs is 667
 
   Scenario: Set the dataset ontologies
     When The following ontology graphs are set for dataset "apollo13"

@@ -11,43 +11,53 @@
 
 space:Mission
 	rdf:type owl:Class ;
-    rdfs:label "Mission"^^xsd:string .
-
+    rdfs:label "Mission"@en ;
+    rdfs:label "Misión"@es ;
+.
 	space:missionRole rdf:type owl:ObjectProperty ;
-        rdfs:label "mission role"^^xsd:string ;
+        rdfs:label "mission role"@en ;
+        rdfs:label "rol en la misión"@es ;
         rdfs:domain space:Mission ;
-        rdfs:range space:MissionRole .
-
-
+        rdfs:range space:MissionRole ;
+.
 space:MissionRole
 	rdf:type owl:Class ;
-    rdfs:label "Mission Role"^^xsd:string .
-
+    rdfs:label "Mission Role"@en ;
+    rdfs:label "Rol en la Misión"@es ;
+.
 	space:actor
 		rdf:type owl:ObjectProperty ;
-        rdfs:label "actor"^^xsd:string ;
+        rdfs:label "actor" ;
         rdfs:domain space:MissionRole ;
-        rdfs:range foaf:Person.
-
+        rdfs:range foaf:Person ;
+    .
 	space:mission
 		rdf:type owl:ObjectProperty ;
-        rdfs:label "mission"^^xsd:string ;
+        rdfs:label "mission"@en ;
+        rdfs:label "misión"@es ;
         rdfs:domain space:MissionRole ;
-        rdfs:range space:Mission .
-
+        rdfs:range space:Mission ;
+    .
 	space:role
 		rdf:type owl:ObjectProperty ;
-		rdfs:label "role"^^xsd:string ;
+		rdfs:label "role"@en ;
+		rdfs:label "rol"@es ;
         rdfs:domain space:MissionRole ;
-        rdfs:range space:Role .
-
-	space:performed
-		rdf:type owl:ObjectProperty ;
-        rdfs:label "performed"^^xsd:string ;
-        rdfs:domain foaf:Person ;
-        rdfs:range space:MissionRole .
-
-
+        rdfs:range space:Role ;
+    .
 space:Role
 	rdf:type owl:Class ;
-    rdfs:label "Role"^^xsd:string .
+    rdfs:label "Role"@en ;
+    rdfs:label "Rol"@es ;
+.
+foaf:Person
+    rdfs:label "Person"@en ;
+    rdfs:label "Persona"@es ;
+.
+    space:performed
+        rdf:type owl:ObjectProperty ;
+        rdfs:label "performed"@en ;
+        rdfs:label "realizó"@es ;
+        rdfs:domain foaf:Person ;
+        rdfs:range space:MissionRole ;
+    .
