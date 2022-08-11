@@ -68,6 +68,7 @@ public interface Queries {
                 "\t\t rdfs:label ?label; \n" +
                 "\t\t foaf:depiction ?depiction; \n" +
                 "\t\t rdfs:comment ?comment . \n" +
+                "\t ?class rdfs:label ?classLabel . \n" +
                 "} WHERE { \n" +
                 "\t { SELECT DISTINCT ?instance \n" +
                 "\t\t WHERE { \n" +
@@ -79,6 +80,7 @@ public interface Queries {
                 "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 "\t\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
                 "\t\t OPTIONAL { ?instance rdfs:comment ?comment } \n" +
+                "\t\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?classLabel } } \n" +
                 "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
@@ -108,7 +110,8 @@ public interface Queries {
                 "\t\t rdfs:label ?label; \n" +
                 "\t\t foaf:depiction ?depiction; \n" +
                 "\t\t ?property ?value . \n" +
-                "\t ?value rdfs:label ?valueLabel; \n" +
+                "\t ?class rdfs:label ?classLabel . \n" +
+                "\t ?value rdfs:label ?valueLabel . \n" +
                 "} WHERE { \n" +
                 "\t ?instance a ?class ; ?property ?value \n" +
                 "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
@@ -116,6 +119,7 @@ public interface Queries {
                 "\t\t CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
                 "\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 "\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?classLabel } } \n" +
                 "}");
         pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();
