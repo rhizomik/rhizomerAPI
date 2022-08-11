@@ -59,8 +59,8 @@ Feature: Detect dataset structure
       | http://xmlns.com/foaf/0.1/name                  | name      | 3         | 3               | xsd:string        | false      |
     And I retrieve facet range "/datasets/mixed/classes/foaf:Person/facets/space:performed/ranges/space:MissionRole" values
       | value                                                                         | count | curie                     | uri                                                                           | label                        |
-      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander          | 1     | kasabi:commander          | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander          | Apollo 13 Mission Commander  |
-      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | 1     | kasabi:lunar-module-pilot | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | Apollo 13 Lunar Module Pilot |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander          | 1     | kasabi:commander          | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander          | Comandante de la MisiÃ³n Apollo 13@es \|\| Apollo 13 Mission Commander     |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | 1     | kasabi:lunar-module-pilot | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | Piloto del MÃ³dulo Lunar Apollo 13@es \|\| Apollo 13 Lunar Module Pilot@en |
 
   Scenario: Change the dataset graph to another of the server graphs and extract classes
     Given The following data graphs are set for dataset "mixed"

@@ -48,24 +48,25 @@ public class NeptuneOptimizedQueries extends OptimizedQueries {
 
     @Override
     public Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
-            MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
+                  MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-            "SELECT ?value ?label (COUNT(?value) AS ?count) \n" +
-            "WHERE { \n" +
+            "SELECT ?value ?count (GROUP_CONCAT(?langLabel; SEPARATOR = \" || \") AS ?label) \n" +
+            "\t WHERE { \n" +
             "hint:Query hint:joinOrder \"Ordered\" .\n" +
-            "\t { SELECT DISTINCT ?instance " +
+            "\t { SELECT ?resource (COUNT(?resource) AS ?count) \n" +
             "\t\t WHERE { \n" +
-            "\t\t\t ?instance a ?class . \n" +
+            "\t\t { SELECT DISTINCT ?instance " +
+            "\t\t\t WHERE { \n" +
+            "\t\t\t\t ?instance a ?class . \n" +
             getFilterPatternsAnd(filters) +
+            "\t\t\t } \n" +
             "\t\t } \n" +
-            "\t } \n" +
-            "\t ?instance ?property ?resource . \n" +
-            "\t OPTIONAL { ?resource rdfs:label ?label \n" +
-            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
-            "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
-            "\t BIND( str(?resource) AS ?value)\n \n" +
-            "} GROUP BY ?value ?label");
+            "\t\t ?instance ?property ?resource . \n" +
+            "\t\t } GROUP BY ?resource } \n" +
+            "\t BIND(str(?resource) AS ?value) \n" +
+            "\t OPTIONAL { ?resource rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "} GROUP BY ?value ?count");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);
         Query query = pQuery.asQuery();
