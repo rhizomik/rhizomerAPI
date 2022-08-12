@@ -3,7 +3,7 @@
 Feature: Describe resource in dataset
   In order to explore the instances in a dataset
   As a data manager
-  I want to detect all the classes defined in the dataset and their facets
+  I want to retrieve all the triples directly associated to a particular resource
 
   Background: Existing dataset in local server storing file data
     Given I login as "user" with password "password"
@@ -20,24 +20,24 @@ Feature: Describe resource in dataset
     And The query type for dataset "apollo" is set to "DETAILED"
     And The inference for dataset "apollo" is set to "false"
 
-  Scenario: Extracts one incoming facet with one domain and one use
-    When I extract the incoming facets from dataset "apollo" for resource
-      | http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr |
-    Then The retrieved incoming facets are
-      | range-curie | curie       | label  | uses | domain-curie      | domain-label | count |
-      | foaf:Person | space:actor | actor  | 1    | space:MissionRole | MissionRole  | 1     |
-
-  Scenario: Extracts one incoming facets with one domain and two uses
-    When I extract the incoming facets from dataset "apollo" for resource
-      | http://data.kasabi.com/dataset/nasa/mission/apollo-13 |
-    Then The retrieved incoming facets are
-      | range-curie   | curie         | label   | uses | domain-curie      | domain-label | count |
-      | space:Mission | space:mission | mission | 2    | space:MissionRole | MissionRole  | 2     |
-
-  Scenario: Extracts two incoming facets with one domain each and one use
-    When I extract the incoming facets from dataset "apollo" for resource
-      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander |
-    Then The retrieved incoming facets are
-      | range-curie       | curie             | label       | uses | domain-curie  | domain-label | count |
-      | space:MissionRole | space:missionRole | missionRole | 1    | space:Mission | Mission      | 1     |
-      | space:MissionRole | space:performed   | performed   | 1    | foaf:Person   | Person       | 1     |
+  Scenario: Describe a resource which includes labels in different languages from data and ontology graphs
+    When I get the description for resource "http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot" in dataset "apollo"
+    Then The retrieved data includes the following triples
+      | subject | predicate | object |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | http://www.w3.org/2000/01/rdf-schema#label      | "Piloto del Módulo Lunar Apollo 13"@es                       |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | http://www.w3.org/2000/01/rdf-schema#label      | "Apollo 13 Lunar Module Pilot"@en                            |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | http://purl.org/net/schemas/space/role          | http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | http://purl.org/net/schemas/space/mission       | http://data.kasabi.com/dataset/nasa/mission/apollo-13        |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | http://purl.org/net/schemas/space/actor         | http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr|
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/lunar-module-pilot | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | http://purl.org/net/schemas/space/MissionRole                |
+      | http://purl.org/net/schemas/space/mission                                     | http://www.w3.org/2000/01/rdf-schema#label      | "mission"@en                                                 |
+      | http://purl.org/net/schemas/space/mission                                     | http://www.w3.org/2000/01/rdf-schema#label      | "misión"@es                                                  |
+      | http://data.kasabi.com/dataset/nasa/mission/apollo-13                         | http://www.w3.org/2000/01/rdf-schema#label      | "Apollo 13"                                                  |
+      | http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot                  | http://www.w3.org/2000/01/rdf-schema#label      | "Lunar Module Pilot"@en                                      |
+      | http://data.kasabi.com/dataset/nasa/roles/lunar-module-pilot                  | http://www.w3.org/2000/01/rdf-schema#label      | "Piloto del Módulo Lunar"@es                                 |
+      | http://purl.org/net/schemas/space/role                                        | http://www.w3.org/2000/01/rdf-schema#label      | "role"@en                                                    |
+      | http://purl.org/net/schemas/space/role                                        | http://www.w3.org/2000/01/rdf-schema#label      | "rol"@es                                                     |
+      | http://purl.org/net/schemas/space/actor                                       | http://www.w3.org/2000/01/rdf-schema#label      | "actor"                                                      |
+      | http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr                 | http://www.w3.org/2000/01/rdf-schema#label      | "Fred Wallace Haise, Jr."                                    |
+      | http://purl.org/net/schemas/space/MissionRole                                 | http://www.w3.org/2000/01/rdf-schema#label      | "Mission Role"@en                                            |
+      | http://purl.org/net/schemas/space/MissionRole                                 | http://www.w3.org/2000/01/rdf-schema#label      | "Rol en la Misión"@es                                        |
