@@ -21,7 +21,11 @@ import net.rhizomik.rhizomer.service.AnalizeDataset;
 import net.rhizomik.rhizomer.service.DetailedQueries;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.json.JSONObject;
@@ -41,6 +45,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -49,8 +54,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
@@ -161,6 +168,30 @@ public class APIStepdefs {
     public ExpectedRelationship expectedRelationship(Map<String, String> entry) {
         return new ExpectedRelationship(entry.get("classCurie"), entry.get("propertyCurie"), entry.get("rangeCurie"),
                 Integer.parseInt(entry.getOrDefault("uses", "0")));
+    }
+
+    @DataTableType
+    public Statement expectedStatement(Map<String, String> entry) {
+        String sString = entry.get("subject");
+        String pString = entry.get("predicate");
+        String oString = entry.get("object");
+        String literal = null;
+        String lang = null;
+        if (oString.contains("\"")) {
+            oString = oString.replaceAll("\"", "");
+            if (oString.contains("@")) {
+                literal = oString.split("@")[0];
+                lang = oString.split("@")[1];
+            } else {
+                literal = oString;
+            }
+        }
+        return ResourceFactory.createStatement(
+                ResourceFactory.createResource(sString),
+                ResourceFactory.createProperty(pString),
+                lang != null ? ResourceFactory.createLangLiteral(literal, lang) :
+                literal != null ? ResourceFactory.createPlainLiteral(literal) :
+                ResourceFactory.createResource(oString));
     }
 
     @Given("^I login as \"([^\"]*)\" with password \"([^\"]*)\"$")
@@ -627,6 +658,27 @@ public class APIStepdefs {
                 .with(authenticate()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
+    }
+
+    @When("^I get the description for resource \"([^\"]*)\" in dataset \"([^\"]*)\"$")
+    public void iExtractTheIncomingFacetsFromDatasetForResources(String resource, String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/describe?uri={resource}", datasetId,
+                        resource)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(authenticate()))
+                .andExpect(request().asyncStarted());
+    }
+
+    @Then("The retrieved data includes the following triples")
+    public void theRetrievedDataIncludesTheFollowingTriples(List<Statement> expectedTriples) throws Exception {
+        // this.mockMvc.perform(asyncDispatch(this.result.andReturn())).andExpect(content().string("http"));
+        String data = this.result.andDo(MvcResult::getAsyncResult)
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        Model model = ModelFactory.createDefaultModel()
+                .read(IOUtils.toInputStream(data, "UTF-8"), null, "JSON-LD");
+        List<Statement> actualTriples = model.listStatements().toList();
+        assertThat(actualTriples, containsInAnyOrder(expectedTriples.toArray()));
     }
 
     @When("^I retrieve facet \"([^\"]*)\" ranges$")
