@@ -92,11 +92,9 @@ public class SPARQLServiceMockFactory {
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(2);
                     List<String> graphs = invocationOnMock.getArgument(3);
-                    Model queryDataset = ModelFactory.createDefaultModel();
-                    graphs.forEach(graph -> queryDataset.add(dataset.getNamedModel(graph)));
                     graphs.forEach(query::addGraphURI);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
-                    QueryExecution qexec = QueryExecutionFactory.create(query, queryDataset);
+                    QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
                     return qexec.execConstruct();
                 });
 
