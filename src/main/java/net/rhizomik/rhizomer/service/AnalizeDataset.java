@@ -15,6 +15,9 @@ import net.rhizomik.rhizomer.repository.RangeRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.Queries.QueryType;
 import java.net.http.HttpClient;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -379,7 +382,8 @@ public class AnalizeDataset {
                     queries(dataset).getQueryDescribeResource(resourceUri), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             model.add(sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
-                    queries(dataset).getQueryDescribeResourceLabels(resourceUri), endPoint.getGraphs(),
+                    queries(dataset).getQueryDescribeResourceLabels(resourceUri),
+                    Stream.concat(endPoint.getGraphs().stream(), endPoint.getOntologyGraphs().stream()).collect(Collectors.toList()),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword())));
             RDFDataMgr.write(out, model, format);
         });
