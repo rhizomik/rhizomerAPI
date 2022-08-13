@@ -56,8 +56,6 @@ public class AnalizeDataset {
     @Autowired private SPARQLService sparqlService;
     @Autowired private OptimizedQueries optimizedQueries;
     @Autowired private DetailedQueries detailedQueries;
-    @Autowired private NeptuneOptimizedQueries neptuneOptimizedQueries;
-    @Autowired private NeptuneDetailedQueries neptuneDetailedQueries;
     @Autowired private VirtuosoDetailedQueries virtuosoDetailedQueries;
     @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
@@ -68,17 +66,12 @@ public class AnalizeDataset {
         Queries.QueryType queryType = dataset.getQueryType();
         SPARQLEndPoint.ServerType serverType = endPointRepository.findByDataset(dataset).get(0).getType();
         if (queryType == QueryType.DETAILED) {
-            if (serverType == SPARQLEndPoint.ServerType.NEPTUNE)
-                return neptuneDetailedQueries;
-            else if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO)
+            if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO)
                 return virtuosoDetailedQueries;
             else
                 return detailedQueries;
         } else {
-            if (serverType == SPARQLEndPoint.ServerType.NEPTUNE)
-                return neptuneOptimizedQueries;
-            else
-                return optimizedQueries;
+            return optimizedQueries;
         }
     }
 
