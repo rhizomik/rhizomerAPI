@@ -59,7 +59,8 @@ public class SPARQLService {
         return result;
     }
 
-    public Model queryDescribe(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
+    public Model queryDescribe(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs,
+                               HttpClient creds) {
         graphs.forEach(query::addGraphURI);
         String queryString = query.toString();
         if (endpoint.getType() == SPARQLEndPoint.ServerType.VIRTUOSO) {
@@ -70,7 +71,6 @@ public class SPARQLService {
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), queryString);
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
         qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
-        graphs.forEach(qBuilder::addDefaultGraphURI);
         if (timeout != null)
             qBuilder.param("timeout", timeout);
         if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)
@@ -78,12 +78,13 @@ public class SPARQLService {
         return qBuilder.build().execDescribe();
     }
 
-    public Model queryConstruct(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
+    public Model queryConstruct(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs,
+                                List<String> namedGraphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
+        namedGraphs.forEach(query::addNamedGraphURI);
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), query);
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
         qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
-        graphs.forEach(qBuilder::addDefaultGraphURI);
         if (timeout != null)
             qBuilder.param("timeout", timeout);
         if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)

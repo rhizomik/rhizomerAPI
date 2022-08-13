@@ -280,7 +280,8 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryClassInstances(classUri.toString(), filters, size,size * page),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });
     }
@@ -304,7 +305,8 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQuerySearchInstances(text, size),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });
     }
@@ -348,7 +350,8 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryClassInstancesLabels(classUri.toString(), filters, size,size * page),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });
     }
@@ -376,8 +379,8 @@ public class AnalizeDataset {
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             model.add(sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryDescribeResourceLabels(resourceUri),
-                    Stream.concat(endPoint.getGraphs().stream(), endPoint.getOntologyGraphs().stream()).collect(Collectors.toList()),
-                    withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword())));
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword())));
             RDFDataMgr.write(out, model, format);
         });
     }

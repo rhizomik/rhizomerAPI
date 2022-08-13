@@ -9,9 +9,7 @@ import static org.mockito.Mockito.when;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
-import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -24,7 +22,6 @@ import org.apache.jena.update.UpdateRequest;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by http://rhizomik.net/~roberto/
@@ -88,11 +85,13 @@ public class SPARQLServiceMockFactory {
                     return qexec.execDescribe();
                 });
 
-        when(mock.queryConstruct(any(SPARQLEndPoint.class), anyString(), any(Query.class), anyList(), any()))
+        when(mock.queryConstruct(any(SPARQLEndPoint.class), anyString(), any(Query.class), anyList(), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(2);
                     List<String> graphs = invocationOnMock.getArgument(3);
+                    List<String> namedGraphs = invocationOnMock.getArgument(4);
                     graphs.forEach(query::addGraphURI);
+                    namedGraphs.forEach(query::addNamedGraphURI);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
                     QueryExecution qexec = QueryExecutionFactory.create(query, dataset);
                     return qexec.execConstruct();
