@@ -213,14 +213,14 @@ public class AnalizeDataset {
     }
 
     public List<Value> retrieveRangeValuesContaining(Dataset dataset, Range facetRange,
-           MultiValueMap<String, String> filters, String containing, int top) {
+           MultiValueMap<String, String> filters, String containing, int top, String lang) {
         URI classUri = facetRange.getFacet().getDomain().getUri();
         URI facetUri = facetRange.getFacet().getUri();
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                     queries(dataset).getQueryFacetRangeValuesContaining(classUri.toString(), facetUri.toString(),
-                            facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top),
+                        facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top, lang),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();

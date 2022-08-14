@@ -188,7 +188,7 @@ public interface Queries {
         boolean ordered);
 
     Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
-           MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top);
+           MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang);
 
     default Query getQueryDescribeResource(URI resourceUri) {
         return QueryFactory.create("DESCRIBE <" + resourceUri + ">");

@@ -87,7 +87,7 @@ public class OptimizedQueries implements Queries {
 
     @Override
     public Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
-            MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top) {
+            MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "SELECT DISTINCT ?value ?label \n" +
@@ -100,7 +100,7 @@ public class OptimizedQueries implements Queries {
                 "\t } \n" +
                 "\t ?instance ?property ?resource . \n" +
                 "\t OPTIONAL { ?resource rdfs:label ?label \n" +
-                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+                "\t\t FILTER LANGMATCHES(LANG(?label), \"" + lang + "\")  } \n" +
                 "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
                 "\t BIND( str(?resource) AS ?value) \n" +
                 "\t FILTER( CONTAINS(LCASE(?value), LCASE(?containing)) || CONTAINS(LCASE(?label), LCASE(?containing)) ) \n" +
