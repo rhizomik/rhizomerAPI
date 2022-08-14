@@ -74,6 +74,7 @@ public class OptimizedQueries implements Queries {
             "\t\t } GROUP BY ?resource } \n" +
             "\t BIND(str(?resource) AS ?value) \n" +
             "\t OPTIONAL { ?resource rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?resource rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "} GROUP BY ?value ?count");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);

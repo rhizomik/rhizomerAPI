@@ -183,8 +183,8 @@ public class AnalizeDataset {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                     queries(dataset).getQueryFacetRangeValues(classUri.toString(), facetUri.toString(),
                             facetRange.getUri().toString(), filters, facetRange.getAllLiteral(),
-                            size, size * page, true),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                            size, size * page, true), endPoint.getGraphs(), endPoint.getOntologyGraphs(),
+                    withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 if (soln.contains("?value")) {

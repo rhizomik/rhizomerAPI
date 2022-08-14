@@ -90,6 +90,7 @@ public class DetailedQueries implements Queries {
                     "\t\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
             "\t\t } GROUP BY ?value } \n" +
             "\t OPTIONAL { ?value rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?value rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "} GROUP BY ?value ?count");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);

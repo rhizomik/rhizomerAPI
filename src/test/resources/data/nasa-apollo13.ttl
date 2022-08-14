@@ -23,6 +23,7 @@
   space:role <http://data.kasabi.com/dataset/nasa/roles/mission-commander> ;
   rdfs:label "Apollo 13 Mission Commander" ;
   rdfs:label "Comandante de la Misión Apollo 13"@es ;
+  rdfs:label "Comandante de Misión Apollo 13"@es ;
 .
 <http://data.kasabi.com/dataset/nasa/roles/mission-commander>
   rdfs:label "Mission Commander" ;

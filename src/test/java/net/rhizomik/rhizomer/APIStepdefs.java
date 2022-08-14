@@ -160,7 +160,7 @@ public class APIStepdefs {
 
     @DataTableType
     public ExpectedRangeValue expectedRangeValueEntry(Map<String, String> entry) {
-        return new ExpectedRangeValue(entry.get("value"), entry.get("curie"), entry.get("uri"), entry.get("label"),
+        return new ExpectedRangeValue(entry.get("value"), entry.get("curie"), entry.get("uri"), entry.get("labels"),
                 Integer.parseInt(entry.getOrDefault("count", "0")));
     }
 
