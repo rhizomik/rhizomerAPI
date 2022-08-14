@@ -171,7 +171,10 @@ public interface Queries {
             "\t\t ?resource rdfs:label ?label . \n" +
             " } UNION { \n" +
             "\t\t ?instance ?resource ?object . \n" +
-            "\t\t ?resource rdfs:label ?label . \n" +
+            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
+            " } UNION { \n" +
+            "\t\t ?instance a ?resource . \n" +
+            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
             "} }");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
@@ -204,7 +207,10 @@ public interface Queries {
             "\t ?resource rdfs:label ?label . \n" +
             " } UNION { \n" +
             "\t\t ?instance ?resource ?object . \n" +
-            "\t\t ?resource rdfs:label ?label . \n" +
+            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
+            " } UNION { \n" +
+            "\t\t ?instance a ?resource . \n" +
+            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
             "} }");
         pQuery.setIri("instance", resourceUri.toString());
         Query query = pQuery.asQuery();
