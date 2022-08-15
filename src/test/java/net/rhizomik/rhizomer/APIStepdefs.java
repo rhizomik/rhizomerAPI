@@ -138,7 +138,7 @@ public class APIStepdefs {
 
     @DataTableType
     public ExpectedClass expectedClassEntry(Map<String, String> entry) {
-        return new ExpectedClass(entry.get("id"), entry.get("uri"), entry.get("label"),
+        return new ExpectedClass(entry.get("id"), entry.get("uri"), entry.get("labels"),
                 entry.get("curie"), Integer.parseInt(entry.get("instanceCount")));
     }
 
@@ -259,7 +259,7 @@ public class APIStepdefs {
     public void iCreateAClassWithURILabelAndInstanceCount(String datasetId, String classUriStr, String classLabel, int instanceCount) throws Throwable {
         String json = MessageFormat.format("'{' " +
                 "\"uri\": \"{0}\", " +
-                "\"label\": \"{1}\", " +
+                "\"labelsStr\": \"{1}\", " +
                 "\"instanceCount\": {2,number,integer} '}'", classUriStr, classLabel, instanceCount);
         this.result = mockMvc.perform(post("/datasets/{datasetId}/classes", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)

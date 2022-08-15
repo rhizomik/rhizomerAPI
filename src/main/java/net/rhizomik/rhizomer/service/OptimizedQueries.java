@@ -17,13 +17,15 @@ public class OptimizedQueries implements Queries {
     @Override
     public Query getQueryClasses() {
         return QueryFactory.create(prefixes +
-            "SELECT ?class ?label (COUNT(DISTINCT ?instance) as ?n) \n" +
+            "SELECT ?class ?n (GROUP_CONCAT(?langLabel; SEPARATOR = \" || \") AS ?label) \n" +
             "WHERE { \n" +
-            "\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
-            "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?label \n" +
-            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\") } } \n" +
-            "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?label } } \n" +
-            "} GROUP BY ?class ?label");
+            "\t { SELECT ?class (COUNT(DISTINCT ?instance) as ?n) \n" +
+            "\t\t WHERE { \n" +
+            "\t\t\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
+            "\t\t } GROUP BY ?class } \n" +
+            "\t OPTIONAL { ?class rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "} GROUP BY ?class ?n");
     }
 
     @Override

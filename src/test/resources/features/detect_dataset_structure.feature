@@ -21,7 +21,7 @@ Feature: Detect dataset structure
   Scenario: The extracted classes are those instantiated in the dataset
     When I extract the classes from dataset "mixed"
     Then The retrieved classes are
-      | uri                                           | label       | instanceCount |
+      | uri                                           | labels      | instanceCount |
       | http://xmlns.com/foaf/0.1/Person              | Person      | 2             |
       | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
       | http://purl.org/net/schemas/space/Mission     | Mission     | 1             |
@@ -31,7 +31,7 @@ Feature: Detect dataset structure
   Scenario: Retrieve just the top most instantiated classes
     When I extract the top 3 classes from dataset "mixed"
     Then The retrieved classes are
-      | uri                                           | label       | instanceCount |
+      | uri                                           | labels      | instanceCount |
       | http://xmlns.com/foaf/0.1/Person              | Person      | 2             |
       | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
       | http://www.w3.org/2000/01/rdf-schema#Resource | Resource    | 2             |
@@ -39,7 +39,7 @@ Feature: Detect dataset structure
   Scenario: Retrieve top classes containing text in URI or label and ignoring case
     When I extract the top 2 classes from dataset "mixed" containing "mission"
     Then The retrieved classes are
-      | uri                                           | label       | instanceCount |
+      | uri                                           | labels      | instanceCount |
       | http://purl.org/net/schemas/space/MissionRole | MissionRole | 2             |
       | http://purl.org/net/schemas/space/Mission     | Mission     | 1             |
 
@@ -67,7 +67,7 @@ Feature: Detect dataset structure
       | http://rhizomik.net/dataset/got                 |
     When I extract the classes from dataset "mixed"
     Then The retrieved classes are
-      | uri                                             | label              | instanceCount |
+      | uri                                             | labels             | instanceCount |
       | http://dbpedia.org/ontology/FictionalCharacter  | FictionalCharacter | 916           |
       | http://dbpedia.org/ontology/Noble               | Noble              | 430           |
       | http://dbpedia.org/ontology/Book                | Book               | 5             |
@@ -108,7 +108,7 @@ Feature: Detect dataset structure
       | uri                                             | label              | instanceCount |
     And I extract the classes from dataset "mixed"
     Then The retrieved classes are
-      | uri                                             | label              | instanceCount |
+      | uri                                             | labels             | instanceCount |
       | http://dbpedia.org/ontology/FictionalCharacter  | FictionalCharacter | 916           |
       | http://dbpedia.org/ontology/Noble               | Noble              | 430           |
       | http://dbpedia.org/ontology/Book                | Book               | 5             |

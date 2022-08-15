@@ -14,7 +14,7 @@ Feature: Create classes in a dataset
     Then the response status is 201
     And exists a class with id "/datasets/vegetables/classes/examples:Potato"
     And The retrieved class is
-      | id                                           | label       | instanceCount | uri                         | curie           |
+      | id                                           | labels      | instanceCount | uri                         | curie           |
       | /datasets/vegetables/classes/examples:Potato | Potato      | 1             | http://examples.org#Potato  | examples:Potato |
 
   Scenario: manually define repeated class
@@ -24,5 +24,5 @@ Feature: Create classes in a dataset
     Then the response status is 409 and message contains "Class with URI 'http://examples.org#Tomato' already exists in Dataset 'vegetables'"
     And exists a class with id "/datasets/vegetables/classes/examples:Tomato"
     And The retrieved class is
-      | id                                           | label       | instanceCount | uri                         | curie           |
+      | id                                           | labels      | instanceCount | uri                         | curie           |
       | /datasets/vegetables/classes/examples:Tomato | Tomato      | 1             | http://examples.org#Tomato  | examples:Tomato |

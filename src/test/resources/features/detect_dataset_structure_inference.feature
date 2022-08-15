@@ -23,11 +23,11 @@ Feature: Detect dataset structure considering inference
   Scenario: The extracted classes are those instantiated in the dataset
     When I extract the classes from dataset "apollo13"
     Then The retrieved classes are
-      | uri                                           | label          | instanceCount |
-      | http://xmlns.com/foaf/0.1/Person              | Person         | 2             |
-      | http://purl.org/net/schemas/space/MissionRole | Mission Role   | 2             |
-      | http://purl.org/net/schemas/space/Mission     | Mission        | 1             |
-      | http://purl.org/net/schemas/space/Role        | Role           | 2             |
+      | uri                                           | labels                                    | instanceCount |
+      | http://xmlns.com/foaf/0.1/Person              | Person@en \|\| Persona@es                 | 2             |
+      | http://purl.org/net/schemas/space/MissionRole | Mission Role@en \|\| Rol en la MisiÃ³n@es | 2             |
+      | http://purl.org/net/schemas/space/Mission     | Mission@en \|\| MisiÃ³n@es                | 1             |
+      | http://purl.org/net/schemas/space/Role        | Role@en \|\| Rol@es                       | 2             |
     And exists a class with id "/datasets/apollo13/classes/space:Role"
 
   Scenario: The extracted facets for an existing class foaf:Person are those instantiated in the dataset
@@ -37,7 +37,7 @@ Feature: Detect dataset structure considering inference
       | uri                                             | label     | timesUsed | differentValues | range           | relation   |
       | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
       | http://purl.org/net/schemas/space/performed     | performed | 2       | 2               | space:MissionRole | true       |
-      | http://www.w3.org/2000/01/rdf-schema#label      | label     | 2         | 2               | xsd:string        | false      |
+      | http://www.w3.org/2000/01/rdf-schema#label      | label     | 2       | 2               | xsd:string        | false      |
       | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type      | 2       | 1               | rdfs:Resource     | true       |
       | http://www.w3.org/2002/07/owl#sameAs            | sameAs    | 1       | 1               | rdfs:Resource     | true       |
     And exists a facet with id "/datasets/apollo13/classes/foaf:Person/facets/foaf:name"

@@ -6,30 +6,30 @@ import java.util.List;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-public class ExpectedClass {
+public class ExpectedClass extends Labelled {
     public String id;
     public String uri;
-    public String label;
     public String curie;
     public int instanceCount = 0;
     public int facetsCount = 0;
     public List<ExpectedFacet> facets = new ArrayList<>();
 
-    public ExpectedClass() {}
+    public ExpectedClass() { super(""); }
 
-    public ExpectedClass(String id, String uri, String label, String curie, int instanceCount) {
+    public ExpectedClass(String id, String uri, String labels, String curie, int instanceCount) {
+        super(labels);
         this.id = id;
         this.uri = uri;
         this.curie = curie;
-        this.label = label;
         this.instanceCount = instanceCount;
     }
 
     public ExpectedClass(Class datasetClass) {
+        super("");
         this.id = datasetClass.getId().toString();
         this.uri = datasetClass.getUri().toString();
         this.curie = id.split("/")[4];
-        this.label = datasetClass.getLabel();
+        this.setLabels(datasetClass.getLabels());
         this.instanceCount = datasetClass.getInstanceCount();
         this.facetsCount = datasetClass.getFacetsCount();
     }
@@ -46,7 +46,7 @@ public class ExpectedClass {
     public String toString() {
         return "ExpectedClass{" +
                 "uri='" + getUri() + '\'' +
-                ", label='" + label + '\'' +
+                ", labels='" + getLabels() + '\'' +
                 ", instanceCount=" + instanceCount +
                 ", facetsCount=" + facetsCount +
                 '}';
@@ -60,6 +60,6 @@ public class ExpectedClass {
         if (instanceCount != that.instanceCount) return false;
         if (facetsCount != that.facetsCount) return false;
         if (!getUri().equals(that.getUri())) return false;
-        return label != null ? label.equals(that.label) : that.label == null;
+        return getLabels() != null ? getLabels().equals(that.getLabels()) : that.getLabels() == null;
     }
 }

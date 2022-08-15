@@ -17,14 +17,13 @@ import java.util.List;
  * Created by http://rhizomik.net/~roberto/
  */
 @Entity
-public class Class {
+public class Class extends Labelled {
     private static final Logger logger = LoggerFactory.getLogger(Class.class);
 
     @EmbeddedId
     private DatasetClassId id;
 
     private String uri;
-    private String label;
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "domain", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Facet> facets = new ArrayList<>();
@@ -35,21 +34,23 @@ public class Class {
     private Dataset dataset;
 
     public Class() {
+        super(null);
         this.id = new DatasetClassId();
     }
 
-    public Class(Dataset dataset, String curie, String label, int instanceCount) throws URISyntaxException {
-        this(dataset, Curie.toUri(curie), label, instanceCount);
+    public Class(Dataset dataset, String curie, String labels, int instanceCount) throws URISyntaxException {
+        this(dataset, Curie.toUri(curie), labels, instanceCount);
     }
 
-    public Class(Dataset dataset, String namespace, String localName, String label, int instanceCount) throws URISyntaxException {
-        this(dataset, new URI(namespace+localName), label, instanceCount);
+    public Class(Dataset dataset, String namespace, String localName, String labels, int instanceCount)
+            throws URISyntaxException {
+        this(dataset, new URI(namespace+localName), labels, instanceCount);
     }
 
-    public Class(Dataset dataset, URI uri, String label, int instanceCount) {
+    public Class(Dataset dataset, URI uri, String labels, int instanceCount) {
+        super(labels);
         this.id = new DatasetClassId(dataset, uri);
         this.uri = uri.toString();
-        this.label = label;
         this.instanceCount = instanceCount;
         this.dataset = dataset;
         logger.debug("Created class: {}", super.toString());
@@ -90,10 +91,6 @@ public class Class {
         this.id.setClassCurie(uri);
     }
 
-    public String getLabel() { return label; }
-
-    public void setLabel(String label) { this.label = label; }
-
     public int getInstanceCount() { return instanceCount; }
 
     public void setInstanceCount(int instanceCount) { this.instanceCount = instanceCount; }
@@ -109,7 +106,7 @@ public class Class {
     public String toString() {
         return "Class{" +
                 "id=" + getId() +
-                ", label='" + label + '\'' +
+                ", labels='" + getLabels() + '\'' +
                 ", instanceCount=" + instanceCount +
                 ", facets=" + facets + '}';
     }
