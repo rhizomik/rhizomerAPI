@@ -56,7 +56,6 @@ public class AnalizeDataset {
     @Autowired private SPARQLService sparqlService;
     @Autowired private OptimizedQueries optimizedQueries;
     @Autowired private DetailedQueries detailedQueries;
-    @Autowired private VirtuosoDetailedQueries virtuosoDetailedQueries;
     @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
@@ -66,10 +65,7 @@ public class AnalizeDataset {
         Queries.QueryType queryType = dataset.getQueryType();
         SPARQLEndPoint.ServerType serverType = endPointRepository.findByDataset(dataset).get(0).getType();
         if (queryType == QueryType.DETAILED) {
-            if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO)
-                return virtuosoDetailedQueries;
-            else
-                return detailedQueries;
+            return detailedQueries;
         } else {
             return optimizedQueries;
         }
@@ -114,9 +110,7 @@ public class AnalizeDataset {
     public void detectClassFacets(Class datasetClass) {
         endPointRepository.findByDataset(datasetClass.getDataset()).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(datasetClass.getDataset()).getQueryClassFacets(
-                            datasetClass.getUri().toString(), datasetClass.getDataset().getSampleSize(),
-                            datasetClass.getInstanceCount(), datasetClass.getDataset().getCoverage()),
+                    queries(datasetClass.getDataset()).getQueryClassFacets(datasetClass.getUri().toString()),
                     endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
                     endPoint.getQueryPassword()));
             while (result.hasNext()) {

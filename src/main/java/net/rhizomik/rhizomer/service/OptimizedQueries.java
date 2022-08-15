@@ -29,30 +29,22 @@ public class OptimizedQueries implements Queries {
     }
 
     @Override
-    public Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage) {
+    public Query getQueryClassFacets(String classUri) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        if (sampleSize > 0 && coverage > 0.0) {
-            pQuery.setCommandText(prefixes +
-                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) \n" +
-                "WHERE { \n" +
-                "\t { { SELECT ?instance WHERE { ?instance a ?class } OFFSET 0 "+"LIMIT "+sampleSize+" } \n" +
-                addSamples(classCount, sampleSize, coverage) + " } \n" +
-                "\t ?instance ?property ?object \n" +
-                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\") } } \n" +
-                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels } } \n" +
-                "} GROUP BY ?property");
-        } else {
-            pQuery.setCommandText(prefixes +
-                "SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) \n" +
-                "WHERE { \n" +
-                "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
-                "\t ?instance ?property ?object \n" +
-                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\") } } \n" +
-                "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?labels } } \n" +
-                "} GROUP BY ?property");
-        }
+        pQuery.setCommandText(prefixes +
+            "SELECT ?property ?uses ?values ?allLiteral " +
+            "       (GROUP_CONCAT(DISTINCT(?langLabel) ; separator=' || ') AS ?label) \n" +
+            "WHERE { \n" +
+            "\t { SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) AS ?allLiteral) \n" +
+            "\t\t WHERE { \n" +
+            "\t\t\t ?instance a ?class . \n"+
+            "\t\t\t ?instance ?property ?object \n" +
+            "\t\t\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+            "\t\t } GROUP BY ?property \n" +
+            "\t } \n" +
+            "\t OPTIONAL { ?property rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "} GROUP BY ?property ?uses ?values ?allLiteral");
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
     }

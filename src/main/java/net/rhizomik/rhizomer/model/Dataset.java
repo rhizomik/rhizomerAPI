@@ -31,8 +31,6 @@ public class Dataset {
 
     private QueryType queryType = QueryType.OPTIMIZED;
     private boolean inferenceEnabled = false;
-    private int sampleSize = 0;
-    private double coverage = 0.0;
     private boolean isPublic = false;
 
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset", cascade = CascadeType.ALL)

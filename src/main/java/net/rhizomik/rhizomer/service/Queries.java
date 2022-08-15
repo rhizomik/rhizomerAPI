@@ -181,7 +181,7 @@ public interface Queries {
         return query;
     }
 
-    Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage);
+    Query getQueryClassFacets(String classUri);
 
     Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
         MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset,
