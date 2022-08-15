@@ -59,7 +59,8 @@ public class FacetController {
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/relations", method = RequestMethod.GET)
     public @ResponseBody List<Relation> listClassRelations(Authentication auth,
                  @PathVariable String datasetId, @PathVariable String classCurie,
-                 @RequestParam(value="relevance", defaultValue="0") float relevance) {
+                 @RequestParam(value="relevance", defaultValue="0") float relevance,
+                 @RequestParam(value="lang", defaultValue="en") String lang) {
         Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() ->
                 new NullPointerException(String.format("Dataset with id '%s' not found", datasetId)));
         securityController.checkPublicOrOwner(dataset, auth);
@@ -74,9 +75,9 @@ public class FacetController {
                 facet.getRanges(relevance, datasetClass.getInstanceCount()).stream()
                         .filter(Range::isRelation)
                         .map(range -> new Relation(
-                                datasetClass.getUri(), datasetClass.getLabel(), classCurie,
-                                facet.getUri(), facet.getLabel(), facet.getCurie(),
-                                range.getUri(), range.getLabel(), range.getCurie(), range.getTimesUsed()))
+                                datasetClass.getUri(), datasetClass.getLabel(lang), classCurie,
+                                facet.getUri(), facet.getLabel(lang), facet.getCurie(),
+                                range.getUri(), range.getLabel(lang), range.getCurie(), range.getTimesUsed()))
         ).collect(Collectors.toCollection(ArrayList::new));
     }
 
