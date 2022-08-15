@@ -144,7 +144,7 @@ public class APIStepdefs {
 
     @DataTableType
     public ExpectedFacet expectedFacetEntry(Map<String, String> entry) {
-        return new ExpectedFacet(entry.get("uri"), entry.get("label"),
+        return new ExpectedFacet(entry.get("uri"), entry.get("labels"),
                 Integer.parseInt(entry.getOrDefault("timesUsed", "0")),
                 Integer.parseInt(entry.getOrDefault("differentValues", "0")),
                 Boolean.parseBoolean(entry.get("relation")), entry.get("range"), entry.get("domainURI"));

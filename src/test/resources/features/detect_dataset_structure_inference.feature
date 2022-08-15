@@ -34,32 +34,32 @@ Feature: Detect dataset structure considering inference
     Given I create a class in dataset "apollo13" with URI "http://xmlns.com/foaf/0.1/Person", label "Person" and instance count 2
     When I extract the facets for class "foaf:Person" in dataset "apollo13"
     Then The retrieved facets are
-      | uri                                             | label     | timesUsed | differentValues | range           | relation   |
-      | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
-      | http://purl.org/net/schemas/space/performed     | performed | 2       | 2               | space:MissionRole | true       |
-      | http://www.w3.org/2000/01/rdf-schema#label      | label     | 2       | 2               | xsd:string        | false      |
-      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type      | 2       | 1               | rdfs:Resource     | true       |
-      | http://www.w3.org/2002/07/owl#sameAs            | sameAs    | 1       | 1               | rdfs:Resource     | true       |
+      | uri                                             | timesUsed | differentValues | range             | relation | labels                        |
+      | http://xmlns.com/foaf/0.1/name                  | 3       | 3                 | xsd:string        | false    | name                          |
+      | http://purl.org/net/schemas/space/performed     | 2       | 2                 | space:MissionRole | true     | performed@en \|\| realizÃ³@es |
+      | http://www.w3.org/2000/01/rdf-schema#label      | 2       | 2                 | xsd:string        | false    | label                         |
+      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | 2       | 1                 | rdfs:Resource     | true     | type                          |
+      | http://www.w3.org/2002/07/owl#sameAs            | 1       | 1                 | rdfs:Resource     | true     | sameAs                        |
     And exists a facet with id "/datasets/apollo13/classes/foaf:Person/facets/foaf:name"
     And The retrieved facet is
-      | uri                                             | label     | timesUsed | differentValues | range           | relation   |
-      | http://xmlns.com/foaf/0.1/name                  | name      | 3       | 3               | xsd:string        | false      |
+      | uri                                             | labels    | timesUsed | differentValues | range       | relation   |
+      | http://xmlns.com/foaf/0.1/name                  | name      | 3         | 3               | xsd:string  | false      |
 
   Scenario: The extracted facets for an existing class space:MissionRole are those instantiated in the dataset
     Given I create a class in dataset "apollo13" with URI "http://purl.org/net/schemas/space/Mission", label "Mission" and instance count 2
     When I extract the facets for class "space:Mission" in dataset "apollo13"
     Then The retrieved facets are
-      | uri                                             | label        | timesUsed | differentValues | range             | relation   |
-      | http://purl.org/net/schemas/space/missionRole   | mission role | 2         | 2               | space:MissionRole | true       |
-      | http://purl.org/dc/terms/title                  | title        | 1         | 1               | xsd:string        | false      |
-      | http://www.w3.org/2000/01/rdf-schema#label      | label        | 1         | 1               | xsd:string        | false      |
-      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | type         | 1         | 1               | rdfs:Resource     | true       |
-      | http://www.w3.org/2002/07/owl#sameAs            | sameAs       | 1         | 1               | rdfs:Resource     | true       |
+      | uri                                             | timesUsed | differentValues | range             | relation | labels                                    |
+      | http://purl.org/net/schemas/space/missionRole   | 2         | 2               | space:MissionRole | true     | mission role@en \|\| rol en la misiÃ³n@es |
+      | http://purl.org/dc/terms/title                  | 1         | 1               | xsd:string        | false    | title                                     |
+      | http://www.w3.org/2000/01/rdf-schema#label      | 1         | 1               | xsd:string        | false    | label                                     |
+      | http://www.w3.org/1999/02/22-rdf-syntax-ns#type | 1         | 1               | rdfs:Resource     | true     | type                                      |
+      | http://www.w3.org/2002/07/owl#sameAs            | 1         | 1               | rdfs:Resource     | true     | sameAs                                    |
     And exists a facet with id "/datasets/apollo13/classes/space:Mission/facets/space:missionRole"
     And The retrieved facet is
-      | uri                                           | label        | timesUsed | differentValues | range             | relation   |
-      | http://purl.org/net/schemas/space/missionRole | mission role | 2         | 2               | space:MissionRole | true       |
+      | uri                                             | timesUsed | differentValues | range             | relation | labels                                    |
+      | http://purl.org/net/schemas/space/missionRole   | 2         | 2               | space:MissionRole | true     | mission role@en \|\| rol en la misiÃ³n@es |
     And I retrieve facet "/datasets/apollo13/classes/space:Mission/facets/space:missionRole" ranges
-      | uri                                             | label        | timesUsed | differentValues | curie             | relation |
-      | http://purl.org/net/schemas/space/MissionRole   | Mission Role | 2         | 2               | space:MissionRole | true     |
+      | uri                                             | timesUsed | differentValues | curie             | relation | label                                     |
+      | http://purl.org/net/schemas/space/MissionRole   | 2         | 2               | space:MissionRole | true     | Mission Role@en \|\| Rol en la MisiÃ³n@es |
 

@@ -18,14 +18,14 @@ import java.net.URISyntaxException;
  */
 @Entity
 @Table(name = "`range`")
-public class Range {
+public class Range extends Labelled {
     private static final Logger logger = LoggerFactory.getLogger(Range.class);
 
     @EmbeddedId
     DatasetClassFacetRangeId id;
 
     private String uri;
-    private String label;
+
     @ManyToOne
     @JsonBackReference
     private Facet facet;
@@ -34,28 +34,29 @@ public class Range {
     private boolean allLiteral;
 
     public Range() {
+        super("");
         this.id = new DatasetClassFacetRangeId();
     }
 
-    public Range(Facet facet, String curie, String label, int timesUsed, int differentValues, boolean allLiteral)
+    public Range(Facet facet, String curie, String labels, int timesUsed, int differentValues, boolean allLiteral)
             throws URISyntaxException {
-        this(facet, Curie.toUri(curie), label, timesUsed, differentValues, allLiteral);
+        this(facet, Curie.toUri(curie), labels, timesUsed, differentValues, allLiteral);
     }
 
-    public Range(String curie, String label, int timesUsed, int differentValues, boolean allLiteral) {
-        this();
+    public Range(String curie, String labels, int timesUsed, int differentValues, boolean allLiteral) {
+        super(labels);
+        this.id = new DatasetClassFacetRangeId();
         this.id.setRangeCurie(curie);
         this.uri = Curie.curieToUriStr(curie);
-        this.label = label;
         this.timesUsed = timesUsed;
         this.differentValues = differentValues;
         this.allLiteral = allLiteral;
     }
 
-    public Range(Facet facet, URI rangeUri, String label, int timesUsed, int differentValues, boolean allLiteral) {
+    public Range(Facet facet, URI rangeUri, String labels, int timesUsed, int differentValues, boolean allLiteral) {
+        super(labels);
         this.id = new DatasetClassFacetRangeId(facet.getDomain().getDataset(), facet.getDomain().getUri(), facet.getUri(), rangeUri);
         this.uri = rangeUri.toString();
-        this.label = label;
         this.facet = facet;
         this.timesUsed = timesUsed;
         this.differentValues = differentValues;
@@ -87,10 +88,6 @@ public class Range {
 
     public String getCurie() { return id.getRangeCurie(); }
 
-    public String getLabel() { return label; }
-
-    public void setLabel(String label) { this.label = label; }
-
     public Facet getFacet() { return facet; }
 
     public void setFacet(Facet facet) {
@@ -116,7 +113,7 @@ public class Range {
     public String toString() {
         return "Range{" +
                 "id=" + getId() +
-                ", label='" + label + '\'' +
+                ", labels='" + getLabels() + '\'' +
                 ", facet=" + facet.getId() +
                 ", timesUsed=" + timesUsed +
                 ", differentValues=" + differentValues +

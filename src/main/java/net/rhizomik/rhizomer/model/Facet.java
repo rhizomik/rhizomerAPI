@@ -19,14 +19,11 @@ import java.util.stream.Collectors;
  * Created by http://rhizomik.net/~roberto/
  */
 @Entity
-public class Facet {
-    private static final Logger logger = LoggerFactory.getLogger(Facet.class);
-
+public class Facet extends Labelled {
     @EmbeddedId
     DatasetClassFacetId id;
 
     private String uri;
-    private String label;
     @ManyToOne
     @JsonIgnore
     private Class domain;
@@ -34,23 +31,23 @@ public class Facet {
     private List<Range> ranges = new ArrayList<>();
 
     public Facet() {
+        super(null);
         this.id = new DatasetClassFacetId();
     }
 
-    public Facet(Class domain, String curie, String label)
-            throws URISyntaxException {
-        this(domain, Curie.toUri(curie), label);
+    public Facet(Class domain, String curie, String labels) throws URISyntaxException {
+        this(domain, Curie.toUri(curie), labels);
     }
 
-    public Facet(String curie, String label) {
+    public Facet(String curie, String labels) {
+        super(labels);
         this.uri = Curie.curieToUriStr(curie);
-        this.label = label;
     }
 
-    public Facet(Class domain, URI uri, String label) {
+    public Facet(Class domain, URI uri, String labels) {
+        super(labels);
         this.id = new DatasetClassFacetId(domain.getDataset(), domain.getUri(), uri);
         this.uri = uri.toString();
-        this.label = label;
         this.domain = domain;
     }
 
@@ -70,10 +67,6 @@ public class Facet {
     }
 
     public String getCurie() { return id.getFacetCurie(); }
-
-    public String getLabel() { return label; }
-
-    public void setLabel(String label) { this.label = label; }
 
     public List<Range> getRanges(float relevance, long instancesCount) {
         return this.ranges.stream()
@@ -124,7 +117,7 @@ public class Facet {
     public String toString() {
         return "Facet{" +
                 "id=" + getId() +
-                ", label='" + label + '\'' +
+                ", labels='" + getLabels() + '\'' +
                 ", domain=" + domain.getId() +
                 ", timesUsed=" + getTimesUsed() +
                 ", differentValues=" + getDifferentValues() +
