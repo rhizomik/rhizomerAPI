@@ -220,21 +220,23 @@ public interface Queries {
     default Query getQueryResourceIncomingFacets(URI resourceUri) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-            "SELECT (SAMPLE(?class) as ?range) ?prop ?proplabel ?uses ?domain ?domainlabel (COUNT(DISTINCT ?s) AS ?count) \n" +
+            "SELECT (SAMPLE(?class) as ?range) ?prop ?uses ?domain (COUNT(DISTINCT ?s) AS ?count) " +
+            "   (GROUP_CONCAT(DISTINCT(?pLabel) ; separator=' || ') AS ?proplabel) " +
+            "   (GROUP_CONCAT(DISTINCT(?dLabel) ; separator=' || ') AS ?domainlabel) \n" +
             "WHERE { \n" +
-            "\t { SELECT ?class ?prop ?proplabel (COUNT(DISTINCT ?s) AS ?uses) \n" +
+            "\t { SELECT ?class ?prop (COUNT(DISTINCT ?s) AS ?uses) \n" +
             "\t\t WHERE { \n" +
             "\t\t\t ?s ?prop ?resource . \n" +
             "\t\t\t OPTIONAL { ?resource a ?class } \n" +
             "\t\t\t FILTER NOT EXISTS { ?subclass rdfs:subClassOf ?class . ?resource a ?subclass } \n" +
-            "\t\t\t OPTIONAL { ?prop rdfs:label ?proplabel FILTER LANGMATCHES(LANG(?proplabel), \"en\")  } \n" +
-            "\t\t\t OPTIONAL { ?prop rdfs:label ?proplabel } \n" +
-            "\t } GROUP BY ?class ?prop ?proplabel } \n" +
+            "\t } GROUP BY ?class ?prop } \n" +
             "\t ?s ?prop ?resource ; a ?domain . \n" +
             "\t FILTER NOT EXISTS { ?subdomain rdfs:subClassOf ?domain . ?s a ?subdomain } \n" +
-            "\t OPTIONAL { ?domain rdfs:label ?domainlabel FILTER LANGMATCHES(LANG(?domainlabel), \"en\")  } \n" +
-            "\t OPTIONAL { ?domain rdfs:label ?domainlabel } \n" +
-            "} GROUP BY ?prop ?proplabel ?domain ?domainlabel ?uses");
+            "\t OPTIONAL { ?prop  rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?pLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?prop  rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?pLabel) } \n" +
+            "\t OPTIONAL { ?domain rdfs:label ?dl BIND (CONCAT(?dl, IF(LANG(?dl),\"@\",\"\"), LANG(?dl)) AS ?dLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?domain rdfs:label ?dl } BIND (CONCAT(?dl, IF(LANG(?dl),\"@\",\"\"), LANG(?dl)) AS ?dLabel) } \n" +
+            "} GROUP BY ?prop ?domain ?uses");
         pQuery.setIri("resource", resourceUri.toString());
         Query query = pQuery.asQuery();
         return query;

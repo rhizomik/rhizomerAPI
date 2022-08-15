@@ -24,20 +24,20 @@ Feature: Describe resource in dataset
     When I extract the incoming facets from dataset "apollo" for resource
       | http://data.kasabi.com/dataset/nasa/person/fredwallacehaisejr |
     Then The retrieved incoming facets are
-      | range-curie | curie       | label  | uses | domain-curie      | domain-label | count |
-      | foaf:Person | space:actor | actor  | 1    | space:MissionRole | MissionRole  | 1     |
+      | range-curie | curie       | uses | domain-curie      | count | label | domain-label                             |
+      | foaf:Person | space:actor | 1    | space:MissionRole | 1     | actor | Mission Role@en \|\| Rol en la Misión@es |
 
   Scenario: Extracts one incoming facets with one domain and two uses
     When I extract the incoming facets from dataset "apollo" for resource
       | http://data.kasabi.com/dataset/nasa/mission/apollo-13 |
     Then The retrieved incoming facets are
-      | range-curie   | curie         | label   | uses | domain-curie      | domain-label | count |
-      | space:Mission | space:mission | mission | 2    | space:MissionRole | MissionRole  | 2     |
+      | range-curie   | curie         | uses | domain-curie      | count | label                     | domain-label                             |
+      | space:Mission | space:mission | 2    | space:MissionRole | 2     | mission@en \|\| misión@es | Mission Role@en \|\| Rol en la Misión@es |
 
   Scenario: Extracts two incoming facets with one domain each and one use
     When I extract the incoming facets from dataset "apollo" for resource
       | http://data.kasabi.com/dataset/nasa/mission/apollo-13/role/commander |
     Then The retrieved incoming facets are
-      | range-curie       | curie             | label       | uses | domain-curie  | domain-label | count |
-      | space:MissionRole | space:missionRole | missionRole | 1    | space:Mission | Mission      | 1     |
-      | space:MissionRole | space:performed   | performed   | 1    | foaf:Person   | Person       | 1     |
+      | range-curie       | curie             |  uses | domain-curie  | count | label                                    | domain-label              |
+      | space:MissionRole | space:missionRole |  1    | space:Mission | 1     | mission role@en \|\| rol en la misión@es | Mission@en \|\| Misión@es |
+      | space:MissionRole | space:performed   |  1    | foaf:Person   | 1     | performed@en \|\| realizó@es             | Person@en \|\| Persona@es |

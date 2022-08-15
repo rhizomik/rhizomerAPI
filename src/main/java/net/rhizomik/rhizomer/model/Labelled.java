@@ -34,7 +34,12 @@ public class Labelled {
     }
 
     public void splitLabels(String labelsString) {
-        if (labelsString == null) return;
+        this.labels = splitLabelsUtil(labelsString);
+    }
+
+    public static Map<String, String> splitLabelsUtil(String labelsString) {
+        Map<String, String> labels = new HashMap<>();
+        if (labelsString == null) return labels;
         for(String langLabel: labelsString.split(" \\|\\| ")) {
             String lang = "undefined";
             String label = langLabel;
@@ -42,11 +47,12 @@ public class Labelled {
                 label = langLabel.split("@")[0];
                 lang = langLabel.split("@")[1];
             }
-            if (!this.labels.containsKey(lang)) {
-                this.labels.put(lang, label);
-            } else if (this.labels.get(lang).length() > label.length()) {
-                this.labels.put(lang, label);
+            if (!labels.containsKey(lang)) {
+                labels.put(lang, label);
+            } else if (labels.get(lang).length() > label.length()) {
+                labels.put(lang, label);
             }
         }
+        return labels;
     }
 }

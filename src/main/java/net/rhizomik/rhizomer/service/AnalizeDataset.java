@@ -310,7 +310,8 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                 queries(dataset).getQuerySearchTypeFacet(text, size, size * page, true),
-                endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                endPoint.getGraphs(), endPoint.getOntologyGraphs(),
+                withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 if (soln.contains("?class")) {
@@ -383,8 +384,8 @@ public class AnalizeDataset {
         HashMap<String, IncomingFacet> incomingFacets = new HashMap<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(dataset).getQueryResourceIncomingFacets(resourceUri),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    queries(dataset).getQueryResourceIncomingFacets(resourceUri), endPoint.getGraphs(),
+                    endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 Resource range = OWL.Thing;

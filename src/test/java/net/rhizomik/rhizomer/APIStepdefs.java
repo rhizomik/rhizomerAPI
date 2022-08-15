@@ -758,9 +758,9 @@ public class APIStepdefs {
                 String facetPath = "$[?(@.curie == '" + expectedIncoming.get("curie") + "')]";
                 String domainPath = facetPath + ".domains[?(@.curie == '" + expectedIncoming.get("domain-curie") + "')]";
                 this.result.andExpect(jsonPath(facetPath + ".rangeCurie", hasItem(expectedIncoming.get("range-curie"))));
-                this.result.andExpect(jsonPath(facetPath + ".label", hasItem(expectedIncoming.get("label"))));
+                this.result.andExpect(jsonPath(facetPath + ".labels", hasItem(Labelled.splitLabelsUtil(expectedIncoming.get("label")))));
                 this.result.andExpect(jsonPath(facetPath + ".uses", hasItem(Integer.parseInt(expectedIncoming.get("uses")))));
-                this.result.andExpect(jsonPath(domainPath + ".label", hasItem(expectedIncoming.get("domain-label"))));
+                this.result.andExpect(jsonPath(domainPath + ".labels", hasItem(Labelled.splitLabelsUtil(expectedIncoming.get("domain-label")))));
                 this.result.andExpect(jsonPath(domainPath + ".count", hasItem(Integer.parseInt(expectedIncoming.get("count")))));
             } catch (Exception e) {
                 e.printStackTrace();
