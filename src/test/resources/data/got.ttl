@@ -11,19 +11,24 @@
 # Books
 
 <http://dbpedia.org/resource/A_Game_of_Thrones> a dbo:Book ;
-												rdfs:label "A Game of Thrones" .
+												rdfs:label "A Game of Thrones" ;
+												foaf:depiction <https://upload.wikimedia.org/wikipedia/en/9/93/AGameOfThrones.jpg> .
 
 <http://dbpedia.org/resource/A_Feast_for_Crows> a dbo:Book ;
-												rdfs:label "A Feast for Crows" .
+												rdfs:label "A Feast for Crows" ;
+												foaf:depiction <https://upload.wikimedia.org/wikipedia/en/a/a3/AFeastForCrows.jpg> .
 
 <http://dbpedia.org/resource/A_Dance_with_Dragons> a dbo:Book ;
-												   rdfs:label "A Dance with Dragons" .
+												   rdfs:label "A Dance with Dragons" ;
+													 foaf:depiction <https://upload.wikimedia.org/wikipedia/en/5/5d/A_Dance_With_Dragons_US.jpg> .
 
 <http://dbpedia.org/resource/A_Clash_of_Kings> a dbo:Book ;
-											   rdfs:label "A Clash of Kings" .
+											   rdfs:label "A Clash of Kings" ;
+												 foaf:depiction <https://upload.wikimedia.org/wikipedia/en/3/39/AClashOfKings.jpg> .
 
 <http://dbpedia.org/resource/A_Storm_of_Swords> a dbo:Book ;
-												rdfs:label "A Storm of Swords" .
+												rdfs:label "A Storm of Swords" ;
+												foaf:depiction <https://upload.wikimedia.org/wikipedia/en/2/24/AStormOfSwords.jpg> .
 
 # Houses
 

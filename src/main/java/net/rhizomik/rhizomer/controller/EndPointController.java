@@ -124,7 +124,7 @@ public class EndPointController {
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/endpoints/{endPointId}/graphs", method = RequestMethod.PUT)
-    public @ResponseBody List<String> updateDGraphs(@Valid @RequestBody Set<String> updatedGraphs,
+    public @ResponseBody List<String> updateGraphs(@Valid @RequestBody Set<String> updatedGraphs,
                             @PathVariable String datasetId, @PathVariable Integer endPointId, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkOwner(dataset, auth);
@@ -132,6 +132,39 @@ public class EndPointController {
         logger.info("Updated endpoint {} graphs to {}", endPoint.getQueryEndPoint(), updatedGraphs.toString());
         endPoint.setGraphs(updatedGraphs);
         return endPointRepository.save(endPoint).getGraphs();
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/endpoints/{endPointId}/ontologies",method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody List<String> addOntologies(@RequestBody List<String> addOntologyGraphs,
+                            @PathVariable Integer endPointId, @PathVariable String datasetId, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkOwner(dataset, auth);
+        SPARQLEndPoint endPoint = getServer(endPointId);
+        logger.info("Add ontologies {} to endpoint {}", addOntologyGraphs.toString(), endPoint.getQueryEndPoint());
+        addOntologyGraphs.forEach(endPoint::addOntologyGraph);
+        return endPointRepository.save(endPoint).getOntologyGraphs();
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/endpoints/{endPointId}/ontologies", method = RequestMethod.GET)
+    public @ResponseBody List<String> listOntologies(@PathVariable String datasetId, @PathVariable Integer endPointId,
+                                                     Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        SPARQLEndPoint endPoint = getServer(endPointId);
+        logger.info("Retrieved graphs for Dataset {} endpoint {}", datasetId, endPoint.getQueryEndPoint());
+        return endPoint.getOntologyGraphs();
+    }
+
+    @RequestMapping(value = "/datasets/{datasetId}/endpoints/{endPointId}/ontologies", method = RequestMethod.PUT)
+    public @ResponseBody List<String> updateOntologies(@Valid @RequestBody Set<String> updatedOntologyGraphs,
+                            @PathVariable String datasetId, @PathVariable Integer endPointId, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkOwner(dataset, auth);
+        SPARQLEndPoint endPoint = getServer(endPointId);
+        logger.info("Updated endpoint {} graphs to {}", endPoint.getQueryEndPoint(), updatedOntologyGraphs.toString());
+        endPoint.setOntologyGraphs(updatedOntologyGraphs);
+        return endPointRepository.save(endPoint).getOntologyGraphs();
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/endpoints/{endpointId}/server/graphs", method = RequestMethod.GET)

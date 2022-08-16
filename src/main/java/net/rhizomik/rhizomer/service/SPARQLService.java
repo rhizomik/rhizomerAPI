@@ -3,6 +3,8 @@ package net.rhizomik.rhizomer.service;
 import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
+
+import java.net.URI;
 import java.net.http.HttpClient;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -34,15 +36,20 @@ public class SPARQLService {
     @Autowired Queries queries;
 
     public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, HttpClient creds) {
-        return this.querySelect(sparqlEndpoint, timeout, query, new ArrayList<>(), creds);
+        return this.querySelect(sparqlEndpoint, timeout, query, new ArrayList<>(), new ArrayList<>(), creds);
     }
 
     public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
+        return this.querySelect(sparqlEndpoint, timeout, query, graphs, new ArrayList<>(), creds);
+    }
+
+    public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, List<String> graphs,
+                                 List<String> namedGraphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
+        namedGraphs.forEach(query::addNamedGraphURI);
         logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
         qBuilder.query(query).endpoint(sparqlEndpoint.toString()).httpClient(creds);
-        graphs.forEach(qBuilder::addDefaultGraphURI);
         if (timeout != null)
             qBuilder.param("timeout", timeout);
         QueryExecutionHTTP qExec = qBuilder.build();
@@ -51,7 +58,8 @@ public class SPARQLService {
         return result;
     }
 
-    public Model queryDescribe(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
+    public Model queryDescribe(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs,
+                               HttpClient creds) {
         graphs.forEach(query::addGraphURI);
         String queryString = query.toString();
         if (endpoint.getType() == SPARQLEndPoint.ServerType.VIRTUOSO) {
@@ -62,7 +70,6 @@ public class SPARQLService {
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), queryString);
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
         qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
-        graphs.forEach(qBuilder::addDefaultGraphURI);
         if (timeout != null)
             qBuilder.param("timeout", timeout);
         if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)
@@ -70,12 +77,13 @@ public class SPARQLService {
         return qBuilder.build().execDescribe();
     }
 
-    public Model queryConstruct(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
+    public Model queryConstruct(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs,
+                                List<String> namedGraphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
+        namedGraphs.forEach(query::addNamedGraphURI);
         logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), query);
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
         qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
-        graphs.forEach(qBuilder::addDefaultGraphURI);
         if (timeout != null)
             qBuilder.param("timeout", timeout);
         if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)
@@ -125,32 +133,12 @@ public class SPARQLService {
         queryUpdate(sparqlEndPoint, clearGraph, creds);
     }
 
-    public void inferTypes(Dataset dataset, SPARQLEndPoint endPoint, HttpClient creds) {
+    public void inferTypes(URI targetGraph, SPARQLEndPoint endPoint, HttpClient creds) {
         if (endPoint.isWritable()) {
-            List<String> targetGraphs = endPoint.getGraphs();
-            targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-            UpdateRequest update = queries
-                    .getUpdateInferTypes(targetGraphs, dataset.getDatasetInferenceGraph().toString());
+            List<String> sourceGraphs = endPoint.getGraphs();
+            sourceGraphs.addAll(endPoint.getOntologyGraphs());
+            UpdateRequest update = queries.getUpdateInferTypes(sourceGraphs, targetGraph.toString());
             queryUpdate(endPoint.getUpdateEndPoint(), update, creds);
-        }
-    }
-
-    public void inferTypesConstruct(Dataset dataset, String timeout, SPARQLEndPoint endPoint, HttpClient creds) {
-        if(endPoint.isWritable()) {
-            List<String> targetGraphs = endPoint.getGraphs();
-            targetGraphs.add(dataset.getDatasetOntologiesGraph().toString());
-            UpdateRequest createGraph = queries.getCreateGraph(dataset.getDatasetInferenceGraph().toString());
-            queryUpdate(endPoint.getUpdateEndPoint(), createGraph, creds);
-            Model inferredModel = queryConstruct(
-                    endPoint, timeout, queries.getQueryInferTypes(), targetGraphs, creds);
-            /*File inferenceOut = new File(dataset.getId() + "-inference.ttl");
-            try {
-                RDFDataMgr.write(new FileOutputStream(inferenceOut), inferredModel, Lang.TURTLE);
-            } catch (FileNotFoundException e) {
-                logger.error(e.getMessage());
-            }*/
-            loadModel(endPoint.getUpdateEndPoint(), endPoint.getType(), dataset.getDatasetInferenceGraph().toString(),
-                    inferredModel, creds);
         }
     }
 }

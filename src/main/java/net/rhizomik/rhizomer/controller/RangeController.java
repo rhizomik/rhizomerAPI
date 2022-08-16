@@ -80,7 +80,8 @@ public class RangeController {
             @PathVariable String classCurie, @PathVariable String facetCurie, @PathVariable String rangeCurie,
             @RequestParam MultiValueMap<String, String> filters, Authentication auth,
             @RequestParam(value = "containing", defaultValue = "") String containing,
-            @RequestParam(value = "top", defaultValue = "-1") int top) {
+            @RequestParam(value = "top", defaultValue = "-1") int top,
+            @RequestParam(value = "lang", defaultValue = "en") String lang) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieving top {} values for Facet {} containing '{}'", top, facetCurie, containing);
@@ -89,7 +90,8 @@ public class RangeController {
         Range facetRange = getRange(rangeCurie, classFacet);
         filters.remove("containing");
         filters.remove("top");
-        return analiseDataset.retrieveRangeValuesContaining(dataset, facetRange, filters, containing, top);
+        filters.remove("lang");
+        return analiseDataset.retrieveRangeValuesContaining(dataset, facetRange, filters, containing, top, lang);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges",

@@ -3,21 +3,22 @@ package net.rhizomik.rhizomer.model;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-public class ExpectedRangeValue {
+public class ExpectedRangeValue extends Labelled {
     public String value;
     public int count;
     public String uri;
     public String curie;
-    public String label;
 
-    public ExpectedRangeValue() {}
+    public ExpectedRangeValue(){
+        super("");
+    }
 
-    public ExpectedRangeValue(String value, String curie, String uri, String label, int count) {
+    public ExpectedRangeValue(String value, String curie, String uri, String labels, int count) {
+        super(labels);
         this.value = value;
         this.count = count;
         this.uri = uri;
         this.curie = curie;
-        this.label = label;
     }
 
     public String getValue() { return value; }
@@ -28,8 +29,6 @@ public class ExpectedRangeValue {
 
     public String getCurie() { return curie; }
 
-    public String getLabel() { return label; }
-
     public void setValue(String value) { this.value = value; }
 
     public void setCount(int count) { this.count = count; }
@@ -37,8 +36,6 @@ public class ExpectedRangeValue {
     public void setUri(String uri) { this.uri = uri; }
 
     public void setCurie(String curie) { this.curie = curie; }
-
-    public void setLabel(String label) { this.label = label; }
 
     @Override
     public boolean equals(Object o) {
@@ -52,7 +49,7 @@ public class ExpectedRangeValue {
         return count == that.count &&
             uri.equals(that.uri) &&
             curie.equals(that.curie) &&
-            label.equals(that.label) &&
+            getLabels().equals(that.getLabels()) &&
             value.equals(that.value);
     }
 
@@ -63,7 +60,7 @@ public class ExpectedRangeValue {
             ", count=" + count +
             ", uri=" + uri +
             ", curie=" + curie +
-            ", label=" + label +
+            ", label=" + getLabels() +
             '}';
     }
 }

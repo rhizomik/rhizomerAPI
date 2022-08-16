@@ -16,80 +16,71 @@ public class DetailedQueries implements Queries {
     @Override
     public Query getQueryClasses() {
         return QueryFactory.create(prefixes +
-            "SELECT ?class ?label (COUNT(DISTINCT ?instance) as ?n) \n" +
+            "SELECT ?class ?n (GROUP_CONCAT(?langLabel; SEPARATOR = \" || \") AS ?label) \n" +
             "WHERE { \n" +
-            "\t { ?instance a ?class . FILTER ( !isBlank(?class) ) " +
-            "\t } UNION \n" +
-            "\t { ?instance ?p ?o . FILTER(NOT EXISTS {?instance a ?c} ) BIND(rdfs:Resource AS ?class) } \n" +
-            "\t OPTIONAL { ?class rdfs:label ?label \n" +
-            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
-            "\t OPTIONAL { ?class rdfs:label ?label } \n" +
-            "} GROUP BY ?class ?label");
+            "\t { SELECT ?class (COUNT(DISTINCT ?instance) as ?n) \n" +
+            "\t\t WHERE { \n" +
+            "\t\t\t { ?instance a ?class . FILTER ( !isBlank(?class) ) } \n" +
+            "\t\t\t UNION \n" +
+            "\t\t\t { ?instance ?p ?o . FILTER(NOT EXISTS {?instance a ?c} ) BIND(rdfs:Resource AS ?class) } \n" +
+            "\t\t } GROUP BY ?class } \n" +
+            "\t OPTIONAL { ?class rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "} GROUP BY ?class ?n");
     }
 
     @Override
-    public Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage) {
+    public Query getQueryClassFacets(String classUri) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        if (sampleSize > 0 && coverage > 0.0) {
-            pQuery.setCommandText(prefixes +
-                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) " +
-                "       (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) (SAMPLE(?rlabels) AS ?rlabel) \n" +
-                "WHERE { \n" +
-                "\t { { SELECT ?instance WHERE { ?instance a ?class } OFFSET 0 "+"LIMIT "+sampleSize+" } \n" +
-                addSamples(classCount, sampleSize, coverage) + " } \n" +
-                "\t ?instance ?property ?object \n" +
-                "\t OPTIONAL { ?object a ?type }\n" +
-                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
-                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
-                "} GROUP BY ?property ?range");
-        } else {
-            pQuery.setCommandText(prefixes +
-                "SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) " +
-                "       (MIN(?isLiteral) as ?allLiteral) (SAMPLE(?labels) AS ?label) (SAMPLE(?rlabels) AS ?rlabel) \n" +
-                "WHERE { \n" +
-                "\t { SELECT ?instance WHERE { ?instance a ?class } " + ((sampleSize>0) ? "LIMIT "+sampleSize : "") + " } \n" +
-                "\t ?instance ?property ?object \n" +
-                "\t OPTIONAL { ?object a ?type }\n" +
-                "\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
-                "\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels FILTER LANGMATCHES(LANG(?labels), \"en\")  } \n" +
-                "\t OPTIONAL { ?property rdfs:label ?labels } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels FILTER LANGMATCHES(LANG(?rlabels), \"en\")  } \n" +
-                "\t OPTIONAL { ?range rdfs:label ?rlabels } \n" +
-                "} GROUP BY ?property ?range");
-        }
+        pQuery.setCommandText(prefixes +
+            "SELECT ?property ?range ?uses ?values ?allLiteral " +
+            "       (GROUP_CONCAT(DISTINCT(?langLabel) ; separator=' || ') AS ?label) " +
+            "       (GROUP_CONCAT(DISTINCT(?rlangLabel) ; separator=' || ') AS ?rlabel) \n" +
+            "WHERE { \n" +
+            "\t { SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) AS ?allLiteral) \n" +
+            "\t\t WHERE { \n" +
+            "\t\t\t ?instance a ?class . \n"+
+            "\t\t\t ?instance ?property ?object \n" +
+            "\t\t\t OPTIONAL { ?object a ?type } \n" +
+            "\t\t\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
+            "\t\t\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+            "\t\t } GROUP BY ?property ?range \n" +
+            "\t } \n" +
+            "\t OPTIONAL { ?property rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "\t OPTIONAL { ?range rdfs:label ?rl BIND (CONCAT(?rl, IF(LANG(?rl),\"@\",\"\"), LANG(?rl)) AS ?rlangLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?range rdfs:label ?rl } BIND (CONCAT(?rl, IF(LANG(?rl),\"@\",\"\"), LANG(?rl)) AS ?rlangLabel) } \n" +
+            "} GROUP BY ?property ?range ?uses ?values ?allLiteral");
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
     }
 
     @Override
     public Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
-        MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
+                    MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-            "SELECT ?value ?label (COUNT(?value) AS ?count) \n" +
-            "WHERE { \n" +
-            "\t { SELECT DISTINCT ?instance " +
+            "SELECT ?value ?count (GROUP_CONCAT(?langLabel; SEPARATOR = \" || \") AS ?label) \n" +
+            "\t WHERE { \n" +
+            "\t { SELECT ?value (COUNT(?value) AS ?count) \n" +
             "\t\t WHERE { \n" +
-            "\t\t\t ?instance a ?class . \n" +
+            "\t\t { SELECT DISTINCT ?instance " +
+            "\t\t\t WHERE { \n" +
+            "\t\t\t\t ?instance a ?class . \n" +
             getFilterPatternsAnd(filters) +
+            "\t\t\t } \n" +
             "\t\t } \n" +
-            "\t } \n" +
-            "\t ?instance ?property ?resource . \n" +
-            "\t OPTIONAL { ?resource rdfs:label ?label \n" +
-            "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
-            "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
-            "\t BIND(?resource AS ?value)\n \n" +
+            "\t\t ?instance ?property ?resource . \n" +
+            "\t\t BIND(?resource AS ?value)\n \n" +
             ( isLiteral ?
-                "\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :
+                "\t\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :
                 !rangeUri.equals(RDFS.Resource.getURI()) ?
-                    "\t ?resource a <" + rangeUri + "> \n" :
-                    "\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
-            "} GROUP BY ?value ?label");
+                    "\t\t ?resource a <" + rangeUri + "> \n" :
+                    "\t\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
+            "\t\t } GROUP BY ?value } \n" +
+            "\t OPTIONAL { ?value rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?value rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+            "} GROUP BY ?value ?count");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);
         Query query = pQuery.asQuery();
@@ -101,7 +92,7 @@ public class DetailedQueries implements Queries {
 
     @Override
     public Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
-        MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top) {
+        MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "SELECT DISTINCT ?value ?label \n" +
@@ -114,7 +105,7 @@ public class DetailedQueries implements Queries {
                 "\t } \n" +
                 "\t ?instance ?property ?resource . \n" +
                 "\t OPTIONAL { ?resource rdfs:label ?label \n" +
-                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
+                "\t\t FILTER LANGMATCHES(LANG(?label), \"" + lang + "\")  } \n" +
                 "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
                 ( isLiteral ?
                     "\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :

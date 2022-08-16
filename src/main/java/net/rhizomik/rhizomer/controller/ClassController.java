@@ -44,15 +44,14 @@ public class ClassController {
     @RequestMapping(value = "/datasets/{datasetId}/classes", method = RequestMethod.GET)
     public @ResponseBody List<Class> searchDatasetClass(@PathVariable String datasetId,
         @RequestParam(value = "containing", defaultValue = "") String containing,
-        @RequestParam(value = "top", defaultValue = "-1") int top, Authentication auth) {
+        @RequestParam(value = "top", defaultValue = "-1") int top,
+        @RequestParam(value = "lang", defaultValue = "en") String lang, Authentication auth) {
         Dataset dataset = getDataset(datasetId);
         securityController.checkPublicOrOwner(dataset, auth);
         logger.info("Retrieving top {} classes in Dataset {} containing '{}'", top, datasetId, containing);
         if (dataset.getClasses().isEmpty() && endPointRepository.existsByDataset(dataset))
             analizeDataset.detectDatasetClasses(dataset);
-        if (top >= 0)
-            return dataset.getClassesContaining(containing, top);
-        return dataset.getClassesContaining(containing);
+        return dataset.getClassesContaining(containing, top, lang);
     }
 
     @RequestMapping(value = "/datasets/{datasetId}/classByUri", method = RequestMethod.GET)

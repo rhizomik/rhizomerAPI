@@ -29,7 +29,7 @@ public interface Queries {
     default
     Query getQueryClassInstancesCount(String classUri, MultiValueMap<String, String> filters) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(
+        pQuery.setCommandText(prefixes +
                 "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
                         "WHERE { \n" +
                         "\t ?instance a ?class . \n" +
@@ -68,6 +68,7 @@ public interface Queries {
                 "\t\t rdfs:label ?label; \n" +
                 "\t\t foaf:depiction ?depiction; \n" +
                 "\t\t rdfs:comment ?comment . \n" +
+                "\t ?class rdfs:label ?classLabel . \n" +
                 "} WHERE { \n" +
                 "\t { SELECT DISTINCT ?instance \n" +
                 "\t\t WHERE { \n" +
@@ -79,6 +80,7 @@ public interface Queries {
                 "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 "\t\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
                 "\t\t OPTIONAL { ?instance rdfs:comment ?comment } \n" +
+                "\t\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?classLabel } } \n" +
                 "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
@@ -88,11 +90,13 @@ public interface Queries {
     default
     Query getQuerySearchInstancesCount(String text) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
-        pQuery.setCommandText(
+        pQuery.setCommandText(prefixes +
                 "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
                 "WHERE { \n" +
                 "\t ?instance a ?class ; ?property ?value \n" +
-                "\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
+                "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
+                "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), ?text) ) || \n" +
+                "\t\t CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
                 "}");
         pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();
@@ -108,7 +112,8 @@ public interface Queries {
                 "\t\t rdfs:label ?label; \n" +
                 "\t\t foaf:depiction ?depiction; \n" +
                 "\t\t ?property ?value . \n" +
-                "\t ?value rdfs:label ?valueLabel; \n" +
+                "\t ?class rdfs:label ?classLabel . \n" +
+                "\t ?value rdfs:label ?valueLabel . \n" +
                 "} WHERE { \n" +
                 "\t ?instance a ?class ; ?property ?value \n" +
                 "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
@@ -116,6 +121,7 @@ public interface Queries {
                 "\t\t CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
                 "\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 "\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?classLabel } } \n" +
                 "}");
         pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();
@@ -130,10 +136,10 @@ public interface Queries {
                 "SELECT ?class ?label (COUNT(DISTINCT ?instance) AS ?count) \n" +
                 "WHERE { \n" +
                 "\t ?instance a ?class ; ?property ?value \n" +
-                "\t\t FILTER ( CONTAINS(LCASE(STR(?value)), ?text) ) \n" +
-                "\t OPTIONAL { ?class rdfs:label ?label \n" +
-                "\t\t FILTER LANGMATCHES(LANG(?label), \"en\")  } \n" +
-                "\t OPTIONAL { ?class rdfs:label ?label } \n" +
+                "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
+                "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), ?text) ) || \n" +
+                "\t\t CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
+                "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?label } } \n" +
                 "} GROUP BY ?class ?label");
         pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();
@@ -165,21 +171,24 @@ public interface Queries {
             "\t\t ?resource rdfs:label ?label . \n" +
             " } UNION { \n" +
             "\t\t ?instance ?resource ?object . \n" +
-            "\t\t ?resource rdfs:label ?label . \n" +
+            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
+            " } UNION { \n" +
+            "\t\t ?instance a ?resource . \n" +
+            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
             "} }");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
         return query;
     }
 
-    Query getQueryClassFacets(String classUri, int sampleSize, int classCount, double coverage);
+    Query getQueryClassFacets(String classUri);
 
     Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
         MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset,
         boolean ordered);
 
     Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
-           MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top);
+           MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang);
 
     default Query getQueryDescribeResource(URI resourceUri) {
         return QueryFactory.create("DESCRIBE <" + resourceUri + ">");
@@ -198,7 +207,10 @@ public interface Queries {
             "\t ?resource rdfs:label ?label . \n" +
             " } UNION { \n" +
             "\t\t ?instance ?resource ?object . \n" +
-            "\t\t ?resource rdfs:label ?label . \n" +
+            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
+            " } UNION { \n" +
+            "\t\t ?instance a ?resource . \n" +
+            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
             "} }");
         pQuery.setIri("instance", resourceUri.toString());
         Query query = pQuery.asQuery();
@@ -208,21 +220,23 @@ public interface Queries {
     default Query getQueryResourceIncomingFacets(URI resourceUri) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-            "SELECT (SAMPLE(?class) as ?range) ?prop ?proplabel ?uses ?domain ?domainlabel (COUNT(DISTINCT ?s) AS ?count) \n" +
+            "SELECT (SAMPLE(?class) as ?range) ?prop ?uses ?domain (COUNT(DISTINCT ?s) AS ?count) " +
+            "   (GROUP_CONCAT(DISTINCT(?pLabel) ; separator=' || ') AS ?proplabel) " +
+            "   (GROUP_CONCAT(DISTINCT(?dLabel) ; separator=' || ') AS ?domainlabel) \n" +
             "WHERE { \n" +
-            "\t { SELECT ?class ?prop ?proplabel (COUNT(DISTINCT ?s) AS ?uses) \n" +
+            "\t { SELECT ?class ?prop (COUNT(DISTINCT ?s) AS ?uses) \n" +
             "\t\t WHERE { \n" +
             "\t\t\t ?s ?prop ?resource . \n" +
             "\t\t\t OPTIONAL { ?resource a ?class } \n" +
             "\t\t\t FILTER NOT EXISTS { ?subclass rdfs:subClassOf ?class . ?resource a ?subclass } \n" +
-            "\t\t\t OPTIONAL { ?prop rdfs:label ?proplabel FILTER LANGMATCHES(LANG(?proplabel), \"en\")  } \n" +
-            "\t\t\t OPTIONAL { ?prop rdfs:label ?proplabel } \n" +
-            "\t } GROUP BY ?class ?prop ?proplabel } \n" +
+            "\t } GROUP BY ?class ?prop } \n" +
             "\t ?s ?prop ?resource ; a ?domain . \n" +
             "\t FILTER NOT EXISTS { ?subdomain rdfs:subClassOf ?domain . ?s a ?subdomain } \n" +
-            "\t OPTIONAL { ?domain rdfs:label ?domainlabel FILTER LANGMATCHES(LANG(?domainlabel), \"en\")  } \n" +
-            "\t OPTIONAL { ?domain rdfs:label ?domainlabel } \n" +
-            "} GROUP BY ?prop ?proplabel ?domain ?domainlabel ?uses");
+            "\t OPTIONAL { ?prop  rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?pLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?prop  rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?pLabel) } \n" +
+            "\t OPTIONAL { ?domain rdfs:label ?dl BIND (CONCAT(?dl, IF(LANG(?dl),\"@\",\"\"), LANG(?dl)) AS ?dLabel) } \n" +
+            "\t OPTIONAL { GRAPH ?g { ?domain rdfs:label ?dl } BIND (CONCAT(?dl, IF(LANG(?dl),\"@\",\"\"), LANG(?dl)) AS ?dLabel) } \n" +
+            "} GROUP BY ?prop ?domain ?uses");
         pQuery.setIri("resource", resourceUri.toString());
         Query query = pQuery.asQuery();
         return query;
@@ -378,8 +392,9 @@ public interface Queries {
     default String convertFilterToSparqlPattern(String property, String range, String value) {
         String pattern = "";
         if (property.equalsIgnoreCase("urn:rhz:contains")) {
-            pattern += "\t ?instance ?anyProperty ?text . FILTER ( CONTAINS(LCASE(STR(?text)), "
-                    + value.toLowerCase() + ") )";
+            pattern += "\t ?instance ?anyProperty ?value . OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
+                       "\t\t FILTER ( (ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), " + value.toLowerCase() + ")) \n" +
+                       "\t\t\t || CONTAINS(LCASE(STR(?valueLabel)), " + value.toLowerCase() + ") )";
         }
         else {
             String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());

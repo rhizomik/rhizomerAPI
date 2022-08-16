@@ -5,7 +5,7 @@
 
 	<groupId>net.rhizomik</groupId>
 	<artifactId>rhizomerAPI</artifactId>
-	<version>0.2</version>
+	<version>0.2.0</version>
 	<packaging>jar</packaging>
 
 	<name>rhizomerAPI</name>

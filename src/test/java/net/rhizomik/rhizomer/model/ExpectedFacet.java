@@ -2,38 +2,42 @@ package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Objects;
+
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-public class ExpectedFacet {
+public class ExpectedFacet extends Labelled {
     public String id;
     public String uri;
     public String curie;
-    public String label;
     public int timesUsed;
     public int differentValues;
     public String domainURI;
     public String range;
     public boolean relation;
 
-    public ExpectedFacet() {}
+    public ExpectedFacet() { super(""); }
 
-    public ExpectedFacet(String uri, String label, int timesUsed, int differentValues, boolean relation, String range) {
+    public ExpectedFacet(String uri, String labels, int timesUsed, int differentValues, boolean relation,
+                         String range, String domainURI) {
+        super(labels);
         this.uri = uri;
-        this.label = label;
         this.timesUsed = timesUsed;
         this.differentValues = differentValues;
         this.relation = relation;
         this.range = range;
+        // this.domainURI = domainURI;
     }
 
     public ExpectedFacet(Facet datasetFacet) {
+        super("");
         this.uri = datasetFacet.getId().toString();
         this.curie = id.split("/")[4];
-        this.label = datasetFacet.getLabel();
+        this.setLabels(datasetFacet.getLabels());
         this.timesUsed = datasetFacet.getTimesUsed();
         this.differentValues = datasetFacet.getDifferentValues();
-        this.domainURI = datasetFacet.getDomainURI();
+        // this.domainURI = datasetFacet.getDomainURI();
         this.range = datasetFacet.getRange();
         this.relation = datasetFacet.isRelation();
     }
@@ -57,10 +61,9 @@ public class ExpectedFacet {
     public String toString() {
         return "ExpectedFacet{" +
                 "uri='" + uri + '\'' +
-                ", label='" + label + '\'' +
+                ", labels='" + getLabels() + '\'' +
                 ", timesUsed=" + timesUsed +
                 ", differentValues=" + differentValues +
-                ", domainURI='" + domainURI + '\'' +
                 ", range='" + range + '\'' +
                 ", relation=" + relation +
                 '}';
@@ -77,15 +80,15 @@ public class ExpectedFacet {
         if (differentValues != that.differentValues) return false;
         if (relation != that.relation) return false;
         if (!uri.equals(that.uri)) return false;
-        if (label != null ? !label.equals(that.label) : that.label != null) return false;
-        return !(range != null ? !range.equals(that.range) : that.range != null);
+        if (getLabels() != null ? !getLabels().equals(that.getLabels()) : that.getLabels() != null) return false;
+        return Objects.equals(range, that.range);
 
     }
 
     @Override
     public int hashCode() {
         int result = uri.hashCode();
-        result = 31 * result + (label != null ? label.hashCode() : 0);
+        result = 31 * result + (getLabels() != null ? getLabels().hashCode() : 0);
         result = 31 * result + timesUsed;
         result = 31 * result + differentValues;
         result = 31 * result + (range != null ? range.hashCode() : 0);

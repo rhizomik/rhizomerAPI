@@ -9,25 +9,24 @@ import java.util.List;
 /**
  * Created by http://rhizomik.net/~roberto/
  */
-public class IncomingFacet {
+public class IncomingFacet extends Labelled {
     private static final Logger logger = LoggerFactory.getLogger(IncomingFacet.class);
 
     private String rangeUri;
     private String rangeCurie;
     private String uri;
     private String curie;
-    private String label;
     private int uses;
     private List<Domain> domains = new ArrayList<>();
 
-    public IncomingFacet() { }
+    public IncomingFacet() { super(""); }
 
-    public IncomingFacet(String rangeUri, String uri, String label, int uses) {
+    public IncomingFacet(String rangeUri, String uri, String labels, int uses) {
+        super(labels);
         this.rangeUri = rangeUri;
         this.rangeCurie = Curie.uriStrToCurie(rangeUri);
         this.uri = uri;
         this.curie = Curie.uriStrToCurie(uri);
-        this.label = label;
         this.uses = uses;
     }
 
@@ -47,10 +46,6 @@ public class IncomingFacet {
 
     public void setCurie(String curie) { this.curie = curie; }
 
-    public String getLabel() { return label; }
-
-    public void setLabel(String label) { this.label = label; }
-
     public int getUses() { return uses; }
 
     public void setUses(int uses) { this.uses = uses; }
@@ -66,23 +61,22 @@ public class IncomingFacet {
         return "Facet{" +
                 "rangeCurie=" + getRangeCurie() +
                 ", curie='" + getCurie() + '\'' +
-                ", label='" + getLabel() + '\'' +
+                ", labels='" + getLabels() + '\'' +
                 ", domains=" + getDomains().toString() +
                 '}';
     }
 
-    public static class Domain {
+    public static class Domain extends Labelled {
         private String uri;
         private String curie;
-        private String label;
         private int count;
 
-        public Domain() { }
+        public Domain() { super(""); }
 
-        public Domain(String uri, String label, int count) {
+        public Domain(String uri, String labels, int count) {
+            super(labels);
             this.uri = uri;
             this.curie = Curie.uriStrToCurie(uri.toString());
-            this.label = label;
             this.count = count;
         }
 
@@ -94,10 +88,6 @@ public class IncomingFacet {
 
         public void setCurie(String curie) { this.curie = curie; }
 
-        public String getLabel() { return label; }
-
-        public void setLabel(String label) { this.label = label; }
-
         public int getCount() { return count; }
 
         public void setCount(int count) { this.count = count; }
@@ -107,7 +97,7 @@ public class IncomingFacet {
             return "Domain{" +
                     "uri=" + uri +
                     ", curie='" + curie + '\'' +
-                    ", label='" + label + '\'' +
+                    ", labels='" + getLabels() + '\'' +
                     ", count=" + count +
                     '}';
         }

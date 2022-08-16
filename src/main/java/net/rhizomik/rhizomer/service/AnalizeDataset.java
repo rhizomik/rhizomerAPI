@@ -15,6 +15,7 @@ import net.rhizomik.rhizomer.repository.RangeRepository;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 import net.rhizomik.rhizomer.service.Queries.QueryType;
 import java.net.http.HttpClient;
+
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -53,9 +54,6 @@ public class AnalizeDataset {
     @Autowired private SPARQLService sparqlService;
     @Autowired private OptimizedQueries optimizedQueries;
     @Autowired private DetailedQueries detailedQueries;
-    @Autowired private NeptuneOptimizedQueries neptuneOptimizedQueries;
-    @Autowired private NeptuneDetailedQueries neptuneDetailedQueries;
-    @Autowired private VirtuosoDetailedQueries virtuosoDetailedQueries;
     @Autowired private SPARQLEndPointRepository endPointRepository;
     @Autowired private ClassRepository classRepository;
     @Autowired private FacetRepository facetRepository;
@@ -65,17 +63,9 @@ public class AnalizeDataset {
         Queries.QueryType queryType = dataset.getQueryType();
         SPARQLEndPoint.ServerType serverType = endPointRepository.findByDataset(dataset).get(0).getType();
         if (queryType == QueryType.DETAILED) {
-            if (serverType == SPARQLEndPoint.ServerType.NEPTUNE)
-                return neptuneDetailedQueries;
-            else if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO)
-                return virtuosoDetailedQueries;
-            else
-                return detailedQueries;
+            return detailedQueries;
         } else {
-            if (serverType == SPARQLEndPoint.ServerType.NEPTUNE)
-                return neptuneOptimizedQueries;
-            else
-                return optimizedQueries;
+            return optimizedQueries;
         }
     }
 
@@ -83,12 +73,12 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             List<String> targetGraphs = endPoint.getGraphs();
             if (dataset.isInferenceEnabled()) {
-                sparqlService.inferTypes(dataset, endPoint,
+                sparqlService.inferTypes(dataset.getDatasetInferenceGraph(), endPoint,
                         withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
                 targetGraphs.add(dataset.getDatasetInferenceGraph().toString());
             }
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(dataset).getQueryClasses(), targetGraphs,
+                    queries(dataset).getQueryClasses(), targetGraphs, endPoint.getOntologyGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
@@ -118,10 +108,9 @@ public class AnalizeDataset {
     public void detectClassFacets(Class datasetClass) {
         endPointRepository.findByDataset(datasetClass.getDataset()).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(datasetClass.getDataset()).getQueryClassFacets(
-                            datasetClass.getUri().toString(), datasetClass.getDataset().getSampleSize(),
-                            datasetClass.getInstanceCount(), datasetClass.getDataset().getCoverage()),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    queries(datasetClass.getDataset()).getQueryClassFacets(datasetClass.getUri().toString()),
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 if (!soln.contains("?property")) continue;
@@ -186,8 +175,8 @@ public class AnalizeDataset {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                     queries(dataset).getQueryFacetRangeValues(classUri.toString(), facetUri.toString(),
                             facetRange.getUri().toString(), filters, facetRange.getAllLiteral(),
-                            size, size * page, true),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                            size, size * page, true), endPoint.getGraphs(), endPoint.getOntologyGraphs(),
+                    withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 if (soln.contains("?value")) {
@@ -216,14 +205,14 @@ public class AnalizeDataset {
     }
 
     public List<Value> retrieveRangeValuesContaining(Dataset dataset, Range facetRange,
-           MultiValueMap<String, String> filters, String containing, int top) {
+           MultiValueMap<String, String> filters, String containing, int top, String lang) {
         URI classUri = facetRange.getFacet().getDomain().getUri();
         URI facetUri = facetRange.getFacet().getUri();
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                     queries(dataset).getQueryFacetRangeValuesContaining(classUri.toString(), facetUri.toString(),
-                            facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top),
+                        facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top, lang),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
@@ -283,7 +272,8 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryClassInstances(classUri.toString(), filters, size,size * page),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });
     }
@@ -307,7 +297,8 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQuerySearchInstances(text, size),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });
     }
@@ -317,7 +308,8 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                 queries(dataset).getQuerySearchTypeFacet(text, size, size * page, true),
-                endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                endPoint.getGraphs(), endPoint.getOntologyGraphs(),
+                withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 if (soln.contains("?class")) {
@@ -351,7 +343,8 @@ public class AnalizeDataset {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryClassInstancesLabels(classUri.toString(), filters, size,size * page),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });
     }
@@ -378,8 +371,9 @@ public class AnalizeDataset {
                     queries(dataset).getQueryDescribeResource(resourceUri), endPoint.getGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             model.add(sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
-                    queries(dataset).getQueryDescribeResourceLabels(resourceUri), endPoint.getGraphs(),
-                    withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword())));
+                    queries(dataset).getQueryDescribeResourceLabels(resourceUri),
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
+                    endPoint.getQueryPassword())));
             RDFDataMgr.write(out, model, format);
         });
     }
@@ -388,8 +382,8 @@ public class AnalizeDataset {
         HashMap<String, IncomingFacet> incomingFacets = new HashMap<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(dataset).getQueryResourceIncomingFacets(resourceUri),
-                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    queries(dataset).getQueryResourceIncomingFacets(resourceUri), endPoint.getGraphs(),
+                    endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
                 Resource range = OWL.Thing;
@@ -471,24 +465,6 @@ public class AnalizeDataset {
             sparqlService.loadModel(endPoint.getUpdateEndPoint(), endPoint.getType(), graph, model,
                     withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
             endPoint.addGraph(graph);
-        }
-    }
-
-    public void clearOntologies(Dataset dataset, SPARQLEndPoint endPoint) {
-        if (endPoint.isWritable()) {
-            sparqlService.clearGraph(endPoint.getUpdateEndPoint(), dataset.getDatasetOntologiesGraph().toString(),
-                    withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
-        }
-    }
-
-    public void loadOntologies(Dataset dataset, SPARQLEndPoint endPoint, Set<String> ontologies) {
-        if (endPoint.isWritable()) {
-            ontologies.forEach(ontologyUriStr -> {
-                sparqlService.loadURI(endPoint.getUpdateEndPoint(), endPoint.getType(),
-                        dataset.getDatasetOntologiesGraph().toString(), ontologyUriStr,
-                        withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
-                dataset.addDatasetOntology(ontologyUriStr);
-            });
         }
     }
 

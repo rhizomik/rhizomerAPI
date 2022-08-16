@@ -21,7 +21,11 @@ import net.rhizomik.rhizomer.service.AnalizeDataset;
 import net.rhizomik.rhizomer.service.DetailedQueries;
 import net.rhizomik.rhizomer.service.SPARQLService;
 import net.rhizomik.rhizomer.service.SPARQLServiceMockFactory;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.json.JSONObject;
@@ -41,6 +45,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -51,6 +56,7 @@ import javax.transaction.Transactional;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
@@ -131,30 +137,29 @@ public class APIStepdefs {
 
     @DataTableType
     public ExpectedClass expectedClassEntry(Map<String, String> entry) {
-        return new ExpectedClass(entry.get("id"), entry.get("uri"), entry.get("label"),
+        return new ExpectedClass(entry.get("id"), entry.get("uri"), entry.get("labels"),
                 entry.get("curie"), Integer.parseInt(entry.get("instanceCount")));
     }
 
     @DataTableType
     public ExpectedFacet expectedFacetEntry(Map<String, String> entry) {
-        return new ExpectedFacet(entry.get("uri"), entry.get("label"),
+        return new ExpectedFacet(entry.get("uri"), entry.get("labels"),
                 Integer.parseInt(entry.getOrDefault("timesUsed", "0")),
                 Integer.parseInt(entry.getOrDefault("differentValues", "0")),
-                Boolean.parseBoolean(entry.get("relation")),
-                entry.get("range"));
+                Boolean.parseBoolean(entry.get("relation")), entry.get("range"), entry.get("domainURI"));
     }
 
     @DataTableType
     public ExpectedRange expectedRangeEntry(Map<String, String> entry) {
-        return new ExpectedRange(entry.get("uri"), entry.get("label"),
+        return new ExpectedRange(entry.get("uri"), entry.get("label"), entry.get("curie"),
                 Integer.parseInt(entry.getOrDefault("timesUsed", "0")),
                 Integer.parseInt(entry.getOrDefault("differentValues", "0")),
-                Boolean.parseBoolean(entry.get("isRelation")));
+                Boolean.parseBoolean(entry.get("relation")));
     }
 
     @DataTableType
     public ExpectedRangeValue expectedRangeValueEntry(Map<String, String> entry) {
-        return new ExpectedRangeValue(entry.get("value"), entry.get("curie"), entry.get("uri"), entry.get("label"),
+        return new ExpectedRangeValue(entry.get("value"), entry.get("curie"), entry.get("uri"), entry.get("labels"),
                 Integer.parseInt(entry.getOrDefault("count", "0")));
     }
 
@@ -162,6 +167,30 @@ public class APIStepdefs {
     public ExpectedRelationship expectedRelationship(Map<String, String> entry) {
         return new ExpectedRelationship(entry.get("classCurie"), entry.get("propertyCurie"), entry.get("rangeCurie"),
                 Integer.parseInt(entry.getOrDefault("uses", "0")));
+    }
+
+    @DataTableType
+    public Statement expectedStatement(Map<String, String> entry) {
+        String sString = entry.get("subject");
+        String pString = entry.get("predicate");
+        String oString = entry.get("object");
+        String literal = null;
+        String lang = null;
+        if (oString.contains("\"")) {
+            oString = oString.replaceAll("\"", "");
+            if (oString.contains("@")) {
+                literal = oString.split("@")[0];
+                lang = oString.split("@")[1];
+            } else {
+                literal = oString;
+            }
+        }
+        return ResourceFactory.createStatement(
+                ResourceFactory.createResource(sString),
+                ResourceFactory.createProperty(pString),
+                lang != null ? ResourceFactory.createLangLiteral(literal, lang) :
+                literal != null ? ResourceFactory.createPlainLiteral(literal) :
+                ResourceFactory.createResource(oString));
     }
 
     @Given("^I login as \"([^\"]*)\" with password \"([^\"]*)\"$")
@@ -229,7 +258,7 @@ public class APIStepdefs {
     public void iCreateAClassWithURILabelAndInstanceCount(String datasetId, String classUriStr, String classLabel, int instanceCount) throws Throwable {
         String json = MessageFormat.format("'{' " +
                 "\"uri\": \"{0}\", " +
-                "\"label\": \"{1}\", " +
+                "\"labelsStr\": \"{1}\", " +
                 "\"instanceCount\": {2,number,integer} '}'", classUriStr, classLabel, instanceCount);
         this.result = mockMvc.perform(post("/datasets/{datasetId}/classes", datasetId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -490,16 +519,16 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", hasItems(graphs.asList().toArray())));
     }
 
-    @And("^The following ontologies are set for dataset \"([^\"]*)\"$")
-    public void theFollowingOntologiesAreSetForDataset(String datasetId, DataTable ontologies) throws Throwable {
-        String ontologiesJson = mapper.writeValueAsString(ontologies.asList());
-        this.result = mockMvc.perform(put("/datasets/{datasetId}/ontologies", datasetId)
+    @When("^I add the graphs to the dataset \"([^\"]*)\" ontologies$")
+    public void iAddTheGraphToTheDatasetOntologies(String datasetId, DataTable graphs) throws Throwable {
+        String graphsJson = mapper.writeValueAsString(graphs.asList());
+        this.result = mockMvc.perform(post("/datasets/{id}/endpoints/{id}/ontologies", datasetId, endPointId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(ontologiesJson)
+                .content(graphsJson)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
-        this.result.andExpect(status().isOk());
-        this.result.andExpect(jsonPath("$", containsInAnyOrder(ontologies.asList().toArray())));
+        this.result.andExpect(status().isCreated());
+        this.result.andExpect(jsonPath("$", hasItems(graphs.asList().toArray())));
     }
 
     @When("^The following data graphs are set for dataset \"([^\"]*)\"$")
@@ -515,10 +544,23 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", containsInAnyOrder(validGraphs.toArray())));
     }
 
+    @When("^The following ontology graphs are set for dataset \"([^\"]*)\"$")
+    public void theFollowingOntologyGraphsAreSetForDataset(String datasetId, DataTable graphs) throws Throwable {
+        List<String> validGraphs = graphs.asList().stream().filter(Objects::nonNull).collect(Collectors.toList());
+        String graphsJson = mapper.writeValueAsString(validGraphs);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/endpoints/{id}/ontologies", datasetId, endPointId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(graphsJson)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
+        this.result.andExpect(status().isOk());
+        this.result.andExpect(jsonPath("$", containsInAnyOrder(validGraphs.toArray())));
+    }
+
     @And("^The following ontologies are defined for the dataset \"([^\"]*)\"$")
     public void theFollowingOntologiesAreDefinedForTheDataset(String datasetId, DataTable ontologies) throws Throwable {
         List<String> validOntologies = ontologies.asList().stream().filter(Objects::nonNull).collect(Collectors.toList());
-        this.result = mockMvc.perform(get("/datasets/{datasetId}/ontologies", datasetId)
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/endpoints/{id}/ontologies", datasetId, endPointId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         this.result.andExpect(jsonPath("$", containsInAnyOrder(validOntologies.toArray())));
@@ -533,20 +575,27 @@ public class APIStepdefs {
         this.result.andExpect(jsonPath("$", containsInAnyOrder(validGraphs.toArray())));
     }
 
-    @And("^The size of dataset \"([^\"]*)\" ontologies graph is (\\d+)$")
-    @Transactional
-    public void theSizeOfDatasetOntologiesGraphIs(String datasetId, long expectedSize) throws Throwable {
-        Dataset dataset = datasetRepository.findById(datasetId).get();
-        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
-        long actualSize = analizeDataset.countGraphTriples(defaultEndPoint, dataset.getDatasetOntologiesGraph().toString());
-        assertThat(actualSize, is(expectedSize));
-    }
-
     @And("^The size of dataset \"([^\"]*)\" data graphs is (\\d+)$")
     @Transactional
     public void theSizeOfDatasetGraphsIs(String datasetId, long expectedSize) throws Throwable {
         Dataset dataset = datasetRepository.findById(datasetId).get();
         this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/graphs", datasetId, endPointId)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(authenticate()));
+        String json = this.result.andReturn().getResponse().getContentAsString();
+        List<String> datasetGraphs = mapper.readValue(json,
+                mapper.getTypeFactory().constructCollectionType(List.class, String.class));
+        SPARQLEndPoint defaultEndPoint = endPointRepository.findByDataset(dataset).get(0);
+        long actualSize = datasetGraphs.stream().mapToLong(
+                graph -> analizeDataset.countGraphTriples(defaultEndPoint, graph)).sum();
+        assertThat(actualSize, is(expectedSize));
+    }
+
+    @And("^The size of dataset \"([^\"]*)\" ontology graphs is (\\d+)$")
+    @Transactional
+    public void theSizeOfDatasetOntologyGraphsIs(String datasetId, long expectedSize) throws Throwable {
+        Dataset dataset = datasetRepository.findById(datasetId).get();
+        this.result = mockMvc.perform(get("/datasets/{id}/endpoints/{id}/ontologies", datasetId, endPointId)
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         String json = this.result.andReturn().getResponse().getContentAsString();
@@ -610,8 +659,41 @@ public class APIStepdefs {
                 .andExpect(status().isOk());
     }
 
+    @When("^I get the description for resource \"([^\"]*)\" in dataset \"([^\"]*)\"$")
+    public void iExtractTheIncomingFacetsFromDatasetForResources(String resource, String datasetId) throws Throwable {
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/describe?uri={resource}", datasetId,
+                        resource)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(authenticate()))
+                .andExpect(request().asyncStarted());
+    }
+
+    @Then("The retrieved data includes the following triples")
+    public void theRetrievedDataIncludesTheFollowingTriples(List<Statement> expectedTriples) throws Exception {
+        // this.mockMvc.perform(asyncDispatch(this.result.andReturn())).andExpect(content().string("http"));
+        String data = this.result.andDo(MvcResult::getAsyncResult)
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        Model model = ModelFactory.createDefaultModel()
+                .read(IOUtils.toInputStream(data, "UTF-8"), null, "JSON-LD");
+        List<Statement> actualTriples = model.listStatements().toList();
+        assertThat(actualTriples, containsInAnyOrder(expectedTriples.toArray()));
+    }
+
+    @When("^I retrieve facet \"([^\"]*)\" ranges$")
+    public void iRetrieveFacetRange(String facetId, List<ExpectedRange> expectedRange) throws Throwable {
+        String json = mockMvc.perform(get(facetId + "/ranges")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(authenticate()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        List<ExpectedRange> actualRange = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, ExpectedRange.class));
+        assertThat(actualRange, containsInAnyOrder(expectedRange.toArray()));
+    }
+
     @When("^I retrieve facet range \"([^\"]*)\" values$")
-    public void iRetrieveFacetRangesValues(String facetRangeId, List<ExpectedRangeValue> expectedRangeValues) throws Throwable {
+    public void iRetrieveFacetRangeValues(String facetRangeId, List<ExpectedRangeValue> expectedRangeValues) throws Throwable {
         String json = mockMvc.perform(get(facetRangeId + "/values")
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()))
@@ -675,9 +757,9 @@ public class APIStepdefs {
                 String facetPath = "$[?(@.curie == '" + expectedIncoming.get("curie") + "')]";
                 String domainPath = facetPath + ".domains[?(@.curie == '" + expectedIncoming.get("domain-curie") + "')]";
                 this.result.andExpect(jsonPath(facetPath + ".rangeCurie", hasItem(expectedIncoming.get("range-curie"))));
-                this.result.andExpect(jsonPath(facetPath + ".label", hasItem(expectedIncoming.get("label"))));
+                this.result.andExpect(jsonPath(facetPath + ".labels", hasItem(Labelled.splitLabelsUtil(expectedIncoming.get("label")))));
                 this.result.andExpect(jsonPath(facetPath + ".uses", hasItem(Integer.parseInt(expectedIncoming.get("uses")))));
-                this.result.andExpect(jsonPath(domainPath + ".label", hasItem(expectedIncoming.get("domain-label"))));
+                this.result.andExpect(jsonPath(domainPath + ".labels", hasItem(Labelled.splitLabelsUtil(expectedIncoming.get("domain-label")))));
                 this.result.andExpect(jsonPath(domainPath + ".count", hasItem(Integer.parseInt(expectedIncoming.get("count")))));
             } catch (Exception e) {
                 e.printStackTrace();

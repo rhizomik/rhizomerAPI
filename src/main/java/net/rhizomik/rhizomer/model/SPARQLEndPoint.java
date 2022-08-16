@@ -40,7 +40,6 @@ public class SPARQLEndPoint {
         GENERIC,
         VIRTUOSO,
         MARKLOGIC,
-        NEPTUNE,
         STARDOG;
     }
     private String timeout;
@@ -50,6 +49,8 @@ public class SPARQLEndPoint {
     private Dataset dataset;
     @ElementCollection
     private Set<String> graphs = new HashSet<>();
+    @ElementCollection
+    private Set<String> ontologyGraphs = new HashSet<>();
 
     public URL getUpdateEndPoint() {
         if (!writable)
@@ -83,7 +84,14 @@ public class SPARQLEndPoint {
     }
 
     public List<String> getGraphs() {
-        List<String> graphsList = new ArrayList<>(this.graphs);
-        return graphsList;
+        return new ArrayList<>(this.graphs);
+    }
+
+    public void addOntologyGraph(String graph) {
+        this.ontologyGraphs.add(graph);
+    }
+
+    public List<String> getOntologyGraphs() {
+        return new ArrayList<>(this.ontologyGraphs);
     }
 }
