@@ -81,7 +81,7 @@ public class ExpectedFacet extends Labelled {
         if (relation != that.relation) return false;
         if (!uri.equals(that.uri)) return false;
         if (getLabels() != null ? !getLabels().equals(that.getLabels()) : that.getLabels() != null) return false;
-        return !(!Objects.equals(range, that.range));
+        return Objects.equals(range, that.range);
 
     }
 
