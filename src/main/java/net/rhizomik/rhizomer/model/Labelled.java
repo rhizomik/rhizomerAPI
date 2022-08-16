@@ -25,6 +25,8 @@ public class Labelled {
             return null;
         } else if (this.labels.containsKey(lang)) {
             return this.labels.get(lang);
+        } else if (this.labels.keySet().stream().anyMatch(code -> code.startsWith(lang))) {
+            return this.labels.get(this.labels.keySet().stream().filter(code -> code.startsWith(lang)).findFirst().get());
         } else if (this.labels.containsKey("undefined")) {
             return this.labels.get("undefined");
         } else if (this.labels.containsKey("en")) {
