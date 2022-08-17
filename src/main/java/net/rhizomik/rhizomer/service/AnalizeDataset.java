@@ -85,7 +85,7 @@ public class AnalizeDataset {
                 if (!soln.contains("?class")) continue;
                 Resource r = soln.getResource("?class");
                 String label = r.getLocalName();
-                if (soln.contains("?label"))
+                if (soln.contains("?label") && !soln.getLiteral("?label").getString().isBlank())
                     label = soln.getLiteral("?label").getString();
                 if (isOmittedClass(r.getURI())) continue;
                 int count = soln.getLiteral("?n").getInt();
@@ -130,7 +130,7 @@ public class AnalizeDataset {
                         allLiteralBoolean = (allLiteral.getInt() != 0);
                 }
                 String label = property.getLocalName();
-                if (soln.contains("?label") && soln.getLiteral("?label").getString().length() > 0)
+                if (soln.contains("?label") && !soln.getLiteral("?label").getString().isBlank())
                     label = soln.getLiteral("?label").getString();
                 try {
                     URI propertyUri = new URI(property.getURI());
@@ -183,7 +183,7 @@ public class AnalizeDataset {
                     RDFNode value = soln.get("?value");
                     int count = soln.getLiteral("?count").getInt();
                     String label = null;
-                    if (soln.contains("?label"))
+                    if (soln.contains("?label") && !soln.getLiteral("?label").getString().isBlank())
                         label = soln.getLiteral("?label").getString();
                     String uri = null;
                     if (value.isResource())
@@ -219,7 +219,7 @@ public class AnalizeDataset {
                 if (soln.contains("?value")) {
                     RDFNode value = soln.get("?value");
                     String label = null;
-                    if (soln.contains("?label"))
+                    if (soln.contains("?label") && !soln.getLiteral("?label").getString().isBlank())
                         label = soln.getLiteral("?label").getString();
                     String uri = null;
                     if (value.isResource())
@@ -316,7 +316,7 @@ public class AnalizeDataset {
                     RDFNode value = soln.get("?class");
                     int count = soln.getLiteral("?count").getInt();
                     String label = null;
-                    if (soln.contains("?label"))
+                    if (soln.contains("?label") && !soln.getLiteral("?label").getString().isBlank())
                         label = soln.getLiteral("?label").getString();
                     String uri = null;
                     if (value.isResource())
