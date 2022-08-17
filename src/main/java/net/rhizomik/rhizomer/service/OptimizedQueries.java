@@ -23,7 +23,6 @@ public class OptimizedQueries implements Queries {
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . FILTER ( !isBlank(?class) ) \n" +
             "\t\t } GROUP BY ?class } \n" +
-            "\t OPTIONAL { ?class rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "} GROUP BY ?class ?n");
     }
@@ -42,7 +41,6 @@ public class OptimizedQueries implements Queries {
             "\t\t\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
             "\t\t } GROUP BY ?property \n" +
             "\t } \n" +
-            "\t OPTIONAL { ?property rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "} GROUP BY ?property ?uses ?values ?allLiteral");
         pQuery.setIri("class", classUri);

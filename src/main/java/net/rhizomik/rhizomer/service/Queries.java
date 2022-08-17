@@ -80,7 +80,7 @@ public interface Queries {
                 "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 "\t\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
                 "\t\t OPTIONAL { ?instance rdfs:comment ?comment } \n" +
-                "\t\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?classLabel } } \n" +
+                "\t\t OPTIONAL { GRAPH ?g { OPTIONAL { ?class rdfs:label ?classLabel } } } \n" +
                 "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
@@ -121,7 +121,7 @@ public interface Queries {
                 "\t\t CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
                 "\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 "\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
-                "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?classLabel } } \n" +
+                "\t OPTIONAL { GRAPH ?g { OPTIONAL { ?class rdfs:label ?classLabel } } } \n" +
                 "}");
         pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();

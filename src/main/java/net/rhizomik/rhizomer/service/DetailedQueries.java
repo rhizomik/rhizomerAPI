@@ -24,7 +24,6 @@ public class DetailedQueries implements Queries {
             "\t\t\t UNION \n" +
             "\t\t\t { ?instance ?p ?o . FILTER(NOT EXISTS {?instance a ?c} ) BIND(rdfs:Resource AS ?class) } \n" +
             "\t\t } GROUP BY ?class } \n" +
-            "\t OPTIONAL { ?class rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "} GROUP BY ?class ?n");
     }
@@ -46,9 +45,7 @@ public class DetailedQueries implements Queries {
             "\t\t\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
             "\t\t } GROUP BY ?property ?range \n" +
             "\t } \n" +
-            "\t OPTIONAL { ?property rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
-            "\t OPTIONAL { ?range rdfs:label ?rl BIND (CONCAT(?rl, IF(LANG(?rl),\"@\",\"\"), LANG(?rl)) AS ?rlangLabel) } \n" +
             "\t OPTIONAL { GRAPH ?g { ?range rdfs:label ?rl } BIND (CONCAT(?rl, IF(LANG(?rl),\"@\",\"\"), LANG(?rl)) AS ?rlangLabel) } \n" +
             "} GROUP BY ?property ?range ?uses ?values ?allLiteral");
         pQuery.setIri("class", classUri);
@@ -95,26 +92,26 @@ public class DetailedQueries implements Queries {
         MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-                "SELECT DISTINCT ?value ?label \n" +
-                "WHERE { \n" +
-                "\t { SELECT DISTINCT ?instance " +
-                "\t\t WHERE { \n" +
-                "\t\t\t ?instance a ?class . \n" +
-                getFilterPatternsAnd(filters) +
-                "\t\t } \n" +
-                "\t } \n" +
-                "\t ?instance ?property ?resource . \n" +
-                "\t OPTIONAL { ?resource rdfs:label ?label \n" +
-                "\t\t FILTER LANGMATCHES(LANG(?label), \"" + lang + "\")  } \n" +
-                "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
-                ( isLiteral ?
-                    "\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :
-                    !rangeUri.equals(RDFS.Resource.getURI()) ?
-                        "\t ?resource a <" + rangeUri + "> \n" :
-                        "\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
-                "\t BIND(?resource AS ?value) \n" +
-                "\t FILTER( CONTAINS(LCASE(STR(?resource)), LCASE(?containing)) || CONTAINS(LCASE(?label), LCASE(?containing)) ) \n" +
-                "}");
+            "SELECT DISTINCT ?value ?label \n" +
+            "WHERE { \n" +
+            "\t { SELECT DISTINCT ?instance " +
+            "\t\t WHERE { \n" +
+            "\t\t\t ?instance a ?class . \n" +
+            getFilterPatternsAnd(filters) +
+            "\t\t } \n" +
+            "\t } \n" +
+            "\t ?instance ?property ?resource . \n" +
+            "\t OPTIONAL { ?resource rdfs:label ?label \n" +
+            "\t\t FILTER LANGMATCHES(LANG(?label), \"" + lang + "\")  } \n" +
+            "\t OPTIONAL { ?resource rdfs:label ?label } \n" +
+            ( isLiteral ?
+                "\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :
+                !rangeUri.equals(RDFS.Resource.getURI()) ?
+                    "\t ?resource a <" + rangeUri + "> \n" :
+                    "\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
+            "\t BIND(?resource AS ?value) \n" +
+            "\t FILTER( CONTAINS(LCASE(STR(?resource)), LCASE(?containing)) || CONTAINS(LCASE(?label), LCASE(?containing)) ) \n" +
+            "}");
         pQuery.setIri("class", classUri);
         pQuery.setIri("property", facetUri);
         pQuery.setLiteral("containing", containing);
