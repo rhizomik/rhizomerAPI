@@ -32,18 +32,20 @@ public class Range extends Labelled {
     private int timesUsed;
     private int differentValues;
     private boolean allLiteral;
+    private boolean allBlank;
 
     public Range() {
         super("");
         this.id = new DatasetClassFacetRangeId();
     }
 
-    public Range(Facet facet, String curie, String labels, int timesUsed, int differentValues, boolean allLiteral)
-            throws URISyntaxException {
-        this(facet, Curie.toUri(curie), labels, timesUsed, differentValues, allLiteral);
+    public Range(Facet facet, String curie, String labels, int timesUsed, int differentValues,
+                 boolean allLiteral, boolean allBlank) throws URISyntaxException {
+        this(facet, Curie.toUri(curie), labels, timesUsed, differentValues, allLiteral, allBlank);
     }
 
-    public Range(String curie, String labels, int timesUsed, int differentValues, boolean allLiteral) {
+    public Range(String curie, String labels, int timesUsed, int differentValues, boolean allLiteral, boolean allBlank)
+    {
         super(labels);
         this.id = new DatasetClassFacetRangeId();
         this.id.setRangeCurie(curie);
@@ -51,16 +53,20 @@ public class Range extends Labelled {
         this.timesUsed = timesUsed;
         this.differentValues = differentValues;
         this.allLiteral = allLiteral;
+        this.allBlank = allBlank;
     }
 
-    public Range(Facet facet, URI rangeUri, String labels, int timesUsed, int differentValues, boolean allLiteral) {
+    public Range(Facet facet, URI rangeUri, String labels, int timesUsed, int differentValues,
+                 boolean allLiteral, boolean allBlank) {
         super(labels);
-        this.id = new DatasetClassFacetRangeId(facet.getDomain().getDataset(), facet.getDomain().getUri(), facet.getUri(), rangeUri);
+        this.id = new DatasetClassFacetRangeId(facet.getDomain().getDataset(), facet.getDomain().getUri(),
+                facet.getUri(), rangeUri);
         this.uri = rangeUri.toString();
         this.facet = facet;
         this.timesUsed = timesUsed;
         this.differentValues = differentValues;
         this.allLiteral = allLiteral;
+        this.allBlank = allBlank;
         logger.info("\t Created Range {} for Facet {}", this.getId(), facet.getId());
     }
 
@@ -108,6 +114,10 @@ public class Range extends Labelled {
     public boolean getAllLiteral() { return allLiteral; }
 
     public void setAllLiteral(boolean allLiteral) { this.allLiteral = allLiteral; }
+
+    public boolean getAllBlank() { return allBlank; }
+
+    public void setAllBlank(boolean allBlank) { this.allBlank = allBlank; }
 
     @Override
     public String toString() {

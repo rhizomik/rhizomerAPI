@@ -32,22 +32,24 @@ public class DetailedQueries implements Queries {
     public Query getQueryClassFacets(String classUri) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-            "SELECT ?property ?range ?uses ?values ?allLiteral " +
+            "SELECT ?property ?range ?uses ?values ?allLiteral ?allBlank " +
             "       (GROUP_CONCAT(DISTINCT(?langLabel) ; separator=' || ') AS ?label) " +
             "       (GROUP_CONCAT(DISTINCT(?rlangLabel) ; separator=' || ') AS ?rlabel) \n" +
             "WHERE { \n" +
-            "\t { SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) AS ?allLiteral) \n" +
+            "\t { SELECT ?property ?range (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) \n" +
+            "\t          (MIN(?isLiteral) AS ?allLiteral) (MIN(?isBlank) AS ?allBlank) \n" +
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n"+
             "\t\t\t ?instance ?property ?object \n" +
             "\t\t\t OPTIONAL { ?object a ?type } \n" +
             "\t\t\t BIND(if(bound(?type), ?type, if(isLiteral(?object), datatype(?object), rdfs:Resource)) AS ?range) \n" +
             "\t\t\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+            "\t\t\t BIND(isBlank(?object) AS ?isBlank) \n" +
             "\t\t } GROUP BY ?property ?range \n" +
             "\t } \n" +
             "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
             "\t OPTIONAL { GRAPH ?g { ?range rdfs:label ?rl } BIND (CONCAT(?rl, IF(LANG(?rl),\"@\",\"\"), LANG(?rl)) AS ?rlangLabel) } \n" +
-            "} GROUP BY ?property ?range ?uses ?values ?allLiteral");
+            "} GROUP BY ?property ?range ?uses ?values ?allLiteral ?allBlank");
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
     }

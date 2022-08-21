@@ -113,6 +113,8 @@ public class Facet extends Labelled {
     @JsonIgnore
     public boolean getAllLiteral() { return ranges.stream().allMatch(Range::getAllLiteral); }
 
+    public boolean getAllBlank() { return ranges.stream().allMatch(Range::getAllBlank); }
+
     @Override
     public String toString() {
         return "Facet{" +

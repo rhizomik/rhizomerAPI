@@ -12,10 +12,12 @@ public class ExpectedRange extends Labelled {
     public int timesUsed;
     public int differentValues;
     public boolean relation;
+    public boolean allBlank;
 
     public ExpectedRange() { super(""); }
 
-    public ExpectedRange(String uri, String labels, String curie, int timesUsed, int differentValues, boolean relation) {
+    public ExpectedRange(String uri, String labels, String curie, int timesUsed, int differentValues, boolean relation,
+                         boolean allBlank) {
         super(labels);
         this.uri = uri;
         this.curie = curie;

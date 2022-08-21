@@ -121,13 +121,21 @@ public class AnalizeDataset {
                     range = soln.getResource("?range");
                 int uses = soln.getLiteral("?uses").getInt();
                 int values = soln.getLiteral("?values").getInt();
-                boolean allLiteralBoolean = false;
+                boolean isAllLiteral = false;
                 if (soln.contains("?allLiteral")) {
                     Literal allLiteral = soln.getLiteral("?allLiteral");
                     if (allLiteral.getDatatype().equals(XSDDatatype.XSDboolean))
-                        allLiteralBoolean = allLiteral.getBoolean();
+                        isAllLiteral = allLiteral.getBoolean();
                     else
-                        allLiteralBoolean = (allLiteral.getInt() != 0);
+                        isAllLiteral = (allLiteral.getInt() != 0);
+                }
+                boolean isAllBlank = false;
+                if (soln.contains("?allBlank")) {
+                    Literal allBlank = soln.getLiteral("?allBlank");
+                    if (allBlank.getDatatype().equals(XSDDatatype.XSDboolean))
+                        isAllBlank = allBlank.getBoolean();
+                    else
+                        isAllBlank = (allBlank.getInt() != 0);
                 }
                 String label = property.getLocalName();
                 if (soln.contains("?label") && !soln.getLiteral("?label").getString().isBlank())
@@ -149,7 +157,8 @@ public class AnalizeDataset {
                     if (soln.contains("?rlabel") && !range.getURI().startsWith(XSD.NS) && !range.equals(RDFS.Resource)
                         && soln.getLiteral("?rlabel").getString().length() > 0)
                         rangeLabel = soln.getLiteral("?rlabel").getString();
-                    Range detectedRange = new Range(detectedFacet, rangeUri, rangeLabel, uses, values, allLiteralBoolean);
+                    Range detectedRange =
+                            new Range(detectedFacet, rangeUri, rangeLabel, uses, values, isAllLiteral, isAllBlank);
                     detectedFacet.addRange(rangeRepository.save(detectedRange));
                     facetRepository.save(detectedFacet);
                     logger.info("Added detected Range {} to Facet {} for Class {} in Dataset {}",

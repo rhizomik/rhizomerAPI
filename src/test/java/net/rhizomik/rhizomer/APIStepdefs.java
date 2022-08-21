@@ -146,7 +146,8 @@ public class APIStepdefs {
         return new ExpectedFacet(entry.get("uri"), entry.get("labels"),
                 Integer.parseInt(entry.getOrDefault("timesUsed", "0")),
                 Integer.parseInt(entry.getOrDefault("differentValues", "0")),
-                Boolean.parseBoolean(entry.get("relation")), entry.get("range"), entry.get("domainURI"));
+                Boolean.parseBoolean(entry.get("relation")), entry.get("range"), entry.get("domainURI"),
+                Boolean.parseBoolean(entry.get("allBlank")));
     }
 
     @DataTableType
@@ -154,7 +155,7 @@ public class APIStepdefs {
         return new ExpectedRange(entry.get("uri"), entry.get("label"), entry.get("curie"),
                 Integer.parseInt(entry.getOrDefault("timesUsed", "0")),
                 Integer.parseInt(entry.getOrDefault("differentValues", "0")),
-                Boolean.parseBoolean(entry.get("relation")));
+                Boolean.parseBoolean(entry.get("relation")), Boolean.parseBoolean(entry.get("allBlank")));
     }
 
     @DataTableType

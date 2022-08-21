@@ -31,18 +31,20 @@ public class OptimizedQueries implements Queries {
     public Query getQueryClassFacets(String classUri) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-            "SELECT ?property ?uses ?values ?allLiteral " +
+            "SELECT ?property ?uses ?values ?allLiteral ?allBlank " +
             "       (GROUP_CONCAT(DISTINCT(?langLabel) ; separator=' || ') AS ?label) \n" +
             "WHERE { \n" +
-            "\t { SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) (MIN(?isLiteral) AS ?allLiteral) \n" +
+            "\t { SELECT ?property (COUNT(?instance) AS ?uses) (COUNT(DISTINCT ?object) AS ?values) " +
+            "\t          (MIN(?isLiteral) AS ?allLiteral) (MIN(?isBlank) AS ?allBlank) \n" +
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n"+
             "\t\t\t ?instance ?property ?object \n" +
             "\t\t\t BIND(isLiteral(?object) AS ?isLiteral) \n" +
+            "\t\t\t BIND(isBlank(?object) AS ?isBlank) \n" +
             "\t\t } GROUP BY ?property \n" +
             "\t } \n" +
             "\t OPTIONAL { GRAPH ?g { ?property rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
-            "} GROUP BY ?property ?uses ?values ?allLiteral");
+            "} GROUP BY ?property ?uses ?values ?allLiteral ?allBlank");
         pQuery.setIri("class", classUri);
         return pQuery.asQuery();
     }

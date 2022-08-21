@@ -16,18 +16,18 @@ public class ExpectedFacet extends Labelled {
     public String domainURI;
     public String range;
     public boolean relation;
+    public boolean allBlank;
 
     public ExpectedFacet() { super(""); }
 
     public ExpectedFacet(String uri, String labels, int timesUsed, int differentValues, boolean relation,
-                         String range, String domainURI) {
+                         String range, String domainURI, boolean allBlank) {
         super(labels);
         this.uri = uri;
         this.timesUsed = timesUsed;
         this.differentValues = differentValues;
         this.relation = relation;
         this.range = range;
-        // this.domainURI = domainURI;
     }
 
     public ExpectedFacet(Facet datasetFacet) {
@@ -37,7 +37,6 @@ public class ExpectedFacet extends Labelled {
         this.setLabels(datasetFacet.getLabels());
         this.timesUsed = datasetFacet.getTimesUsed();
         this.differentValues = datasetFacet.getDifferentValues();
-        // this.domainURI = datasetFacet.getDomainURI();
         this.range = datasetFacet.getRange();
         this.relation = datasetFacet.isRelation();
     }
