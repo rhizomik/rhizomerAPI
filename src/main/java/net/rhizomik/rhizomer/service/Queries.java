@@ -135,14 +135,17 @@ public interface Queries {
     Query getQuerySearchTypeFacet(String text, int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
-                "SELECT ?class ?label (COUNT(DISTINCT ?instance) AS ?count) \n" +
+                "SELECT ?class ?count (GROUP_CONCAT(?langLabel; SEPARATOR = \" || \") AS ?label) \n" +
                 "WHERE { \n" +
-                "\t ?instance a ?class ; ?property ?value \n" +
-                "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
-                "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), ?text) ) || \n" +
-                "\t\t CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
-                "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?label } } \n" +
-                "} GROUP BY ?class ?label");
+                "\t { SELECT ?class (COUNT(DISTINCT ?instance) as ?count) \n" +
+                "\t\t WHERE { \n" +
+                "\t\t\t ?instance a ?class ; ?property ?value \n" +
+                "\t\t\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
+                "\t\t\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), ?text) ) || \n" +
+                "\t\t\t          CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
+                "\t\t } GROUP BY ?class } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+                "} GROUP BY ?class ?count");
         pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();
         if (limit > 0) query.setLimit(limit);
