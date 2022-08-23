@@ -413,8 +413,11 @@ public interface Queries {
             String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
             pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
             if (!value.equals("null")) {
-                pattern += "FILTER ( STR(?v" + propertyValueVar + ") = " +
-                        value.replaceAll("[<>]", "\"") + " ) \n";
+                String valueString = value;
+                if (valueString.startsWith("<") && valueString.endsWith(">")) {
+                    valueString = valueString.substring(1, valueString.length() - 1);
+                }
+                pattern += "FILTER ( STR(?v" + propertyValueVar + ") = " + valueString + " ) \n";
             }
         }
         return pattern;
