@@ -126,8 +126,9 @@ public class DetailedQueries implements Queries {
     public String convertFilterToSparqlPattern(String property, String range, String value) {
         String pattern = "";
         if (property.equalsIgnoreCase("urn:rhz:contains")) {
-            pattern += "\t ?instance ?anyProperty ?text . FILTER ( CONTAINS(LCASE(STR(?text)), "
-                    + value.toLowerCase() + ") )";
+            pattern += "\t ?instance ?anyProperty ?value . OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
+                    "\t\t FILTER ( (ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), " + value.toLowerCase() + ")) \n" +
+                    "\t\t\t || CONTAINS(LCASE(STR(?valueLabel)), " + value.toLowerCase() + ") )";
         }
         else {
             String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
