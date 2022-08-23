@@ -206,16 +206,24 @@ public interface Queries {
             "WHERE { { \n" +
             "\t ?instance ?property ?resource . \n" +
             "\t ?resource rdfs:label ?label . \n" +
-            "} UNION { \n" +
+            " } UNION { \n" +
             "\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
             "\t ?anon ?property ?resource .\n" +
             "\t ?resource rdfs:label ?label . \n" +
             " } UNION { \n" +
-            "\t\t ?instance ?resource ?object . \n" +
-            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
+            "\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
+            "\t ?anon ?resource ?object .\n" +
+            "\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
             " } UNION { \n" +
-            "\t\t ?instance a ?resource . \n" +
-            "\t\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
+            "\t ?instance ?propertyanon ?anon . FILTER(isBlank(?anon)) \n" +
+            "\t ?anon a ?resource .\n" +
+            "\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
+            " } UNION { \n" +
+            "\t ?instance ?resource ?object . \n" +
+            "\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
+            " } UNION { \n" +
+            "\t ?instance a ?resource . \n" +
+            "\t GRAPH ?g { ?resource rdfs:label ?label } \n" +
             "} }");
         pQuery.setIri("instance", resourceUri.toString());
         Query query = pQuery.asQuery();
