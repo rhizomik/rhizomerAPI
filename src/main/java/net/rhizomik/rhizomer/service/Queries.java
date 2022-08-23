@@ -113,6 +113,7 @@ public interface Queries {
                 "\t\t foaf:depiction ?depiction; \n" +
                 "\t\t ?property ?value . \n" +
                 "\t ?class rdfs:label ?classLabel . \n" +
+                "\t ?property rdfs:label ?propLabel . \n" +
                 "\t ?value rdfs:label ?valueLabel . \n" +
                 "} WHERE { \n" +
                 "\t ?instance a ?class ; ?property ?value \n" +
@@ -122,6 +123,7 @@ public interface Queries {
                 "\t OPTIONAL { ?instance rdfs:label ?label } \n" +
                 "\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
                 "\t OPTIONAL { GRAPH ?g { OPTIONAL { ?class rdfs:label ?classLabel } } } \n" +
+                "\t OPTIONAL { GRAPH ?g { OPTIONAL { ?property rdfs:label ?propLabel } } } \n" +
                 "}");
         pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();
