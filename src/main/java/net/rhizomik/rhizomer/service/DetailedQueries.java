@@ -147,19 +147,28 @@ public class DetailedQueries implements Queries {
             pattern += "\t ?instance ?anyProperty ?value . OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
                     "\t\t FILTER ( (ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), " + value.toLowerCase() + ")) \n" +
                     "\t\t\t || CONTAINS(LCASE(STR(?valueLabel)), " + value.toLowerCase() + ") )";
-        }
-        else {
+        } else {
             String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
             pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
             if (!value.equals("null")) {
-                pattern +=
-                        ( value.startsWith("<") && value.endsWith(">") ?
-                                "\t FILTER( ?v" + propertyValueVar + " = " + value + " )\n" :
-                                "\t FILTER( STR(?v" + propertyValueVar + ") = " + value +
-                                        " && ISLITERAL(?v" + propertyValueVar + ")" +
-                                        (range != null ? " && DATATYPE(?v" + propertyValueVar + ") = <" + range + ">" : "") +
-                                        " )\n"
-                        );
+                if (value.startsWith("≧") || value.startsWith("≦")) {
+                    String operator = value.startsWith("≧") ? ">=" : "<=";
+                    value = value.substring(1);
+                    pattern +=
+                        "\t FILTER( ?v" + propertyValueVar + " " + operator + " \"" + value + "\"" +
+                        (range != null ?
+                                "^^<" + range + "> && DATATYPE(?v" + propertyValueVar + ") = <" + range + ">" : "") +
+                        " )\n";
+                }
+                else {
+                    pattern +=
+                        (value.startsWith("<") && value.endsWith(">") ?
+                        "\t FILTER( ?v" + propertyValueVar + " = " + value + " )\n" :
+                        "\t FILTER( STR(?v" + propertyValueVar + ") = " + value +
+                        (range != null ?
+                                " && DATATYPE(?v" + propertyValueVar + ") = <" + range + ">" : "") +
+                        " )\n");
+                }
             }
         }
         return pattern;
