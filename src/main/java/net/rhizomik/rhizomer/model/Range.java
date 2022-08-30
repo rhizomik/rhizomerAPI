@@ -6,10 +6,7 @@ import net.rhizomik.rhizomer.model.id.DatasetClassFacetRangeId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -33,6 +30,10 @@ public class Range extends Labelled {
     private int differentValues;
     private boolean allLiteral;
     private boolean allBlank;
+    @Transient
+    private String min;
+    @Transient
+    private String max;
 
     public Range() {
         super("");
@@ -118,6 +119,14 @@ public class Range extends Labelled {
     public boolean getAllBlank() { return allBlank; }
 
     public void setAllBlank(boolean allBlank) { this.allBlank = allBlank; }
+
+    public String getMin() { return min; }
+
+    public void setMin(String min) { this.min = min; }
+
+    public String getMax() { return max; }
+
+    public void setMax(String max) { this.max = max; }
 
     @Override
     public String toString() {

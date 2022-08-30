@@ -94,6 +94,20 @@ public class RangeController {
         return analiseDataset.retrieveRangeValuesContaining(dataset, facetRange, filters, containing, top, lang);
     }
 
+    @RequestMapping(method = RequestMethod.GET,
+            value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges/{rangeCurie}/minmax")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody Range getRangeMinMax(@PathVariable String datasetId, @PathVariable String classCurie,
+            @PathVariable String facetCurie, @PathVariable String rangeCurie,
+            @RequestParam MultiValueMap<String, String> filters, Authentication auth) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        Class datasetClass = getClass(classCurie, dataset);
+        Facet classFacet = getFacet(facetCurie, datasetClass.getId());
+        Range facetRange = getRange(rangeCurie, classFacet);
+        return analiseDataset.retrieveRangeMinMax(dataset, facetRange, filters);
+    }
+
     @RequestMapping(value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges",
         method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)

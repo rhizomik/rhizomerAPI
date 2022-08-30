@@ -123,6 +123,24 @@ public class DetailedQueries implements Queries {
     }
 
     @Override
+    public Query getQueryFacetRangeMinMax(String classUri, String facetUri, String rangeUri,
+                                          MultiValueMap<String, String> filters) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+                "SELECT (MIN(?num) AS ?min) (MAX(?num) AS ?max) \n" +
+                "WHERE { \n" +
+                "\t ?instance a ?class . \n" +
+                getFilterPatternsAnd(filters) +
+                "\t ?instance ?property ?num . \n" +
+                "\t FILTER( ISLITERAL(?num) && DATATYPE(?num) = <" + rangeUri + "> )\n" +
+                "} ");
+        pQuery.setIri("class", classUri);
+        pQuery.setIri("property", facetUri);
+        Query query = pQuery.asQuery();
+        return query;
+    }
+
+    @Override
     public String convertFilterToSparqlPattern(String property, String range, String value) {
         String pattern = "";
         if (property.equalsIgnoreCase("urn:rhz:contains")) {

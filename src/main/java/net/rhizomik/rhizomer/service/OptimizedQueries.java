@@ -106,4 +106,10 @@ public class OptimizedQueries implements Queries {
         if (top > 0) query.setLimit(top);
         return query;
     }
+
+    @Override
+    public Query getQueryFacetRangeMinMax(String classUri, String facetUri, String rangeUri,
+                                          MultiValueMap<String, String> filters) {
+        throw new UnsupportedOperationException("Optimized query for facet MIN and MAX not available");
+    }
 }

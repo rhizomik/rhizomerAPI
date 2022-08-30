@@ -247,6 +247,30 @@ public class AnalizeDataset {
         return rangeValues;
     }
 
+    public Range retrieveRangeMinMax(Dataset dataset, Range facetRange,
+                                           MultiValueMap<String, String> filters) {
+        URI classUri = facetRange.getFacet().getDomain().getUri();
+        URI facetUri = facetRange.getFacet().getUri();
+        endPointRepository.findByDataset(dataset).forEach(endPoint -> {
+            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+                    queries(dataset).getQueryFacetRangeMinMax(classUri.toString(), facetUri.toString(),
+                            facetRange.getUri().toString(), filters), endPoint.getGraphs(), endPoint.getOntologyGraphs(),
+                    withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+            while (result.hasNext()) {
+                QuerySolution soln = result.nextSolution();
+                if (soln.contains("?min")) {
+                    String min = soln.getLiteral("?min").getString();
+                    facetRange.setMin(min);
+                }
+                if (soln.contains("?max")) {
+                    String max = soln.getLiteral("?max").getString();
+                    facetRange.setMax(max);
+                }
+            }
+        });
+        return facetRange;
+    }
+
     public List<URI> listServerGraphs(Dataset dataset, SPARQLEndPoint endPoint) {
         ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
                 queries(dataset).getQueryGraphs(),
