@@ -71,14 +71,12 @@ public class AnalizeDataset {
 
     public void detectDatasetClasses(Dataset dataset){
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            List<String> targetGraphs = endPoint.getGraphs();
-            if (dataset.isInferenceEnabled()) {
-                sparqlService.inferTypes(dataset.getDatasetInferenceGraph(), endPoint,
+            if (endPoint.isInferenceEnabled() && endPoint.isWritable()) {
+                sparqlService.inferTypes(endPoint.getDatasetInferenceGraph(), endPoint,
                         withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
-                targetGraphs.add(dataset.getDatasetInferenceGraph().toString());
             }
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(dataset).getQueryClasses(), targetGraphs, endPoint.getOntologyGraphs(),
+                    queries(dataset).getQueryClasses(), endPoint.getGraphs(), endPoint.getOntologyGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();

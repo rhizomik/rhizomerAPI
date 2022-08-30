@@ -30,7 +30,6 @@ public class Dataset {
     private String id;
 
     private QueryType queryType = QueryType.OPTIMIZED;
-    private boolean inferenceEnabled = false;
     private boolean isPublic = false;
 
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "dataset", cascade = CascadeType.ALL)
@@ -73,21 +72,10 @@ public class Dataset {
     public URI getDatasetUri() {
         URI datasetURI = null;
         try {
-            datasetURI = new URI("http://" + InetAddress.getLocalHost().getHostName() + "/dataset/"+getId());
+            datasetURI = new URI("http://" + InetAddress.getLocalHost().getHostName() + "/datasets/"+getId());
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return datasetURI;
-    }
-
-    @JsonIgnore
-    public URI getDatasetInferenceGraph() {
-        URI datasetInferenceGraphURI = null;
-        try {
-            datasetInferenceGraphURI = new URI(getDatasetUri()+"/inference");
-        } catch (URISyntaxException e) {
-            logger.error(e.getMessage());
-        }
-        return datasetInferenceGraphURI;
     }
 }

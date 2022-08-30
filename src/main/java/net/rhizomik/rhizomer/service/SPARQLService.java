@@ -133,12 +133,10 @@ public class SPARQLService {
         queryUpdate(sparqlEndPoint, clearGraph, creds);
     }
 
-    public void inferTypes(URI targetGraph, SPARQLEndPoint endPoint, HttpClient creds) {
-        if (endPoint.isWritable()) {
-            List<String> sourceGraphs = endPoint.getGraphs();
-            sourceGraphs.addAll(endPoint.getOntologyGraphs());
-            UpdateRequest update = queries.getUpdateInferTypes(sourceGraphs, targetGraph.toString());
-            queryUpdate(endPoint.getUpdateEndPoint(), update, creds);
-        }
+    public void inferTypes(String targetGraph, SPARQLEndPoint endPoint, HttpClient creds) {
+        List<String> sourceGraphs = endPoint.getGraphs();
+        sourceGraphs.addAll(endPoint.getOntologyGraphs());
+        UpdateRequest update = queries.getUpdateInferTypes(sourceGraphs, targetGraph);
+        queryUpdate(endPoint.getUpdateEndPoint(), update, creds);
     }
 }

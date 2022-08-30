@@ -245,9 +245,7 @@ public interface Queries {
             "\t } GROUP BY ?class ?prop } \n" +
             "\t ?s ?prop ?resource ; a ?domain . \n" +
             "\t FILTER NOT EXISTS { ?subdomain rdfs:subClassOf ?domain . ?s a ?subdomain } \n" +
-            "\t OPTIONAL { ?prop  rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?pLabel) } \n" +
             "\t OPTIONAL { GRAPH ?g { ?prop  rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?pLabel) } \n" +
-            "\t OPTIONAL { ?domain rdfs:label ?dl BIND (CONCAT(?dl, IF(LANG(?dl),\"@\",\"\"), LANG(?dl)) AS ?dLabel) } \n" +
             "\t OPTIONAL { GRAPH ?g { ?domain rdfs:label ?dl } BIND (CONCAT(?dl, IF(LANG(?dl),\"@\",\"\"), LANG(?dl)) AS ?dLabel) } \n" +
             "} GROUP BY ?prop ?domain ?uses");
         pQuery.setIri("resource", resourceUri.toString());
@@ -275,20 +273,25 @@ public interface Queries {
 
     default UpdateRequest getUpdateInferTypes(List<String> targetGraphs, String datasetInferenceGraph) {
         return UpdateFactory.create(prefixes +
-            "INSERT { GRAPH <" + datasetInferenceGraph + "> { ?i a ?type } } \n" +
+            "INSERT { GRAPH <" + datasetInferenceGraph + "> { ?i a ?class } } \n" +
             targetGraphs.stream().map(s -> String.format("USING <%s> \n", s)).collect(Collectors.joining()) +
             "WHERE { \n" +
-            "{\t ?p rdfs:domain ?type . \n" +
-            " \t ?subp rdfs:subPropertyOf* ?p . \n" +
-            " \t ?i ?subp ?o \n" +
-            " \t FILTER NOT EXISTS {?i a ?class} \n" +
-            "} \n" +
-            "UNION \n" +
-            "{\t ?p rdfs:range ?type . \n" +
-            " \t ?subp rdfs:subPropertyOf* ?p . \n" +
-            " \t ?s ?subp ?i \n" +
-            " \t FILTER NOT EXISTS {?i a ?class} \n" +
-            "} \n" +
+            "\t { ?subclass rdfs:subClassOf* ?class . \n" +
+            "\t\t ?i a ?subclass \n" +
+            "\t\t FILTER NOT EXISTS {?i a ?class} \n" +
+            "\t } \n" +
+            "\t UNION \n" +
+            "\t { ?p rdfs:domain ?type . \n" +
+            "\t\t ?subp rdfs:subPropertyOf* ?p . \n" +
+            "\t\t ?i ?subp ?o \n" +
+            "\t\t FILTER NOT EXISTS {?i a ?class} \n" +
+            "\t } \n" +
+            "\t UNION \n" +
+            "\t { ?p rdfs:range ?type . \n" +
+            "\t\t ?subp rdfs:subPropertyOf* ?p . \n" +
+            "\t\t ?s ?subp ?i \n" +
+            "\t\t FILTER NOT EXISTS {?i a ?class} \n" +
+            "\t } \n" +
             "}");
     }
 

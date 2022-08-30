@@ -1,10 +1,9 @@
 package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,8 +16,6 @@ import java.util.Set;
 @Entity
 @Data
 public class SPARQLEndPoint {
-    private static final Logger logger = LoggerFactory.getLogger(Dataset.class);
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -30,6 +27,8 @@ public class SPARQLEndPoint {
     private String queryPassword;
 
     private boolean writable = false;
+
+    private boolean inferenceEnabled = false;
     private URL updateEndPoint;
     private String updateUsername;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -52,6 +51,11 @@ public class SPARQLEndPoint {
     @ElementCollection
     private Set<String> ontologyGraphs = new HashSet<>();
 
+    public SPARQLEndPoint() {}
+
+    public SPARQLEndPoint(Dataset dataset) {
+        this.dataset = dataset;
+    }
     public URL getUpdateEndPoint() {
         if (!writable)
             return null;
@@ -84,7 +88,11 @@ public class SPARQLEndPoint {
     }
 
     public List<String> getGraphs() {
-        return new ArrayList<>(this.graphs);
+        Set<String> graphs = new HashSet<>(this.graphs);
+        if (graphs.size() > 0 & isInferenceEnabled()) {
+            graphs.add(getDatasetInferenceGraph());
+        }
+        return new ArrayList<>(graphs);
     }
 
     public void addOntologyGraph(String graph) {
@@ -93,5 +101,10 @@ public class SPARQLEndPoint {
 
     public List<String> getOntologyGraphs() {
         return new ArrayList<>(this.ontologyGraphs);
+    }
+
+    @JsonIgnore
+    public String getDatasetInferenceGraph() {
+        return dataset.getDatasetUri()+"/inference";
     }
 }

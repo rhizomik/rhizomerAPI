@@ -383,7 +383,7 @@ public class APIStepdefs {
     public void theDatasetHasAMockServer(String datasetId) throws Throwable {
         Dataset dataset = datasetRepository.findById(datasetId).get();
         SPARQLServiceMockFactory.clearDataset();
-        SPARQLEndPoint endPoint = new SPARQLEndPoint();
+        SPARQLEndPoint endPoint = new SPARQLEndPoint(dataset);
         endPoint.setQueryEndPoint(new URL("http://sparql/mock"));
         endPoint.setWritable(true);
         String endPointJason = mapper.writeValueAsString(endPoint);
@@ -442,14 +442,18 @@ public class APIStepdefs {
 
     @And("^The inference for dataset \"([^\"]*)\" is set to \"([^\"]*)\"$")
     public void theInferenceForDatasetIsSetTo(String datasetId, boolean inference) throws Throwable {
-        existsADatasetWithId(datasetId);
-        String datasetJson = this.result.andReturn().getResponse().getContentAsString();
-        Dataset dataset = mapper.readValue(datasetJson, Dataset.class);
-        dataset.setInferenceEnabled(inference);
-        datasetJson = mapper.writeValueAsString(dataset);
-        this.result = mockMvc.perform(put("/datasets/{datasetId}", datasetId)
+        Dataset dataset = datasetRepository.findById(datasetId).get();
+        this.result = mockMvc.perform(get("/datasets/{datasetId}/endpoints/{id}", datasetId, endPointId)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .with(authenticate()))
+                        .andExpect(status().isOk());
+        String endpointJson = this.result.andReturn().getResponse().getContentAsString();
+        SPARQLEndPoint endpoint = mapper.readValue(endpointJson, SPARQLEndPoint.class);
+        endpoint.setDataset(dataset);
+        endpoint.setInferenceEnabled(inference);
+        this.result = mockMvc.perform(put("/datasets/{datasetId}/endpoints/{id}", datasetId, endPointId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(datasetJson)
+                .content(mapper.writeValueAsString(endpoint))
                 .accept(MediaType.APPLICATION_JSON)
                 .with(authenticate()));
         this.result.andExpect(jsonPath("$.inferenceEnabled", is(inference)));
@@ -457,7 +461,8 @@ public class APIStepdefs {
 
     @And("^Add endpoint to dataset \"([^\"]*)\"$")
     public void theDatasetServerIsSetTo(String datasetId, Map<String, String> props) throws Throwable {
-        SPARQLEndPoint endPoint = new SPARQLEndPoint();
+        Dataset dataset = datasetRepository.findById(datasetId).get();
+        SPARQLEndPoint endPoint = new SPARQLEndPoint(dataset);
         endPoint.setQueryEndPoint(new URL(props.get("QueryEndPoint")));
         endPoint.setUpdateEndPoint(props.containsKey("UpdateEndPoint") ? new URL(props.get("UpdateEndPoint")) : null);
         endPoint.setUpdateUsername(props.get("UpdateUsername"));
