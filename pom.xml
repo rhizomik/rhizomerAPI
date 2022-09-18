@@ -5,7 +5,7 @@
 
 	<groupId>net.rhizomik</groupId>
 	<artifactId>rhizomerAPI</artifactId>
-	<version>0.2.0</version>
+	<version>0.2.1</version>
 	<packaging>jar</packaging>
 
 	<name>rhizomerAPI</name>
@@ -111,6 +111,13 @@
 			<artifactId>jena-arq</artifactId>
 			<version>4.3.2</version>
 		</dependency>
+
+        <!-- Documentation -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.10</version>
+        </dependency>
 
 	</dependencies>
 
