@@ -313,7 +313,7 @@ public class AnalizeDataset {
         AtomicInteger count = new AtomicInteger();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(dataset).getQuerySearchInstancesCount(text),
+                    queries(dataset).getQuerySearchInstancesCount(endPoint.getType(), text),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
@@ -327,7 +327,7 @@ public class AnalizeDataset {
     public void searchInstances(OutputStream out, Dataset dataset, String text, int size, RDFFormat format) {
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
-                    queries(dataset).getQuerySearchInstances(text, size),
+                    queries(dataset).getQuerySearchInstances(endPoint.getType(), text, size),
                     endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
                     endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
@@ -338,7 +338,7 @@ public class AnalizeDataset {
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                queries(dataset).getQuerySearchTypeFacet(text, size, size * page, true),
+                queries(dataset).getQuerySearchTypeFacet(endPoint.getType(), text, size, size * page, true),
                 endPoint.getGraphs(), endPoint.getOntologyGraphs(),
                 withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {

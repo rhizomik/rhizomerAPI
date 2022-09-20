@@ -20,7 +20,8 @@ import org.springframework.util.MultiValueMap;
 public interface Queries {
     String prefixes =
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
-            "PREFIX foaf: <http://xmlns.com/foaf/0.1/> \n" ;
+            "PREFIX foaf: <http://xmlns.com/foaf/0.1/> \n" +
+            "PREFIX text: <http://jena.apache.org/text#> \n";
 
     enum QueryType { OPTIMIZED, DETAILED }
 
@@ -88,23 +89,19 @@ public interface Queries {
     }
 
     default
-    Query getQuerySearchInstancesCount(String text) {
+    Query getQuerySearchInstancesCount(SPARQLEndPoint.ServerType serverType, String text) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
                 "WHERE { \n" +
-                "\t ?instance a ?class ; ?property ?value \n" +
-                "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
-                "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), ?text) ) || \n" +
-                "\t\t CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
+                containingText(serverType, text.toLowerCase()) +
                 "}");
-        pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();
         return query;
     }
 
     default
-    Query getQuerySearchInstances(String text, int limit) {
+    Query getQuerySearchInstances(SPARQLEndPoint.ServerType serverType, String text, int limit) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "CONSTRUCT { \n" +
@@ -115,38 +112,32 @@ public interface Queries {
                 "\t ?class rdfs:label ?classLabel . \n" +
                 "\t ?property rdfs:label ?propLabel . \n" +
                 "\t ?value rdfs:label ?valueLabel . \n" +
-                "} WHERE { \n" +
+                "} WHERE { { SELECT ?instance ?value WHERE { \n" +
+                containingText(serverType, text.toLowerCase()) +
+                "\t } LIMIT " + limit + " } \n" +
                 "\t ?instance a ?class ; ?property ?value \n" +
-                "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
-                "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), ?text) ) || \n" +
-                "\t\t CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
                 "\t OPTIONAL { ?instance rdfs:label ?label } \n" +
+                "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
                 "\t OPTIONAL { ?instance foaf:depiction ?depiction } \n" +
                 "\t OPTIONAL { GRAPH ?g { OPTIONAL { ?class rdfs:label ?classLabel } } } \n" +
                 "\t OPTIONAL { GRAPH ?g { OPTIONAL { ?property rdfs:label ?propLabel } } } \n" +
                 "}");
-        pQuery.setLiteral("text", text.toLowerCase());
-        Query query = pQuery.asQuery();
-        if (limit > 0) query.setLimit(limit);
-        return query;
+        return pQuery.asQuery();
     }
 
     default
-    Query getQuerySearchTypeFacet(String text, int limit, int offset, boolean ordered) {
+    Query getQuerySearchTypeFacet(SPARQLEndPoint.ServerType serverType, String text,
+                                  int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "SELECT ?class ?count (GROUP_CONCAT(?langLabel; SEPARATOR = \" || \") AS ?label) \n" +
                 "WHERE { \n" +
                 "\t { SELECT ?class (COUNT(DISTINCT ?instance) as ?count) \n" +
                 "\t\t WHERE { \n" +
-                "\t\t\t ?instance a ?class ; ?property ?value \n" +
-                "\t\t\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
-                "\t\t\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), ?text) ) || \n" +
-                "\t\t\t          CONTAINS(LCASE(STR(?valueLabel)), ?text) ) \n" +
+                containingText(serverType, text.toLowerCase()) +
                 "\t\t } GROUP BY ?class } \n" +
                 "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
                 "} GROUP BY ?class ?count");
-        pQuery.setLiteral("text", text.toLowerCase());
         Query query = pQuery.asQuery();
         if (limit > 0) query.setLimit(limit);
         if (offset > 0) query.setOffset(offset);
@@ -426,5 +417,19 @@ public interface Queries {
             }
         }
         return pattern;
+    }
+
+    default String containingText(SPARQLEndPoint.ServerType serverType, String text) {
+        if (serverType == SPARQLEndPoint.ServerType.FUSEKI_LUCENE) {
+            return  "\t { (?instance ?score ?value) text:query \"*" + text + "*\" } \n" +
+                    "\t UNION \n" +
+                    "\t { ?value text:query \"*" + text + "*\" } \n" +
+                    "\t ?instance a ?class ; ?property ?value \n";
+        } else {
+            return  "\t ?instance a ?class ; ?property ?value \n" +
+                    "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
+                    "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), \""+ text + "\") ) || \n" +
+                    "\t\t CONTAINS(LCASE(STR(?valueLabel)), \"" + text + "\") ) \n";
+        }
     }
 }

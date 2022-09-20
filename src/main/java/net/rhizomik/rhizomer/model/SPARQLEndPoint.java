@@ -37,6 +37,8 @@ public class SPARQLEndPoint {
     private ServerType type = ServerType.GENERIC;
     public enum ServerType {
         GENERIC,
+        FUSEKI,
+        FUSEKI_LUCENE,
         VIRTUOSO,
         MARKLOGIC,
         STARDOG;
