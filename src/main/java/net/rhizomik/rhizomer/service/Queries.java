@@ -2,6 +2,7 @@ package net.rhizomik.rhizomer.service;
 
 import java.net.URI;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
@@ -94,7 +95,7 @@ public interface Queries {
         pQuery.setCommandText(prefixes +
                 "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
                 "WHERE { \n" +
-                containingText(serverType, text.toLowerCase()) +
+                containingText(serverType, text) +
                 "}");
         Query query = pQuery.asQuery();
         return query;
@@ -113,7 +114,7 @@ public interface Queries {
                 "\t ?property rdfs:label ?propLabel . \n" +
                 "\t ?value rdfs:label ?valueLabel . \n" +
                 "} WHERE { { SELECT ?instance ?value WHERE { \n" +
-                containingText(serverType, text.toLowerCase()) +
+                containingText(serverType, text) +
                 "\t } LIMIT " + limit + " } \n" +
                 "\t ?instance a ?class ; ?property ?value \n" +
                 "\t OPTIONAL { ?instance rdfs:label ?label } \n" +
@@ -134,7 +135,7 @@ public interface Queries {
                 "WHERE { \n" +
                 "\t { SELECT ?class (COUNT(DISTINCT ?instance) as ?count) \n" +
                 "\t\t WHERE { \n" +
-                containingText(serverType, text.toLowerCase()) +
+                containingText(serverType, text) +
                 "\t\t } GROUP BY ?class } \n" +
                 "\t OPTIONAL { GRAPH ?g { ?class rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
                 "} GROUP BY ?class ?count");
@@ -421,15 +422,18 @@ public interface Queries {
 
     default String containingText(SPARQLEndPoint.ServerType serverType, String text) {
         if (serverType == SPARQLEndPoint.ServerType.FUSEKI_LUCENE) {
-            return  "\t { (?instance ?score ?value) text:query \"*" + text + "*\" } \n" +
+            String queryText = text.replaceAll("\"", Matcher.quoteReplacement("\\\"")).toLowerCase();
+            queryText = queryText.contains("\\\"") ? queryText : "*" + queryText + "*";
+            return  "\t { (?instance ?score ?value) text:query \"" + queryText + "\" } \n" +
                     "\t UNION \n" +
-                    "\t { ?value text:query \"*" + text + "*\" } \n" +
+                    "\t { ?value text:query \"" + queryText + "\" } \n" +
                     "\t ?instance a ?class ; ?property ?value \n";
         } else {
+            String queryText = text.replaceAll("\"", "").toLowerCase();
             return  "\t ?instance a ?class ; ?property ?value \n" +
                     "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
-                    "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), \""+ text + "\") ) || \n" +
-                    "\t\t CONTAINS(LCASE(STR(?valueLabel)), \"" + text + "\") ) \n";
+                    "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), \""+ queryText + "\") ) || \n" +
+                    "\t\t CONTAINS(LCASE(STR(?valueLabel)), \"" + queryText + "\") ) \n";
         }
     }
 }
