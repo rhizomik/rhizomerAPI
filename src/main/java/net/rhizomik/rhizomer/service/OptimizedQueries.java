@@ -1,5 +1,6 @@
 package net.rhizomik.rhizomer.service;
 
+import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -50,7 +51,8 @@ public class OptimizedQueries implements Queries {
     }
 
     @Override
-    public Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
+    public Query getQueryFacetRangeValues(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
             MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
@@ -61,7 +63,7 @@ public class OptimizedQueries implements Queries {
             "\t\t { SELECT DISTINCT ?instance " +
             "\t\t\t WHERE { \n" +
             "\t\t\t\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(filters) +
+            getFilterPatternsAnd(serverType, filters) +
             "\t\t\t } \n" +
             "\t\t } \n" +
             "\t\t ?instance ?property ?resource . \n" +
@@ -80,7 +82,8 @@ public class OptimizedQueries implements Queries {
     }
 
     @Override
-    public Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
+    public Query getQueryFacetRangeValuesContaining(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
             MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
@@ -89,7 +92,7 @@ public class OptimizedQueries implements Queries {
                 "\t { SELECT DISTINCT ?instance " +
                 "\t\t WHERE { \n" +
                 "\t\t\t ?instance a ?class . \n" +
-                getFilterPatternsAnd(filters) +
+                getFilterPatternsAnd(serverType, filters) +
                 "\t\t } \n" +
                 "\t } \n" +
                 "\t ?instance ?property ?resource . \n" +
@@ -108,8 +111,9 @@ public class OptimizedQueries implements Queries {
     }
 
     @Override
-    public Query getQueryFacetRangeMinMax(String classUri, String facetUri, String rangeUri,
-                                          MultiValueMap<String, String> filters) {
+    public Query getQueryFacetRangeMinMax(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
+            MultiValueMap<String, String> filters) {
         throw new UnsupportedOperationException("Optimized query for facet MIN and MAX not available");
     }
 }

@@ -180,9 +180,10 @@ public class AnalizeDataset {
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(dataset).getQueryFacetRangeValues(classUri.toString(), facetUri.toString(),
-                            facetRange.getUri().toString(), filters, facetRange.getAllLiteral(),
-                            size, size * page, true), endPoint.getGraphs(), endPoint.getOntologyGraphs(),
+                    queries(dataset).getQueryFacetRangeValues(endPoint.getType(), classUri.toString(),
+                            facetUri.toString(), facetRange.getUri().toString(), filters, facetRange.getAllLiteral(),
+                            size, size * page, true),
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
@@ -218,8 +219,9 @@ public class AnalizeDataset {
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(dataset).getQueryFacetRangeValuesContaining(classUri.toString(), facetUri.toString(),
-                        facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top, lang),
+                    queries(dataset).getQueryFacetRangeValuesContaining(
+                            endPoint.getType(), classUri.toString(), facetUri.toString(),
+                            facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top, lang),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
@@ -253,8 +255,9 @@ public class AnalizeDataset {
         URI facetUri = facetRange.getFacet().getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                    queries(dataset).getQueryFacetRangeMinMax(classUri.toString(), facetUri.toString(),
-                            facetRange.getUri().toString(), filters), endPoint.getGraphs(), endPoint.getOntologyGraphs(),
+                    queries(dataset).getQueryFacetRangeMinMax(endPoint.getType(), classUri.toString(), facetUri.toString(),
+                            facetRange.getUri().toString(), filters),
+                    endPoint.getGraphs(), endPoint.getOntologyGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();
@@ -291,8 +294,9 @@ public class AnalizeDataset {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryDescribe(endPoint, endPoint.getTimeout(),
-                queries(dataset).getQueryClassDescriptions(classUri.toString(), filters, size,size * page),
-                endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+                    queries(dataset).getQueryClassDescriptions(endPoint.getType(), classUri.toString(),
+                            filters, size,size * page),
+                    endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
         });
     }
@@ -302,7 +306,8 @@ public class AnalizeDataset {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
-                    queries(dataset).getQueryClassInstances(classUri.toString(), filters, size,size * page),
+                    queries(dataset).getQueryClassInstances(endPoint.getType(), classUri.toString(),
+                            filters, size,size * page),
                     endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
                     endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
@@ -373,7 +378,8 @@ public class AnalizeDataset {
         URI classUri = datasetClass.getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             Model model = sparqlService.queryConstruct(endPoint, endPoint.getTimeout(),
-                    queries(dataset).getQueryClassInstancesLabels(classUri.toString(), filters, size,size * page),
+                    queries(dataset).getQueryClassInstancesLabels(endPoint.getType(), classUri.toString(),
+                            filters, size,size * page),
                     endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
                     endPoint.getQueryPassword()));
             RDFDataMgr.write(out, model, format);
@@ -385,7 +391,7 @@ public class AnalizeDataset {
         AtomicInteger count = new AtomicInteger();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
             ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
-                queries(dataset).getQueryClassInstancesCount(classUri.toString(), filters),
+                queries(dataset).getQueryClassInstancesCount(endPoint.getType(), classUri.toString(), filters),
                 endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
                 QuerySolution soln = result.nextSolution();

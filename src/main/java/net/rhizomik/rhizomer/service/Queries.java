@@ -30,13 +30,14 @@ public interface Queries {
     Query getQueryClasses();
 
     default
-    Query getQueryClassInstancesCount(String classUri, MultiValueMap<String, String> filters) {
+    Query getQueryClassInstancesCount(
+            SPARQLEndPoint.ServerType serverType, String classUri, MultiValueMap<String, String> filters) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
                         "WHERE { \n" +
                         "\t ?instance a ?class . \n" +
-                        getFilterPatternsAnd(filters) +
+                        getFilterPatternsAnd(serverType, filters) +
                         "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
@@ -44,7 +45,8 @@ public interface Queries {
     }
 
     default
-    Query getQueryClassDescriptions(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
+    Query getQueryClassDescriptions(SPARQLEndPoint.ServerType serverType, String classUri,
+                                    MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "DESCRIBE ?instance \n" +
@@ -53,7 +55,7 @@ public interface Queries {
                 "\t\t WHERE { \n" +
                 "\t\t\t ?instance a ?class . \n" +
                 "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-                getFilterPatternsAnd(filters) +
+                getFilterPatternsAnd(serverType, filters) +
                 "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
                 "\t } \n" +
                 "}");
@@ -63,7 +65,8 @@ public interface Queries {
     }
 
     default
-    Query getQueryClassInstances(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
+    Query getQueryClassInstances(SPARQLEndPoint.ServerType serverType, String classUri,
+                                 MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "CONSTRUCT { \n" +
@@ -77,7 +80,7 @@ public interface Queries {
                 "\t\t WHERE { \n" +
                 "\t\t\t ?instance a ?class . \n" +
                 "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-                getFilterPatternsAnd(filters) +
+                getFilterPatternsAnd(serverType, filters) +
                 "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
                 "} \n" +
                 "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
@@ -148,7 +151,8 @@ public interface Queries {
     }
 
     default
-    Query getQueryClassInstancesLabels(String classUri, MultiValueMap<String, String> filters, int limit, int offset) {
+    Query getQueryClassInstancesLabels(SPARQLEndPoint.ServerType serverType, String classUri,
+                                       MultiValueMap<String, String> filters, int limit, int offset) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "CONSTRUCT { ?resource rdfs:label ?label } \n" +
@@ -157,7 +161,7 @@ public interface Queries {
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n" +
             "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-            getFilterPatternsAnd(filters) +
+            getFilterPatternsAnd(serverType, filters) +
             "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
             "\t } \n" +
             "\t { \n" +
@@ -181,14 +185,17 @@ public interface Queries {
 
     Query getQueryClassFacets(String classUri);
 
-    Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
-        MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset,
-        boolean ordered);
+    Query getQueryFacetRangeValues(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
+            MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered);
 
-    Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
-           MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang);
+    Query getQueryFacetRangeValuesContaining(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
+            MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang);
 
-    Query getQueryFacetRangeMinMax(String classUri, String facetUri, String rangeUri, MultiValueMap<String, String> filters);
+    Query getQueryFacetRangeMinMax(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
+            MultiValueMap<String, String> filters);
 
     default Query getQueryDescribeResource(URI resourceUri) {
         return QueryFactory.create("DESCRIBE <" + resourceUri + ">");
@@ -388,24 +395,25 @@ public interface Queries {
         return filtersPatterns.toString();
     }
 
-    default String getFilterPatternsAnd(MultiValueMap<String, String> filters) {
+    default String getFilterPatternsAnd(SPARQLEndPoint.ServerType serverType, MultiValueMap<String, String> filters) {
         StringBuilder filtersPatterns = new StringBuilder();
         filters.forEach((property_range, values) -> {
-            values.forEach(value -> {
+            int num = 1;
+            for (String value: values) {
                 String property = property_range.split(" ")[0];
                 String range = property_range.indexOf(" ") > 0 ? property_range.split(" ")[1] : null;
-                filtersPatterns.append(convertFilterToSparqlPattern(property, range, value));
-            });
+                filtersPatterns.append(convertFilterToSparqlPattern(serverType, property, range, value, num));
+                num++;
+            }
         });
         return filtersPatterns.toString();
     }
 
-    default String convertFilterToSparqlPattern(String property, String range, String value) {
+    default String convertFilterToSparqlPattern(
+            SPARQLEndPoint.ServerType serverType, String property, String range, String value, int num) {
         String pattern = "";
         if (property.equalsIgnoreCase("urn:rhz:contains")) {
-            pattern += "\t ?instance ?anyProperty ?value . OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
-                       "\t\t FILTER ( (ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), " + value.toLowerCase() + ")) \n" +
-                       "\t\t\t || CONTAINS(LCASE(STR(?valueLabel)), " + value.toLowerCase() + ") )";
+            pattern += containingText(serverType, value, num+"");
         }
         else {
             String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());

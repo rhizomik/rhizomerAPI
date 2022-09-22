@@ -1,5 +1,6 @@
 package net.rhizomik.rhizomer.service;
 
+import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -55,8 +56,9 @@ public class DetailedQueries implements Queries {
     }
 
     @Override
-    public Query getQueryFacetRangeValues(String classUri, String facetUri, String rangeUri,
-                    MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
+    public Query getQueryFacetRangeValues(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
+            MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "SELECT ?value ?count (GROUP_CONCAT(?langLabel; SEPARATOR = \" || \") AS ?label) \n" +
@@ -66,7 +68,7 @@ public class DetailedQueries implements Queries {
             "\t\t { SELECT DISTINCT ?instance " +
             "\t\t\t WHERE { \n" +
             "\t\t\t\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(filters) +
+            getFilterPatternsAnd(serverType, filters) +
             "\t\t\t } \n" +
             "\t\t } \n" +
             "\t\t ?instance ?property ?resource . \n" +
@@ -90,8 +92,9 @@ public class DetailedQueries implements Queries {
     }
 
     @Override
-    public Query getQueryFacetRangeValuesContaining(String classUri, String facetUri, String rangeUri,
-        MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang) {
+    public Query getQueryFacetRangeValuesContaining(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
+            MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
             "SELECT DISTINCT ?value ?label \n" +
@@ -99,7 +102,7 @@ public class DetailedQueries implements Queries {
             "\t { SELECT DISTINCT ?instance " +
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(filters) +
+            getFilterPatternsAnd(serverType, filters) +
             "\t\t } \n" +
             "\t } \n" +
             "\t ?instance ?property ?resource . \n" +
@@ -123,14 +126,15 @@ public class DetailedQueries implements Queries {
     }
 
     @Override
-    public Query getQueryFacetRangeMinMax(String classUri, String facetUri, String rangeUri,
-                                          MultiValueMap<String, String> filters) {
+    public Query getQueryFacetRangeMinMax(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
+            MultiValueMap<String, String> filters) {
         ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
         pQuery.setCommandText(prefixes +
                 "SELECT (MIN(?num) AS ?min) (MAX(?num) AS ?max) \n" +
                 "WHERE { \n" +
                 "\t ?instance a ?class . \n" +
-                getFilterPatternsAnd(filters) +
+                getFilterPatternsAnd(serverType, filters) +
                 "\t ?instance ?property ?num . \n" +
                 "\t FILTER( ISLITERAL(?num) && DATATYPE(?num) = <" + rangeUri + "> )\n" +
                 "} ");
@@ -141,12 +145,11 @@ public class DetailedQueries implements Queries {
     }
 
     @Override
-    public String convertFilterToSparqlPattern(String property, String range, String value) {
+    public String convertFilterToSparqlPattern(
+            SPARQLEndPoint.ServerType serverType, String property, String range, String value, int num) {
         String pattern = "";
         if (property.equalsIgnoreCase("urn:rhz:contains")) {
-            pattern += "\t ?instance ?anyProperty ?value . OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
-                    "\t\t FILTER ( (ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), " + value.toLowerCase() + ")) \n" +
-                    "\t\t\t || CONTAINS(LCASE(STR(?valueLabel)), " + value.toLowerCase() + ") )";
+            pattern += containingText(serverType, value, num+"");
         } else {
             String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
             pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
