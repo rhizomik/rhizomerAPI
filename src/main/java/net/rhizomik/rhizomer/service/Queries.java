@@ -22,7 +22,8 @@ public interface Queries {
     String prefixes =
             "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
             "PREFIX foaf: <http://xmlns.com/foaf/0.1/> \n" +
-            "PREFIX text: <http://jena.apache.org/text#> \n";
+            "PREFIX text: <http://jena.apache.org/text#> \n" +
+            "PREFIX bif:  <http://www.openlinksw.com/schemas/bif#> \n";
 
     enum QueryType { OPTIMIZED, DETAILED }
 
@@ -421,19 +422,30 @@ public interface Queries {
     }
 
     default String containingText(SPARQLEndPoint.ServerType serverType, String text) {
+        return containingText(serverType, text, "");
+    }
+
+    default String containingText(SPARQLEndPoint.ServerType serverType, String text, String count) {
         if (serverType == SPARQLEndPoint.ServerType.FUSEKI_LUCENE) {
             String queryText = text.replaceAll("\"", Matcher.quoteReplacement("\\\"")).toLowerCase();
             queryText = queryText.contains("\\\"") ? queryText : "*" + queryText + "*";
-            return  "\t { (?instance ?score ?value) text:query \"" + queryText + "\" } \n" +
+            return  "\t { (?instance [] ?value"+count+") text:query \"" + queryText + "\" } \n" +
                     "\t UNION \n" +
-                    "\t { ?value text:query \"" + queryText + "\" } \n" +
-                    "\t ?instance a ?class ; ?property ?value \n";
+                    "\t { ?value"+count+" text:query \"" + queryText + "\" } \n" +
+                    "\t ?instance a ?class ; ?property"+count+" ?value"+count+" \n";
+        } else if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO) {
+            String queryText = text.replaceAll("\"", Matcher.quoteReplacement("\\\"")).toLowerCase();
+            return  "\t { ?instance a ?class ; ?property"+count+" ?value"+count+" \n" +
+                    "\t\t FILTER(bif:contains(?value"+count+", \"'" + queryText + "'\")) } \n" +
+                    "\t UNION \n" +
+                    "\t { ?instance a ?class ; ?property"+count+" ?value"+count+" . ?value"+count+" rdfs:label ?valueLabel"+count+" \n" +
+                    "\t\t FILTER(bif:contains(?valueLabel"+count+", \"'" + queryText + "'\")) } \n";
         } else {
             String queryText = text.replaceAll("\"", "").toLowerCase();
-            return  "\t ?instance a ?class ; ?property ?value \n" +
-                    "\t OPTIONAL { ?value rdfs:label ?valueLabel } \n" +
-                    "\t FILTER ( ( ISLITERAL(?value) && CONTAINS(LCASE(STR(?value)), \""+ queryText + "\") ) || \n" +
-                    "\t\t CONTAINS(LCASE(STR(?valueLabel)), \"" + queryText + "\") ) \n";
+            return  "\t ?instance a ?class ; ?property"+count+" ?value"+count+" \n" +
+                    "\t OPTIONAL { ?value"+count+" rdfs:label ?valueLabel"+count+" } \n" +
+                    "\t FILTER ( ( ISLITERAL(?value"+count+") && CONTAINS(LCASE(STR(?value"+count+")), \""+ queryText + "\") ) || \n" +
+                    "\t\t CONTAINS(LCASE(STR(?valueLabel"+count+")), \"" + queryText + "\") ) \n";
         }
     }
 }
