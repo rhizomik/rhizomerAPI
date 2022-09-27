@@ -435,11 +435,10 @@ public interface Queries {
 
     default String containingText(SPARQLEndPoint.ServerType serverType, String text, String count) {
         if (serverType == SPARQLEndPoint.ServerType.FUSEKI_LUCENE) {
-            String queryText = text.replaceAll("\"", Matcher.quoteReplacement("\\\"")).toLowerCase();
-            queryText = queryText.contains("\\\"") ? queryText : "*" + queryText + "*";
-            return  "\t { (?instance [] ?value"+count+") text:query \"" + queryText + "\" } \n" +
+            String queryText = text.replaceAll("\"", "").toLowerCase();
+            return  "\t { (?instance [] ?value"+count+") text:query \"\\\"" + queryText + "\\\"\" } \n" +
                     "\t UNION \n" +
-                    "\t { ?value"+count+" text:query \"" + queryText + "\" } \n" +
+                    "\t { ?value"+count+" text:query \"\\\"" + queryText + "\\\"\" } \n" +
                     "\t ?instance a ?class ; ?property"+count+" ?value"+count+" \n";
         } else if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO) {
             String queryText = text.replaceAll("\"", Matcher.quoteReplacement("\\\"")).toLowerCase();
