@@ -3,6 +3,7 @@ package net.rhizomik.rhizomer.service;
 import java.net.URI;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
@@ -37,7 +38,7 @@ public interface Queries {
                 "SELECT (COUNT(DISTINCT ?instance) AS ?n) \n" +
                         "WHERE { \n" +
                         "\t ?instance a ?class . \n" +
-                        getFilterPatternsAnd(serverType, filters) +
+                        getFilterPatterns(serverType, filters) +
                         "}");
         pQuery.setIri("class", classUri);
         Query query = pQuery.asQuery();
@@ -55,7 +56,7 @@ public interface Queries {
                 "\t\t WHERE { \n" +
                 "\t\t\t ?instance a ?class . \n" +
                 "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-                getFilterPatternsAnd(serverType, filters) +
+                getFilterPatterns(serverType, filters) +
                 "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
                 "\t } \n" +
                 "}");
@@ -80,7 +81,7 @@ public interface Queries {
                 "\t\t WHERE { \n" +
                 "\t\t\t ?instance a ?class . \n" +
                 "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-                getFilterPatternsAnd(serverType, filters) +
+                getFilterPatterns(serverType, filters) +
                 "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
                 "} \n" +
                 "\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
@@ -161,7 +162,7 @@ public interface Queries {
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n" +
             "\t\t\t OPTIONAL { ?instance rdfs:label ?label } \n" +
-            getFilterPatternsAnd(serverType, filters) +
+            getFilterPatterns(serverType, filters) +
             "\t\t } ORDER BY (!BOUND(?label)) ASC(LCASE(?label)) LIMIT " + limit + " OFFSET " + offset + " \n" +
             "\t } \n" +
             "\t { \n" +
@@ -290,8 +291,8 @@ public interface Queries {
             "\t } \n" +
             "\t UNION \n" +
             "\t { ?p rdfs:range ?type . \n" +
-            "\t\t ?subp rdfs:subPropertyOf* ?p . \n" +
-            "\t\t ?s ?subp ?i \n" +
+            // "\t\t ?subp rdfs:subPropertyOf* ?p . \n" +
+            "\t\t ?s ?p ?i \n" +
             "\t\t FILTER NOT EXISTS {?i a ?class} \n" +
             "\t } \n" +
             "}");
@@ -376,83 +377,107 @@ public interface Queries {
         return selectsUnion;
     }
 
-    default String getFilterPatternsOr(MultiValueMap<String, String> filters) {
+    default String getFilterPatterns(SPARQLEndPoint.ServerType serverType, MultiValueMap<String, String> filters) {
         StringBuilder filtersPatterns = new StringBuilder();
         filters.forEach((property_range, values) -> {
             String property = property_range.split(" ")[0];
-            String range = property_range.split(" ")[1];
-            String propertyVar = Integer.toUnsignedString(property.hashCode());
-            String pattern = "\t ?instance <" + property + "> ?v" + propertyVar + " . \n";
-            values.removeIf(value -> value.equals("null"));
-            if (!values.isEmpty()) {
-                pattern += "\t FILTER( STR(?v" + propertyVar + ") IN (" +
-                    values.stream().map(value -> "STR(" + value.replaceAll("[<>]", "\"") + ")")
-                            .collect(Collectors.joining(", "))
-                    + ")) . \n";
-            }
-            filtersPatterns.append(pattern);
-        });
-        return filtersPatterns.toString();
-    }
-
-    default String getFilterPatternsAnd(SPARQLEndPoint.ServerType serverType, MultiValueMap<String, String> filters) {
-        StringBuilder filtersPatterns = new StringBuilder();
-        filters.forEach((property_range, values) -> {
-            int num = 1;
-            for (String value: values) {
-                String property = property_range.split(" ")[0];
-                String range = property_range.indexOf(" ") > 0 ? property_range.split(" ")[1] : null;
-                filtersPatterns.append(convertFilterToSparqlPattern(serverType, property, range, value, num));
-                num++;
+            String range = property_range.indexOf(" ") > 0 ? property_range.split(" ")[1] : null;
+            if (values.size() > 1) {
+                filtersPatterns.append(convertOrFilter(serverType, property, range, values));
+            } else if (values.size() == 1 && values.get(0).startsWith("AND(")) {
+                filtersPatterns.append(convertAndFilter(serverType, property, range, patternValuesToList(values.get(0))));
+            } else if (values.size() == 1 && values.get(0).startsWith("OR(")) {
+                filtersPatterns.append(convertOrFilter(serverType, property, range, patternValuesToList(values.get(0))));
+            } else {
+                filtersPatterns.append(convertAndFilter(serverType, property, range, patternValuesToList(values.get(0))));
             }
         });
         return filtersPatterns.toString();
     }
 
-    default String convertFilterToSparqlPattern(
-            SPARQLEndPoint.ServerType serverType, String property, String range, String value, int num) {
-        String pattern = "";
-        if (property.equalsIgnoreCase("urn:rhz:contains")) {
-            pattern += containingText(serverType, value, num+"");
-        }
-        else {
+    default String convertAndFilter(SPARQLEndPoint.ServerType serverType, String property,
+                                    String range, List<String> values) {
+        StringBuilder pattern = new StringBuilder();
+        values.forEach(value -> {
             String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
-            pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
-            if (!value.equals("null")) {
-                String valueString = value;
-                if (valueString.startsWith("<") && valueString.endsWith(">")) {
-                    valueString = valueString.substring(1, valueString.length() - 1);
+            if (property.equalsIgnoreCase("urn:rhz:contains")) {
+                pattern.append(containingText(serverType, value, propertyValueVar));
+            } else {
+                pattern.append("\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n");
+                if (!value.equals("null")) {
+                    String valueString = value;
+                    if (valueString.startsWith("<") && valueString.endsWith(">")) {
+                        valueString = valueString.substring(1, valueString.length() - 1);
+                    }
+                    pattern.append("FILTER ( STR(?v" + propertyValueVar + ") = " + valueString + " ) \n");
                 }
-                pattern += "FILTER ( STR(?v" + propertyValueVar + ") = " + valueString + " ) \n";
+            }
+        });
+        return pattern.toString();
+    }
+
+    default String convertOrFilter(SPARQLEndPoint.ServerType serverType, String property,
+                                                  String range, List<String> values) {
+        StringBuilder pattern = new StringBuilder();
+        if (property.equalsIgnoreCase("urn:rhz:contains")) {
+            values.forEach(value -> {
+                String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
+                pattern.append(containingText(serverType, value, propertyValueVar));
+            });
+        } else {
+            String propertyVar = Integer.toUnsignedString(property.hashCode());
+            pattern.append("\t ?instance <" + property + "> ?v" + propertyVar + " . \n");
+            if (values.size() > 0 && !values.get(0).equals("null")) {
+                pattern.append("FILTER ( STR(?v" + propertyVar + ") IN (" +
+                        values.stream().map(value -> (value.startsWith("<") && value.endsWith(">")) ?
+                                        "\"" + value.substring(1, value.length() - 1) + "\"" : value)
+                                .collect(Collectors.joining(", "))
+                        + ") ) \n");
             }
         }
-        return pattern;
+        return pattern.toString();
     }
 
     default String containingText(SPARQLEndPoint.ServerType serverType, String text) {
         return containingText(serverType, text, "");
     }
 
-    default String containingText(SPARQLEndPoint.ServerType serverType, String text, String count) {
+    default String containingText(SPARQLEndPoint.ServerType serverType, String text, String propValueId) {
         if (serverType == SPARQLEndPoint.ServerType.FUSEKI_LUCENE) {
             String queryText = text.replaceAll("\"", "").toLowerCase();
-            return  "\t { (?instance [] ?value"+count+") text:query \"\\\"" + queryText + "\\\"\" } \n" +
+            return  "\t { (?instance [] ?value"+propValueId+") text:query \"\\\"" + queryText + "\\\"\" } \n" +
                     "\t UNION \n" +
-                    "\t { ?value"+count+" text:query \"\\\"" + queryText + "\\\"\" } \n" +
-                    "\t ?instance a ?class ; ?property"+count+" ?value"+count+" \n";
+                    "\t { ?value"+propValueId+" text:query \"\\\"" + queryText + "\\\"\" } \n" +
+                    "\t ?instance a ?class ; ?property"+propValueId+" ?value"+propValueId+" \n";
         } else if (serverType == SPARQLEndPoint.ServerType.VIRTUOSO) {
             String queryText = text.replaceAll("\"", Matcher.quoteReplacement("\\\"")).toLowerCase();
-            return  "\t { ?instance a ?class ; ?property"+count+" ?value"+count+" \n" +
-                    "\t\t FILTER(bif:contains(?value"+count+", \"'" + queryText + "'\")) } \n" +
+            return  "\t { ?instance a ?class ; ?property"+propValueId+" ?value"+propValueId+" \n" +
+                    "\t\t FILTER(bif:contains(?value"+propValueId+", \"'" + queryText + "'\")) } \n" +
                     "\t UNION \n" +
-                    "\t { ?instance a ?class ; ?property"+count+" ?value"+count+" . ?value"+count+" rdfs:label ?valueLabel"+count+" \n" +
-                    "\t\t FILTER(bif:contains(?valueLabel"+count+", \"'" + queryText + "'\")) } \n";
+                    "\t { ?instance a ?class ; ?property"+propValueId+" ?value"+propValueId+" . ?value"+propValueId+" rdfs:label ?valueLabel"+propValueId+" \n" +
+                    "\t\t FILTER(bif:contains(?valueLabel"+propValueId+", \"'" + queryText + "'\")) } \n";
         } else {
             String queryText = text.replaceAll("\"", "").toLowerCase();
-            return  "\t ?instance a ?class ; ?property"+count+" ?value"+count+" \n" +
-                    "\t OPTIONAL { ?value"+count+" rdfs:label ?valueLabel"+count+" } \n" +
-                    "\t FILTER ( ( ISLITERAL(?value"+count+") && CONTAINS(LCASE(STR(?value"+count+")), \""+ queryText + "\") ) || \n" +
-                    "\t\t CONTAINS(LCASE(STR(?valueLabel"+count+")), \"" + queryText + "\") ) \n";
+            return  "\t ?instance a ?class ; ?property"+propValueId+" ?value"+propValueId+" \n" +
+                    "\t OPTIONAL { ?value"+propValueId+" rdfs:label ?valueLabel"+propValueId+" } \n" +
+                    "\t FILTER ( ( ISLITERAL(?value"+propValueId+") && CONTAINS(LCASE(STR(?value"+propValueId+")), \""+ queryText + "\") ) || \n" +
+                    "\t\t CONTAINS(LCASE(STR(?valueLabel"+propValueId+")), \"" + queryText + "\") ) \n";
         }
+    }
+
+    default List<String> patternValuesToList (String values) {
+        if ((values.startsWith("AND(") || values.startsWith("OR(")) && values.endsWith(")")) {
+            values = values.substring(values.indexOf("(") + 1, values.lastIndexOf(")"));
+        }
+        if (values.matches("^<[^>]+>(?: <[^>]+>)*$")) {
+            Pattern p = Pattern.compile("<[^>]+>");
+            Matcher m = p.matcher(values);
+            return m.results().map(match -> match.group()).collect(Collectors.toList());
+        } else if (values.matches("^\\\"[^\\\"]+\\\"(?: \\\"[^\\\"]+\\\")*$")) {
+            Pattern p = Pattern.compile("\\\"[^\\\"]+\\\"");
+            Matcher m = p.matcher(values);
+            return m.results().map(match -> match.group()).collect(Collectors.toList());
+        }
+        return List.of(values);
     }
 }

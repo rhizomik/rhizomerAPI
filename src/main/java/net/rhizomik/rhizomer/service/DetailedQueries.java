@@ -8,6 +8,9 @@ import org.apache.jena.vocabulary.RDFS;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by http://rhizomik.net/~roberto/
  */
@@ -68,7 +71,7 @@ public class DetailedQueries implements Queries {
             "\t\t { SELECT DISTINCT ?instance " +
             "\t\t\t WHERE { \n" +
             "\t\t\t\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(serverType, filters) +
+            getFilterPatterns(serverType, filters) +
             "\t\t\t } \n" +
             "\t\t } \n" +
             "\t\t ?instance ?property ?resource . \n" +
@@ -102,7 +105,7 @@ public class DetailedQueries implements Queries {
             "\t { SELECT DISTINCT ?instance " +
             "\t\t WHERE { \n" +
             "\t\t\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(serverType, filters) +
+            getFilterPatterns(serverType, filters) +
             "\t\t } \n" +
             "\t } \n" +
             "\t ?instance ?property ?resource . \n" +
@@ -134,7 +137,7 @@ public class DetailedQueries implements Queries {
                 "SELECT (MIN(?num) AS ?min) (MAX(?num) AS ?max) \n" +
                 "WHERE { \n" +
                 "\t ?instance a ?class . \n" +
-                getFilterPatternsAnd(serverType, filters) +
+                getFilterPatterns(serverType, filters) +
                 "\t ?instance ?property ?num . \n" +
                 "\t FILTER( ISLITERAL(?num) && DATATYPE(?num) = <" + rangeUri + "> )\n" +
                 "} ");
@@ -145,35 +148,65 @@ public class DetailedQueries implements Queries {
     }
 
     @Override
-    public String convertFilterToSparqlPattern(
-            SPARQLEndPoint.ServerType serverType, String property, String range, String value, int num) {
-        String pattern = "";
-        if (property.equalsIgnoreCase("urn:rhz:contains")) {
-            pattern += containingText(serverType, value, num+"");
-        } else {
+    public String convertAndFilter(SPARQLEndPoint.ServerType serverType, String property,
+                                    String range, List<String> values) {
+        StringBuilder pattern = new StringBuilder();
+        values.forEach(value -> {
             String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
-            pattern = "\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n";
-            if (!value.equals("null")) {
-                if (value.startsWith("≧") || value.startsWith("≦")) {
-                    String operator = value.startsWith("≧") ? ">=" : "<=";
-                    value = value.substring(1);
-                    pattern +=
-                        "\t FILTER( ?v" + propertyValueVar + " " + operator + " \"" + value + "\"" +
-                        (range != null ?
-                                "^^<" + range + "> && DATATYPE(?v" + propertyValueVar + ") = <" + range + ">" : "") +
-                        " )\n";
+            if (property.equalsIgnoreCase("urn:rhz:contains")) {
+                pattern.append(containingText(serverType, value, propertyValueVar));
+            } else {
+                pattern.append("\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n");
+                if (!value.equals("null")) {
+                    if (value.startsWith("\"≧") || value.startsWith("\"≦")) {
+                        convertRangeFilterToSparqlPattern(value, range, propertyValueVar, pattern);
+                    }
+                    else {
+                        pattern.append(
+                                (value.startsWith("<") && value.endsWith(">") ?
+                                        "\t FILTER( ?v" + propertyValueVar + " = " + value + " )\n" :
+                                        "\t FILTER( STR(?v" + propertyValueVar + ") = " + value +
+                                                (range != null ?
+                                                        " && DATATYPE(?v" + propertyValueVar + ") = <" + range + ">" : "") +
+                                                " )\n"));
+                    }
                 }
-                else {
-                    pattern +=
-                        (value.startsWith("<") && value.endsWith(">") ?
-                        "\t FILTER( ?v" + propertyValueVar + " = " + value + " )\n" :
-                        "\t FILTER( STR(?v" + propertyValueVar + ") = " + value +
-                        (range != null ?
-                                " && DATATYPE(?v" + propertyValueVar + ") = <" + range + ">" : "") +
-                        " )\n");
+            }
+        });
+        return pattern.toString();
+    }
+
+    public  String convertOrFilter(SPARQLEndPoint.ServerType serverType, String property,
+                                   String range, List<String> values) {
+        StringBuilder pattern = new StringBuilder();
+        if (property.equalsIgnoreCase("urn:rhz:contains")) {
+            values.forEach(value -> {
+                String propertyValueVar = Integer.toUnsignedString(property.hashCode() + value.hashCode());
+                pattern.append(containingText(serverType, value, propertyValueVar));
+            });
+        } else {
+            String propertyVar = Integer.toUnsignedString(property.hashCode());
+            pattern.append("\t ?instance <" + property + "> ?v" + propertyVar + " . \n");
+            if (values.size() > 0 && !values.get(0).equals("null")) {
+                if (values.get(0).startsWith("≧") || values.get(0).startsWith("≦")) {
+                    convertRangeFilterToSparqlPattern(values.get(0), range, propertyVar, pattern);
+                } else {
+                    pattern.append("FILTER ( ?v" + propertyVar + " IN (" +
+                            values.stream().collect(Collectors.joining(", "))
+                            + ") ) \n");
                 }
             }
         }
-        return pattern;
+        return pattern.toString();
     }
+
+    public void convertRangeFilterToSparqlPattern(String value, String range, String propertyValueVar,
+                                                  StringBuilder pattern){
+        String operator = value.startsWith("\"≧") ? ">=" : "<=";
+        value = value.substring(2, value.lastIndexOf('"'));
+        pattern.append("\t FILTER( ?v" + propertyValueVar + " " + operator + " \"" + value + "\"" +
+                (range != null ? "^^<" + range + "> && DATATYPE(?v" + propertyValueVar + ") = <" + range + ">" : "") +
+                " )\n");
+    }
+
 }

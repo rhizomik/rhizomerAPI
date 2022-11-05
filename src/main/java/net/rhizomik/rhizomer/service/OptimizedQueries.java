@@ -63,7 +63,7 @@ public class OptimizedQueries implements Queries {
             "\t\t { SELECT DISTINCT ?instance " +
             "\t\t\t WHERE { \n" +
             "\t\t\t\t ?instance a ?class . \n" +
-            getFilterPatternsAnd(serverType, filters) +
+            getFilterPatterns(serverType, filters) +
             "\t\t\t } \n" +
             "\t\t } \n" +
             "\t\t ?instance ?property ?resource . \n" +
@@ -92,7 +92,7 @@ public class OptimizedQueries implements Queries {
                 "\t { SELECT DISTINCT ?instance " +
                 "\t\t WHERE { \n" +
                 "\t\t\t ?instance a ?class . \n" +
-                getFilterPatternsAnd(serverType, filters) +
+                getFilterPatterns(serverType, filters) +
                 "\t\t } \n" +
                 "\t } \n" +
                 "\t ?instance ?property ?resource . \n" +
