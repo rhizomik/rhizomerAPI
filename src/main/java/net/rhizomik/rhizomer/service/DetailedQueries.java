@@ -156,6 +156,12 @@ public class DetailedQueries implements Queries {
             if (property.equalsIgnoreCase("urn:rhz:contains")) {
                 pattern.append(containingText(serverType, value, propertyValueVar));
             } else {
+                boolean negation = false;
+                if (value.startsWith("!")) {
+                    negation = true;
+                    value = value.substring(1);
+                    pattern.append("FILTER NOT EXISTS { ");
+                }
                 pattern.append("\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n");
                 if (!value.equals("null")) {
                     if (value.startsWith("\"≧") || value.startsWith("\"≦")) {
@@ -169,6 +175,8 @@ public class DetailedQueries implements Queries {
                                                 (range != null ?
                                                         " && DATATYPE(?v" + propertyValueVar + ") = <" + range + ">" : "") +
                                                 " )\n"));
+                        if (negation)
+                            pattern.append(" }");
                     }
                 }
             }
@@ -192,7 +200,7 @@ public class DetailedQueries implements Queries {
                     convertRangeFilterToSparqlPattern(values.get(0), range, propertyVar, pattern);
                 } else {
                     pattern.append("FILTER ( ?v" + propertyVar + " IN (" +
-                            values.stream().collect(Collectors.joining(", "))
+                            String.join(", ", values)
                             + ") ) \n");
                 }
             }

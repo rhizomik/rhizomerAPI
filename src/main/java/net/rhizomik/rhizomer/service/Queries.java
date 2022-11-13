@@ -403,6 +403,12 @@ public interface Queries {
             if (property.equalsIgnoreCase("urn:rhz:contains")) {
                 pattern.append(containingText(serverType, value, propertyValueVar));
             } else {
+                boolean negation = false;
+                if (value.startsWith("!")) {
+                    negation = true;
+                    value = value.substring(1);
+                    pattern.append("FILTER NOT EXISTS { ");
+                }
                 pattern.append("\t ?instance <" + property + "> ?v" + propertyValueVar + " . \n");
                 if (!value.equals("null")) {
                     String valueString = value;
@@ -410,6 +416,8 @@ public interface Queries {
                         valueString = valueString.substring(1, valueString.length() - 1);
                     }
                     pattern.append("FILTER ( STR(?v" + propertyValueVar + ") = " + valueString + " ) \n");
+                    if (negation)
+                        pattern.append(" }");
                 }
             }
         });
@@ -469,12 +477,12 @@ public interface Queries {
         if ((values.startsWith("AND(") || values.startsWith("OR(")) && values.endsWith(")")) {
             values = values.substring(values.indexOf("(") + 1, values.lastIndexOf(")"));
         }
-        if (values.matches("^<[^>]+>(?: <[^>]+>)*$")) {
-            Pattern p = Pattern.compile("<[^>]+>");
+        if (values.matches("^!?<[^>]+>(?: !?<[^>]+>)*$")) {
+            Pattern p = Pattern.compile("!?<[^>]+>");
             Matcher m = p.matcher(values);
             return m.results().map(match -> match.group()).collect(Collectors.toList());
-        } else if (values.matches("^\\\"[^\\\"]+\\\"(?: \\\"[^\\\"]+\\\")*$")) {
-            Pattern p = Pattern.compile("\\\"[^\\\"]+\\\"");
+        } else if (values.matches("^!?\\\"[^\\\"]+\\\"(?: !?\\\"[^\\\"]+\\\")*$")) {
+            Pattern p = Pattern.compile("!?\\\"[^\\\"]+\\\"");
             Matcher m = p.matcher(values);
             return m.results().map(match -> match.group()).collect(Collectors.toList());
         }
