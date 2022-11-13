@@ -95,6 +95,39 @@ public class DetailedQueries implements Queries {
     }
 
     @Override
+    public Query getFacetRangeValueLabelAndCount(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri, String value,
+            MultiValueMap<String, String> filters, boolean isLiteral) {
+        ParameterizedSparqlString pQuery = new ParameterizedSparqlString();
+        pQuery.setCommandText(prefixes +
+                "SELECT ?value ?count (GROUP_CONCAT(?langLabel; SEPARATOR = \" || \") AS ?label) \n" +
+                "\t WHERE { \n" +
+                "\t BIND(" + value + " AS ?value) \n" +
+                "\t { SELECT (COUNT(?resource) AS ?count) \n" +
+                "\t\t WHERE { \n" +
+                "\t\t { SELECT DISTINCT ?instance " +
+                "\t\t\t WHERE { \n" +
+                "\t\t\t\t ?instance a ?class . \n" +
+                getFilterPatterns(serverType, filters) +
+                "\t\t\t } \n" +
+                "\t\t } \n" +
+                "\t\t ?instance ?property ?resource . FILTER (?resource = " + value + ") \n" +
+                ( isLiteral ?
+                        "\t\t FILTER( ISLITERAL(?resource) && DATATYPE(?resource) = <" + rangeUri + "> )\n" :
+                        !rangeUri.equals(RDFS.Resource.getURI()) ?
+                                "\t\t ?resource a <" + rangeUri + "> \n" :
+                                "\t\t OPTIONAL { ?resource a ?type } FILTER( (!BOUND(?type) || ?type=rdfs:Resource ) && !ISLITERAL(?resource) ) \n" ) +
+                "\t\t } } \n" +
+                "\t OPTIONAL { ?value rdfs:label ?l BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+                "\t OPTIONAL { GRAPH ?g { ?value rdfs:label ?l } BIND (CONCAT(?l, IF(LANG(?l),\"@\",\"\"), LANG(?l)) AS ?langLabel) } \n" +
+                "} GROUP BY ?value ?count");
+        pQuery.setIri("class", classUri);
+        pQuery.setIri("property", facetUri);
+        Query query = pQuery.asQuery();
+        return query;
+    }
+
+    @Override
     public Query getQueryFacetRangeValuesContaining(
             SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
             MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang) {

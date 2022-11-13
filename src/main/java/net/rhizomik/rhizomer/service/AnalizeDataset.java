@@ -212,6 +212,44 @@ public class AnalizeDataset {
         return rangeValues;
     }
 
+    public Value retrieveFacetRangeValueLabelAndCount(
+            Dataset dataset, Range facetRange, String rangeValue, MultiValueMap<String, String> filters) {
+        URI classUri = facetRange.getFacet().getDomain().getUri();
+        URI facetUri = facetRange.getFacet().getUri();
+        Value resultValue = null;
+        SPARQLEndPoint endPoint = endPointRepository.findByDataset(dataset).get(0);
+        ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+                queries(dataset).getFacetRangeValueLabelAndCount(
+                        endPoint.getType(), classUri.toString(), facetUri.toString(), facetRange.getUri().toString(),
+                        rangeValue, filters, facetRange.getAllLiteral()),
+                endPoint.getGraphs(), endPoint.getOntologyGraphs(),
+                withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
+        if (result.hasNext()) {
+            QuerySolution soln = result.nextSolution();
+            if (soln.contains("?value")) {
+                RDFNode value = soln.get("?value");
+                int count = soln.getLiteral("?count").getInt();
+                String label = null;
+                if (soln.contains("?label") && !soln.getLiteral("?label").getString().isBlank())
+                    label = soln.getLiteral("?label").getString();
+                String uri = null;
+                if (value.isResource())
+                    uri = value.asResource().getURI();
+                String curie = null;
+                if (uri != null)
+                    try {
+                        curie = prefixCCMap.abbreviate(new URL(uri).toString());
+                    } catch (Exception ignored) {
+                    }
+                if (value.isLiteral())
+                    resultValue = new Value(value.asLiteral().getString(), count, uri, curie, label);
+                else
+                    resultValue = new Value(value.toString(), count, uri, curie, label);
+            }
+        }
+        return resultValue;
+    }
+
     public List<Value> retrieveRangeValuesContaining(Dataset dataset, Range facetRange,
            MultiValueMap<String, String> filters, String containing, int top, String lang) {
         URI classUri = facetRange.getFacet().getDomain().getUri();

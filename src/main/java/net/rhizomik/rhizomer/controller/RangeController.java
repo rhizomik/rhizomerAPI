@@ -75,6 +75,22 @@ public class RangeController {
     }
 
     @RequestMapping(method = RequestMethod.GET,
+            value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges/{rangeCurie}")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody Value getRangeValue(@PathVariable String datasetId, @PathVariable String classCurie,
+                                                    @PathVariable String facetCurie, @PathVariable String rangeCurie,
+                                                    @RequestParam MultiValueMap<String, String> filters, Authentication auth,
+                                                    @RequestParam(value="value") String value) {
+        Dataset dataset = getDataset(datasetId);
+        securityController.checkPublicOrOwner(dataset, auth);
+        Class datasetClass = getClass(classCurie, dataset);
+        Facet classFacet = getFacet(facetCurie, datasetClass.getId());
+        Range facetRange = getRange(rangeCurie, classFacet);
+        filters.remove("value");
+        return analiseDataset.retrieveFacetRangeValueLabelAndCount(dataset, facetRange, value, filters);
+    }
+
+    @RequestMapping(method = RequestMethod.GET,
             value = "/datasets/{datasetId}/classes/{classCurie}/facets/{facetCurie}/ranges/{rangeCurie}/valuesContaining")
     public @ResponseBody List<Value> getRangeValuesContaining(@PathVariable String datasetId,
             @PathVariable String classCurie, @PathVariable String facetCurie, @PathVariable String rangeCurie,

@@ -190,6 +190,10 @@ public interface Queries {
             SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
             MultiValueMap<String, String> filters, boolean isLiteral, int limit, int offset, boolean ordered);
 
+    Query getFacetRangeValueLabelAndCount(
+            SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri, String value,
+            MultiValueMap<String, String> filters, boolean isLiteral);
+
     Query getQueryFacetRangeValuesContaining(
             SPARQLEndPoint.ServerType serverType, String classUri, String facetUri, String rangeUri,
             MultiValueMap<String, String> filters, boolean isLiteral, String containing, int top, String lang);
