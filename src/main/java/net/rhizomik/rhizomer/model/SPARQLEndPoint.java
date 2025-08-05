@@ -41,7 +41,8 @@ public class SPARQLEndPoint {
         FUSEKI_LUCENE,
         VIRTUOSO,
         MARKLOGIC,
-        STARDOG;
+        STARDOG,
+        QLEVER
     }
     private String timeout;
 
