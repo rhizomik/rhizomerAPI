@@ -288,14 +288,14 @@ public interface Queries {
             "\t\t FILTER NOT EXISTS {?i a ?class} \n" +
             "\t } \n" +
             "\t UNION \n" +
-            "\t { ?p rdfs:domain ?type . \n" +
+            "\t { ?p rdfs:domain ?class . \n" +
             "\t\t ?subp rdfs:subPropertyOf* ?p . \n" +
             "\t\t ?i ?subp ?o \n" +
             "\t\t FILTER NOT EXISTS {?i a ?class} \n" +
             "\t } \n" +
             "\t UNION \n" +
-            "\t { ?p rdfs:range ?type . \n" +
-            // "\t\t ?subp rdfs:subPropertyOf* ?p . \n" +
+            "\t { ?p rdfs:range ?class . \n" +
+            "\t\t ?subp rdfs:subPropertyOf* ?p . \n" +
             "\t\t ?s ?p ?i \n" +
             "\t\t FILTER NOT EXISTS {?i a ?class} \n" +
             "\t } \n" +
