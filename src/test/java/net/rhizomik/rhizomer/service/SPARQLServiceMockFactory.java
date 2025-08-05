@@ -44,7 +44,7 @@ public class SPARQLServiceMockFactory {
         Queries queries = new OptimizedQueries();
         SPARQLService mock = Mockito.mock(SPARQLService.class);
 
-        when(mock.querySelect(any(URL.class), anyString(), any(Query.class), any()))
+        when(mock.querySelect(any(SPARQLEndPoint.class), anyString(), any(Query.class), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(2);
                     logger.info("Sending to {} query: \n{}", "mockServer", query);
@@ -52,7 +52,7 @@ public class SPARQLServiceMockFactory {
                     return qexec.execSelect();
                 });
 
-        when(mock.querySelect(any(URL.class), anyString(), any(Query.class), anyList(), any()))
+        when(mock.querySelect(any(SPARQLEndPoint.class), anyString(), any(Query.class), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(2);
                     List<String> graphs = invocationOnMock.getArgument(3);
@@ -62,7 +62,7 @@ public class SPARQLServiceMockFactory {
                     return qexec.execSelect();
                 });
 
-        when(mock.querySelect(any(URL.class), anyString(), any(Query.class), anyList(), anyList(), any()))
+        when(mock.querySelect(any(SPARQLEndPoint.class), anyString(), any(Query.class), anyList(), anyList(), any()))
                 .thenAnswer(invocationOnMock -> {
                     Query query = invocationOnMock.getArgument(2);
                     List<String> graphs = invocationOnMock.getArgument(3);
@@ -103,7 +103,7 @@ public class SPARQLServiceMockFactory {
             return null;
         }).when(mock).queryUpdate(any(URL.class), any(UpdateRequest.class), any());
 
-        when(mock.countGraphTriples(any(URL.class), anyString(), anyString(), any()))
+        when(mock.countGraphTriples(any(SPARQLEndPoint.class), anyString(), anyString(), any()))
                 .thenAnswer(invocationOnMock -> {
                     String graph = invocationOnMock.getArgument(2);
                     if (dataset.containsNamedModel(graph))

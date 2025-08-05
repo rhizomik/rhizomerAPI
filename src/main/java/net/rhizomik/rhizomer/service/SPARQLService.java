@@ -1,10 +1,8 @@
 package net.rhizomik.rhizomer.service;
 
-import net.rhizomik.rhizomer.model.Dataset;
 import net.rhizomik.rhizomer.model.SPARQLEndPoint;
 import net.rhizomik.rhizomer.repository.SPARQLEndPointRepository;
 
-import java.net.URI;
 import java.net.http.HttpClient;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -35,21 +33,21 @@ public class SPARQLService {
     @Autowired SPARQLEndPointRepository endPointRepository;
     @Autowired Queries queries;
 
-    public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, HttpClient creds) {
-        return this.querySelect(sparqlEndpoint, timeout, query, new ArrayList<>(), new ArrayList<>(), creds);
+    public ResultSet querySelect(SPARQLEndPoint endpoint, String timeout, Query query, HttpClient creds) {
+        return this.querySelect(endpoint, timeout, query, new ArrayList<>(), new ArrayList<>(), creds);
     }
 
-    public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
-        return this.querySelect(sparqlEndpoint, timeout, query, graphs, new ArrayList<>(), creds);
+    public ResultSet querySelect(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs, HttpClient creds) {
+        return this.querySelect(endpoint, timeout, query, graphs, new ArrayList<>(), creds);
     }
 
-    public ResultSet querySelect(URL sparqlEndpoint, String timeout, Query query, List<String> graphs,
+    public ResultSet querySelect(SPARQLEndPoint endpoint, String timeout, Query query, List<String> graphs,
                                  List<String> namedGraphs, HttpClient creds) {
         graphs.forEach(query::addGraphURI);
         namedGraphs.forEach(query::addNamedGraphURI);
-        logger.info("Sending to {} query: \n{}", sparqlEndpoint, query);
+        logger.info("Sending to {} query: \n{}", endpoint.getQueryEndPoint(), query);
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
-        qBuilder.query(query).endpoint(sparqlEndpoint.toString()).httpClient(creds);
+        qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
         if (timeout != null)
             qBuilder.param("timeout", timeout);
         QueryExecutionHTTP qExec = qBuilder.build();
@@ -99,10 +97,10 @@ public class SPARQLService {
         processor.execute();
     }
 
-    public long countGraphTriples(URL sparqlEndPoint, String timeout, String graph, HttpClient creds) {
+    public long countGraphTriples(SPARQLEndPoint endpoint, String timeout, String graph, HttpClient creds) {
         Query countTriples = queries.getQueryCountTriples();
         countTriples.addGraphURI(graph);
-        ResultSet result = querySelect(sparqlEndPoint, timeout, countTriples, creds);
+        ResultSet result = querySelect(endpoint, timeout, countTriples, creds);
         long count = 0;
         while (result.hasNext()) {
             QuerySolution soln = result.nextSolution();

@@ -75,7 +75,7 @@ public class AnalizeDataset {
                 sparqlService.inferTypes(endPoint.getDatasetInferenceGraph(), endPoint,
                         withCreds(endPoint.getUpdateUsername(), endPoint.getUpdatePassword()));
             }
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+            ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryClasses(), endPoint.getGraphs(), endPoint.getOntologyGraphs(),
                     withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
@@ -105,7 +105,7 @@ public class AnalizeDataset {
 
     public void detectClassFacets(Class datasetClass) {
         endPointRepository.findByDataset(datasetClass.getDataset()).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+            ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                     queries(datasetClass.getDataset()).getQueryClassFacets(datasetClass.getUri().toString()),
                     endPoint.getGraphs(), endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(),
                     endPoint.getQueryPassword()));
@@ -179,7 +179,7 @@ public class AnalizeDataset {
         URI facetUri = facetRange.getFacet().getUri();
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+            ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryFacetRangeValues(endPoint.getType(), classUri.toString(),
                             facetUri.toString(), facetRange.getUri().toString(), filters, facetRange.getAllLiteral(),
                             size, size * page, true),
@@ -218,7 +218,7 @@ public class AnalizeDataset {
         URI facetUri = facetRange.getFacet().getUri();
         Value resultValue = null;
         SPARQLEndPoint endPoint = endPointRepository.findByDataset(dataset).get(0);
-        ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+        ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                 queries(dataset).getFacetRangeValueLabelAndCount(
                         endPoint.getType(), classUri.toString(), facetUri.toString(), facetRange.getUri().toString(),
                         rangeValue, filters, facetRange.getAllLiteral()),
@@ -256,7 +256,7 @@ public class AnalizeDataset {
         URI facetUri = facetRange.getFacet().getUri();
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+            ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryFacetRangeValuesContaining(
                             endPoint.getType(), classUri.toString(), facetUri.toString(),
                             facetRange.getUri().toString(), filters, facetRange.getAllLiteral(), containing, top, lang),
@@ -292,7 +292,7 @@ public class AnalizeDataset {
         URI classUri = facetRange.getFacet().getDomain().getUri();
         URI facetUri = facetRange.getFacet().getUri();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+            ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryFacetRangeMinMax(endPoint.getType(), classUri.toString(), facetUri.toString(),
                             facetRange.getUri().toString(), filters),
                     endPoint.getGraphs(), endPoint.getOntologyGraphs(),
@@ -313,7 +313,7 @@ public class AnalizeDataset {
     }
 
     public List<URI> listServerGraphs(Dataset dataset, SPARQLEndPoint endPoint) {
-        ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+        ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                 queries(dataset).getQueryGraphs(),
                 withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
         List<URI> graphs = new ArrayList<>();
@@ -355,7 +355,7 @@ public class AnalizeDataset {
     public int retrieveSearchInstancesCount(Dataset dataset, String text) {
         AtomicInteger count = new AtomicInteger();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+            ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQuerySearchInstancesCount(endPoint.getType(), text),
                     endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
@@ -380,7 +380,7 @@ public class AnalizeDataset {
     public List<Value> searchInstancesTypeFacetValues(Dataset dataset, String text, int page, int size) {
         List<Value> rangeValues = new ArrayList<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+            ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                 queries(dataset).getQuerySearchTypeFacet(endPoint.getType(), text, size, size * page, true),
                 endPoint.getGraphs(), endPoint.getOntologyGraphs(),
                 withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
@@ -428,7 +428,7 @@ public class AnalizeDataset {
         URI classUri = datasetClass.getUri();
         AtomicInteger count = new AtomicInteger();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+            ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                 queries(dataset).getQueryClassInstancesCount(endPoint.getType(), classUri.toString(), filters),
                 endPoint.getGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
@@ -456,7 +456,7 @@ public class AnalizeDataset {
     public Collection<IncomingFacet> detectDatasetResourceIncomingFacets(Dataset dataset, URI resourceUri) {
         HashMap<String, IncomingFacet> incomingFacets = new HashMap<>();
         endPointRepository.findByDataset(dataset).forEach(endPoint -> {
-            ResultSet result = sparqlService.querySelect(endPoint.getQueryEndPoint(), endPoint.getTimeout(),
+            ResultSet result = sparqlService.querySelect(endPoint, endPoint.getTimeout(),
                     queries(dataset).getQueryResourceIncomingFacets(resourceUri), endPoint.getGraphs(),
                     endPoint.getOntologyGraphs(), withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
             while (result.hasNext()) {
@@ -517,7 +517,7 @@ public class AnalizeDataset {
     }
 
     public long countGraphTriples(SPARQLEndPoint endPoint, String graph) {
-        return sparqlService.countGraphTriples(endPoint.getQueryEndPoint(), endPoint.getTimeout(), graph,
+        return sparqlService.countGraphTriples(endPoint, endPoint.getTimeout(), graph,
                 withCreds(endPoint.getQueryUsername(), endPoint.getQueryPassword()));
     }
 
