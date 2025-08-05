@@ -8522,351 +8522,351 @@
 	rdfs:label "Talbert Serry" .
 
 <http://mydomain.org/persons/Jaime_Lannister> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/jamie-lannister-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/jamie-lannister-1920.jpg> ;
 	rdfs:comment "The Queen's twin brother. It was he who murdered the previous King (Aerys), despite have sworn to protect him. This deed earned him his nickname: “Kingslayer.”" ;
 	skos:altLabel "Jaime Lannister" .
 
 <http://mydomain.org/persons/Sandor_Clegane> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/sandor-clegane-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/sandor-clegane-1920.jpg> ;
 	rdfs:comment "Personal bodyguard to Prince Joffrey, half his face is covered in burn scars as a result of his brother thrusting him into a fire." ;
 	skos:altLabel "Sandor Clegane (“The Hound”)" .
 
 <http://mydomain.org/persons/Joffrey_Baratheon> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/joffrey-baratheon-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/joffrey-baratheon-1920.jpg> ;
 	rdfs:comment "The oldest of King Robert and Queen Cersei's children." ;
 	skos:altLabel "Joffrey Baratheon" .
 
 <http://mydomain.org/persons/Samwell_Tarly> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/samwell-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/samwell-1920.jpg> ;
 	rdfs:comment "An overweight and timid, Night’s Watch recruit who is forced to join after being disinherited by his family. He falls under Jon Snow's protection and becomes his best friend." ;
 	skos:altLabel "Samwell Tarly" .
 
 <http://mydomain.org/persons/Olenna_Redwyne> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/olenna-tyrell-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/olenna-tyrell-1920.jpg> ;
 	rdfs:comment "Matriarch of House Tyrell, Lady Olenna is not shy about sharing her opinions. Although fond of her granddaughter Margaery, she feels less generous toward the men in her family." ;
 	skos:altLabel "Olenna Tyrell" .
 
 <http://mydomain.org/persons/Rickon_Stark> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/rickon-stark-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/rickon-stark-1920.jpg> ;
 	rdfs:comment "Rickon is the youngest of the Stark children. His direwolf is named Shaggydog." ;
 	skos:altLabel "Rickon Stark" .
 
 <http://mydomain.org/persons/Missandei> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/missandei-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/missandei-1920.jpg> ;
 	rdfs:comment "Formerly a slave in Astapor, Missandei is fluent in the Common Tongue and High Valyrian." ;
 	skos:altLabel "Missandei" .
 
 <http://mydomain.org/persons/Ygritte> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/ygritte-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/ygritte-1920.jpg> ;
 	rdfs:comment "A wildling woman that Jon Snow encountered traveling beyond the Wall, Ygritte is fiercely proud of her free status. Her opinions have clouded Jon’s stance about the Night’s Watch." ;
 	skos:altLabel "Ygritte" .
 
 <http://mydomain.org/persons/Thoros> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s3/thoros-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s3/thoros-1920.jpg> ;
 	rdfs:comment "A native of the Free City of Myr and a famous soldier, he has since joined the outlaw group the Brotherhood Without Banners. Although Thoros serves as a priest for the Lord of Light, he is fond of drink." ;
 	skos:altLabel "Thoros of Myr" .
 
 <http://mydomain.org/persons/Daario_Naharis> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/daario-naharis-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/daario-naharis-1920.jpg> ;
 	rdfs:comment "Daenerys' advisor and lover." ;
 	skos:altLabel "Daario Naharis" .
 
 <http://mydomain.org/persons/Benjen_Stark> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/benjen-stark-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/benjen-stark-1920.jpg> ;
 	rdfs:comment "Ned's younger brother and First Ranger of the Night Watch, he is a hero of Jon Snow's." ;
 	skos:altLabel "Benjen Stark" .
 
-<http://mydomain.org/persons/Arya_Stark> foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/arya-stark-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+<http://mydomain.org/persons/Arya_Stark> foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/arya-stark-1920.jpg> ;
 	a dbo:FictionalCharacter ;
 	rdfs:comment "The younger of Ned and Cat's two daughters. A tomboy, she would rather fence than dance. Her direwolf is named Nymeria, after a warrior queen." ;
 	skos:altLabel "Arya Stark" .
 
 <http://mydomain.org/persons/Randyll_Tarly> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/randyll-tarly-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/randyll-tarly-1920.jpg> ;
 	rdfs:comment "A legendary soldier, Randyll Tarly has no patience for his son Samwell’s studious nature. He forced Sam to join the Night’s Watch, making his second son Dickon heir to Horn Hill." ;
 	skos:altLabel "Randyll Tarly" .
 
 <http://mydomain.org/persons/Tyrion_Lannister> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/tyrion-lannister-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/tyrion-lannister-1920.jpg> ;
 	rdfs:comment "Called \"The Imp,\" because of his small stature, he is the youngest son of Tywin Lannister, the richest lord in the Seven Kingdoms and younger brother to Queen Cersei and Ser Jaime Lannister. What he lacks in height, he makes up in wit." ;
 	skos:altLabel "Tyrion Lannister" .
 
 <http://mydomain.org/persons/Loras_Tyrell> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/loras-tyrell-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/loras-tyrell-1920.jpg> ;
 	rdfs:comment "A handsome and popular young knight, referred to as the Knight of Flowers, Loras is a close friend of Renly Barthenon." ;
 	skos:altLabel "Loras Tyrell" .
 
 <http://mydomain.org/persons/Qyburn> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/qyburn-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/qyburn-1920.jpg> ;
 	rdfs:comment "Although trained in the medical arts, Qyburn was censured by the Citadel for his unauthorized experiments and does not wear the chains of a maester." ;
 	skos:altLabel "Qyburn" .
 
 <http://mydomain.org/persons/Sansa_Stark> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/sansa-stark-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/sansa-stark-1920.jpg> ;
 	rdfs:comment "Ned and Cat's oldest daughter. Demure and ladylike, her dream is to marry Prince Joffrey. Her direwolf is named Lady." ;
 	skos:altLabel "Sansa Stark" .
 
 <http://mydomain.org/persons/Barristan_Selmy> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/barristan-selmy-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/barristan-selmy-1920.jpg> ;
 	rdfs:comment "As a member of the Kingsguard under the former king, Aerys, he never wavered in his oath to protect. For his commitment, Robert pardoned him and promoted him to Lord Commander." ;
 	skos:altLabel "Barristan Selmy" .
 
 <http://mydomain.org/persons/Oberyn_Martell> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/oberyn-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/oberyn-1920.jpg> ;
 	rdfs:comment "A prince of Dorne, Oberyn Martell is also a fierce fighter who earned the nickname, the \"Red Viper.\"" ;
 	skos:altLabel "Oberyn Martell" .
 
 <http://mydomain.org/persons/Eddard_Stark> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/eddard-ned-stark-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/eddard-ned-stark-1920.jpg> ;
 	rdfs:comment "Lord of Winterfell and Warden of the North. The childhood friend of Robert Baratheon, he was a key player in Robert's rebellion, helping him win the throne from the Targaryens. He is married to Catelyn Tully." ;
 	skos:altLabel "Eddard “Ned” Stark" .
 
 <http://mydomain.org/persons/Melisandre> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/melisandre-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/melisandre-1920.jpg> ;
 	rdfs:comment "A Red Priestess from Asshai, Melisandre worships the Lord of Light. She believes her visions will lead her to the true king of Westeros." ;
 	skos:altLabel "Melisandre" .
 
 <http://mydomain.org/persons/Robb_Stark> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/robert-stark-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/robert-stark-1920.jpg> ;
 	rdfs:comment "The oldest of Ned and Cat's five children. His direwolf is named Grey Wind." ;
 	skos:altLabel "Robb Stark" .
 
 <http://mydomain.org/persons/Gendry> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/gendry-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/gendry-1920.jpg> ;
 	rdfs:comment "An apprentice smith in King’s Landing who is of interest to Jon Arryn and Ned Stark." ;
 	skos:altLabel "Gendry" .
 
 <http://mydomain.org/persons/Brynden_Tully> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/blackfish-tully-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/blackfish-tully-1920.jpg> ;
 	rdfs:comment "Brynden is known as “the Blackfish,” due to the strained relationship between him and his older brother Hoster. Alongside Barristan Selmy, Brynden showed great heroism during the War of the Ninepenny Kings, a rebellion in the East that threatened the Seven Kingdoms." ;
 	skos:altLabel "Brynden Tully (“The Blackfish”)" .
 
 <http://mydomain.org/persons/Obara_Sand> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/obera-sand-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/obera-sand-1920.jpg> ;
 	rdfs:comment "The eldest of Oberyn Martell's bastard daughters, Obara is as dangerous with a spear as he was." ;
 	skos:altLabel "Obara Sand" .
 
-<http://mydomain.org/persons/Luwin> foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/maester-luwin-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+<http://mydomain.org/persons/Luwin> foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/maester-luwin-1920.jpg> ;
 	rdfs:comment "Maester of Winterfell, he provides wise counsel to Ned and serves as tutor to the children." ;
 	a dbo:FictionalCharacter ;
 	skos:altLabel "Maester Luwin" .
 
 <http://mydomain.org/persons/Robert_Baratheon> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/robert-baratheon-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/robert-baratheon-1920.jpg> ;
 	rdfs:comment "King of the Seven Kingdoms of Westeros and longtime friend of Ned Stark.  Robert was engaged to Ned's sister, Lyanna, whose abduction by Prince Rhaegar Targaryen incited Robert's uprising against the throne.  When Lyanna died during the war, Robert married Cersei Lannister." ;
 	skos:altLabel "Robert Baratheon" .
 
-<http://mydomain.org/persons/High_Sparrow> foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/high-sparrow-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+<http://mydomain.org/persons/High_Sparrow> foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/high-sparrow-1920.jpg> ;
 	a dbo:FictionalCharacter ;
 	rdfs:comment "The High Sparrow leads a group of religious zealots determined to combat vice in King's Landing." ;
 	skos:altLabel "High Sparrow" .
 
 <http://mydomain.org/persons/Varys> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/maetser-varys-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/maetser-varys-1920.jpg> ;
 	rdfs:comment "A eunuch and a member of the Small Council. A master of disguise, he along with Littlefinger are always aware of what goes on in Court." ;
 	skos:altLabel "Varys" .
 
 <http://mydomain.org/persons/Davos_Seaworth> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/davos-seaworth-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/davos-seaworth-1920.jpg> ;
 	rdfs:comment "A reformed smuggler, it was Davos who provided Stannis' forces much-needed provisions during the long siege of Storm's End." ;
 	skos:altLabel "Davos Seaworth" .
 
 <http://mydomain.org/persons/Drogo> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/khal-drogo-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/khal-drogo-1920.jpg> ;
 	rdfs:comment "The warrior leader of a vast tribe of horseman in Essos." ;
 	skos:altLabel "Khal Drogo" .
 
 <http://mydomain.org/persons/Mance_Rayder> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/mance-rayder-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/mance-rayder-1920.jpg> ;
 	rdfs:comment "Once a brother of the Night’s Watch, Mance abandoned his vows to join the wildlings. He serves as their King Beyond the Wall." ;
 	skos:altLabel "Mance Rayder" .
 
 <http://mydomain.org/persons/Jaqen_H%27ghar> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/jaqen-hghar-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/jaqen-hghar-1920.jpg> ;
 	rdfs:comment "Jaqen helped Arya escape from Harrenhal and provided her with an iron coin to ensure her safe passage to Braavos." ;
 	skos:altLabel "Jaqen H’ghar" .
 
 <http://mydomain.org/persons/Orell> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/orell-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/orell-1920.jpg> ;
 	rdfs:comment "A wildling scout, he travels with an eagle." ;
 	skos:altLabel "Orell" .
 
 <http://mydomain.org/persons/Asha_Greyjoy> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/yara-greyjoy-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/yara-greyjoy-1920.jpg> ;
 	rdfs:comment "Theon's older sister, she is the only child of Balon Greyjoy remaining on the Iron Islands." ;
 	skos:altLabel "Yara Greyjoy" .
 
 <http://mydomain.org/persons/Ellaria_Sand> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/ellaria-sand-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/ellaria-sand-1920.jpg> ;
 	rdfs:comment "Prince Oberyn Martell’s paramour." ;
 	skos:altLabel "Ellaria Sand" .
 
 <http://mydomain.org/persons/Osha> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/osha-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/osha-1920.jpg> ;
 	rdfs:comment "A wildling woman who helps raise Bran." ;
 	skos:altLabel "Osha" .
 
 <http://mydomain.org/persons/Nymeria_Sand> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/nymeria-sand-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/nymeria-sand-1920.jpg> ;
 	rdfs:comment "Half-Dornish and elegant, she uses the whip as her weapon of choice." ;
 	skos:altLabel "Nym Sand" .
 
 <http://mydomain.org/persons/Ramsay_Snow> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/ramsay-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/ramsay-1920.jpg> ;
 	rdfs:comment "A bastard son of Roose Bolton, Ramsay's bloodlust is even stronger than his father's." ;
 	skos:altLabel "Ramsay Snow" .
 
 <http://mydomain.org/persons/Shae> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/shae-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/shae-1920.jpg> ;
 	rdfs:comment "A prostitute-turned-mistress of Tyrion Lannister." ;
 	skos:altLabel "Shae" .
 
 <http://mydomain.org/persons/Bran_Stark> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/bran-stark-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/bran-stark-1920.jpg> ;
 	rdfs:comment "Ned and Cat's younger son, who has an inquisitive nature and a penchant for climbing Winterfell's walls. His direwolf is named Summer." ;
 	skos:altLabel "Bran Stark" .
 
 <http://mydomain.org/persons/Aemon_Targaryen_%28son_of_Maekar_I%29> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/aemon-targaryen-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/aemon-targaryen-1920.jpg> ;
 	rdfs:comment "The elderly, blind maester of the Night's Watch who is sympathetic to Jon Snow's plight." ;
 	skos:altLabel "Maester Aemon" .
 
 <http://mydomain.org/persons/Renly_Baratheon> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/renly-baratheon-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/renly-baratheon-1920.jpg> ;
 	rdfs:comment "King Robert’s youngest brother, Master of Laws on the King’s Small Council and Lord of Storm’s End. He is a close friend of Loras Tyrell, the Knight of Flowers." ;
 	skos:altLabel "Renly Baratheon" .
 
 <http://mydomain.org/persons/Theon_Greyjoy> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/theon-greyjoy-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/theon-greyjoy-1920.jpg> ;
 	rdfs:comment "Ned's ward, heir to House Greyjoy. He was brought to Winterfell after his father, Balon Greyjoy, tried to rise against King Robert. Although raised among the Stark children, he is keenly aware he is not one of them." ;
 	skos:altLabel "Theon Greyjoy" .
 
 <http://mydomain.org/persons/Pycelle> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/maester-pycelle-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/maester-pycelle-1920.jpg> ;
 	rdfs:comment "The aged maester of King’s Landing and a member of the Small Council." ;
 	skos:altLabel "Grand Maester Pycelle" .
 
 <http://mydomain.org/persons/Jon_Snow> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/john-snow-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/john-snow-1920.jpg> ;
 	rdfs:comment "Ned's bastard son. He joins the Night’s Watch, following in the footsteps of his Uncle Benjen. His direwolf is named Ghost." ;
 	skos:altLabel "Jon Snow" .
 
 <http://mydomain.org/persons/Jeor_Mormont> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/jeor-mormont-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/jeor-mormont-1920.jpg> ;
 	rdfs:comment "Father of the exiled Jorah Mormont and former lord of Bear Island. He is now the lord commander of the Night’s Watch and a friend to Jon Snow." ;
 	skos:altLabel "Jeor Mormont" .
 
 <http://mydomain.org/persons/Daenerys_Targaryen> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/daenarys-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/daenarys-1920.jpg> ;
 	rdfs:comment "Princess of House Targaryen, living in exile in Essos with her brother, Viserys." ;
 	skos:altLabel "Daenerys Targaryen" .
 
 <http://mydomain.org/persons/Roose_Bolton> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/roose-bolton-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/roose-bolton-1920.jpg> ;
 	rdfs:comment "Lord of the Dreadfort and head of House Bolton, Roose takes pride in his family's sigil of a flayed man." ;
 	skos:altLabel "Roose Bolton" .
 
 <http://mydomain.org/persons/Cersei_Lannister> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/cersei-lannister-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/cersei-lannister-1920.jpg> ;
 	rdfs:comment "Queen of the Seven Kingdoms and wife of King Robert. Fiercely protective of her three children, she also has an unusually tight connection to her twin brother, Jaime." ;
 	skos:altLabel "Cersei Lannister" .
 
 <http://mydomain.org/persons/Tormund> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/tormund-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/tormund-1920.jpg> ;
 	rdfs:comment "A legendary wildling leader who supports Mance Rayder, Tormund is a fair and formidable warrior." ;
 	skos:altLabel "Tormund" .
 
 <http://mydomain.org/persons/Jorah_Mormont> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/jorah-mormont-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/jorah-mormont-1920.jpg> ;
 	rdfs:comment "A knight now in exile in Essos who advises Viserys and Daenerys Targaryen as they make a life among the Dothraki." ;
 	skos:altLabel "Jorah Mormont" .
 
 <http://mydomain.org/persons/Podrick_Payne> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/podrick-payne-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/podrick-payne-1920.jpg> ;
 	rdfs:comment "Quiet and unassuming, Podrick is Tyrion’s squire." ;
 	skos:altLabel "Podrick Payne" .
 
 <http://mydomain.org/persons/Beric_Dondarrion> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/beric-dondarron-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/beric-dondarron-1920.jpg> ;
 	rdfs:comment "Lord Beric of Blackhaven, he was tasked by Ned Stark, then Hand of the King, to bring Gregor Clegane to justice. A follower of the Red faith, Beric has been brought back to life several times by Thoros of Myr." ;
 	skos:altLabel "Beric Dondarrion" .
 
 <http://mydomain.org/persons/Brienne_of_Tarth> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/brienne-of-tarth-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/brienne-of-tarth-1920.jpg> ;
 	rdfs:comment "Brienne is a highborn lady who would rather be a knight. As Catelyn Stark's envoy, she is tasked with escorting Jaime Lannister back to King's Landing." ;
 	skos:altLabel "Brienne of Tarth" .
 
 <http://mydomain.org/persons/Lancel_Lannister> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/lancel-lannister-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/lancel-lannister-1920.jpg> ;
 	rdfs:comment "Robert's squire. A first cousin of Queen Cersei, he bears some resemblance to her brother Jaime." ;
 	skos:altLabel "Lancel Lannister" .
 
 <http://mydomain.org/persons/Bronn> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/bronn-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/bronn-1920.jpg> ;
 	rdfs:comment "A mercenary who joins Tyrion Lannister and becomes his right-hand man." ;
 	skos:altLabel "Bronn" .
 
 <http://mydomain.org/persons/Gilly> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s6/gilly-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s6/gilly-1920.jpg> ;
 	rdfs:comment "A wildling from Craster’s Keep, Gilly and her son Sam journeyed south of the Wall under the protection of Sam Tarly." ;
 	skos:altLabel "Gilly" .
 
-<http://mydomain.org/persons/Tyene_Sand> foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/tyene-sand-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+<http://mydomain.org/persons/Tyene_Sand> foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/tyene-sand-1920.jpg> ;
 	a dbo:FictionalCharacter ;
 	rdfs:comment "The youngest of the Sand Snakes, Tyene is proficient with daggers." ;
 	skos:altLabel "Tyene Sand" .
 
 <http://mydomain.org/persons/Doran_Martell> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/doran-martell-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/doran-martell-1920.jpg> ;
 	rdfs:comment "A firm and diplomatic leader, Doran stayed largely neutral in the War of Five Kings." ;
 	skos:altLabel "Doran Martell" .
 
 <http://mydomain.org/persons/Tywin_Lannister> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/tywin-lannister-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/tywin-lannister-1920.jpg> ;
 	rdfs:comment "Father of Cersei, Jaime and Tyrion, he is the most powerful lord in the Seven Kingdoms, because of his enormous wealth. His wife died giving birth to Tyrion, hence his hatred for him." ;
 	skos:altLabel "Tywin Lannister" .
 
 <http://mydomain.org/persons/Hodor> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/hodor-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/hodor-1920.jpg> ;
 	rdfs:comment "One of Winterfell many loyal servants. Simple-minded and oversized, Hodor will serve as Bran's primary method of transport." ;
 	skos:altLabel "Hodor" .
 
 <http://mydomain.org/persons/Lysa_Tully> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/lysa-arryn-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/lysa-arryn-1920.jpg> ;
 	rdfs:comment "Catelyn Stark's younger sister and the wife of Jon Arryn, the Hand of the King. Both she and Catelyn were raised with Petyr Baelish." ;
 	skos:altLabel "Lysa Arryn" .
 
 <http://mydomain.org/persons/Alliser_Thorne> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/allister-thorne-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/allister-thorne-1920.jpg> ;
 	rdfs:comment "Master-at-arms of Castle Black, it is his job to turn the undisciplined and obstinate recruits into rangers of the Night Watch. He resents Jon Snow." ;
 	skos:altLabel "Alliser Thorne" .
 
 <http://mydomain.org/persons/Catelyn_Tully> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/catelyn-stark-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/catelyn-stark-1920.jpg> ;
 	rdfs:comment "Wife of Ned Stark, born Catelyn of House Tully, the ruling house of the Riverlands. Originally engaged to Ned’s older brother Brandon, she married Ned when he was killed." ;
 	skos:altLabel "Catelyn Stark" .
 
 <http://mydomain.org/persons/Margaery_Tyrell> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/margarey-tyrell-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/margarey-tyrell-1920.jpg> ;
 	rdfs:comment "Mace Tyrell's only daughter, Margaery is as clever as she is beautiful." ;
 	skos:altLabel "Margaery Tyrell" .
 
 <http://mydomain.org/persons/Myrcella_Baratheon> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/myrcella-baratheon-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/myrcella-baratheon-1920.jpg> ;
 	rdfs:comment "Fair-haired and demure, Myrcella now lives in Dorne as part of a deal her uncle Tyrion made with House Martell to align their houses and keep the princess safe." ;
 	skos:altLabel "Myrcella Baratheon" .
 
 <http://mydomain.org/persons/Grey_Worm> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s3/grey-worm-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s3/grey-worm-1920.jpg> ;
 	rdfs:comment "One of the highly-trained Unsullied fighters from Astapor, he was named by his fellow soldiers as their leader when they were set free by Daenerys Targaryen." ;
 	skos:altLabel "Grey Worm" .
 
 <http://mydomain.org/persons/Petyr_Baelish> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/petyr-baelish-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/petyr-baelish-1920.jpg> ;
 	rdfs:comment "Master of Coin and member of the King’s Small Council, he grew up with Catelyn Stark for whom he still harbors feelings. Beyond his official duties, he is the eyes and ears of King's Landing along with Varys." ;
 	skos:altLabel "Petyr Baelish (“Littlefinger”)" .
 
 <http://mydomain.org/persons/Viserys_Targaryen> a dbo:FictionalCharacter ;
-	foaf:depiction <https://www.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/viserys-targaryen-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg> ;
+	foaf:depiction <https://static.hbo.com/content/dam/hbodata/series/game-of-thrones/character/s5/viserys-targaryen-1920.jpg> ;
 	rdfs:comment "Prince of House Targaryen, whose father, the \"Mad\" King Aerys was usurped by King Robert.  Viserys lives in self-exile with his sister Daenerys and is obsessed with regaining his family's throne." ;
 	skos:altLabel "Viserys Targaryen" .
