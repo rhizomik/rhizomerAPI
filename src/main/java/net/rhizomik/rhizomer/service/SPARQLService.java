@@ -49,7 +49,7 @@ public class SPARQLService {
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
         qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
         if (timeout != null)
-            qBuilder.param("timeout", timeout);
+            qBuilder.param("timeout", getTimeout(timeout, endpoint.getType()));
         QueryExecutionHTTP qExec = qBuilder.build();
         ResultSet result = ResultSetFactory.copyResults(qExec.execSelect());
         qExec.close();
@@ -69,7 +69,7 @@ public class SPARQLService {
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
         qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
         if (timeout != null)
-            qBuilder.param("timeout", timeout);
+            qBuilder.param("timeout", getTimeout(timeout, endpoint.getType()));
         if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)
             qBuilder.acceptHeader("application/n-triples"); // Workaround for MarkLogic
         return qBuilder.build().execDescribe();
@@ -83,7 +83,7 @@ public class SPARQLService {
         QueryExecutionHTTPBuilder qBuilder = QueryExecutionHTTPBuilder.create();
         qBuilder.query(query).endpoint(endpoint.getQueryEndPoint().toString()).httpClient(creds);
         if (timeout != null)
-            qBuilder.param("timeout", timeout);
+            qBuilder.param("timeout", getTimeout(timeout, endpoint.getType()));
         if (endpoint.getType() == SPARQLEndPoint.ServerType.MARKLOGIC)
             qBuilder.acceptHeader("application/n-triples"); // Workaround for MarkLogic
         return qBuilder.build().execConstruct();
@@ -136,5 +136,12 @@ public class SPARQLService {
         sourceGraphs.addAll(endPoint.getOntologyGraphs());
         UpdateRequest update = queries.getUpdateInferTypes(sourceGraphs, targetGraph);
         queryUpdate(endPoint.getUpdateEndPoint(), update, creds);
+    }
+
+    private String getTimeout(String timeout, SPARQLEndPoint.ServerType serverType) {
+        String timeoutValue = timeout;
+        if (serverType == SPARQLEndPoint.ServerType.QLEVER)
+            timeoutValue += "ms"; // QLever requires time unit
+        return timeoutValue;
     }
 }
