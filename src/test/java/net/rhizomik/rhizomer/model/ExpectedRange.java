@@ -2,6 +2,8 @@ package net.rhizomik.rhizomer.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.Transient;
+
 /**
  * Created by http://rhizomik.net/~roberto/
  */
@@ -13,6 +15,8 @@ public class ExpectedRange extends Labelled {
     public int differentValues;
     public boolean relation;
     public boolean allBlank;
+    public String min;
+    public String max;
 
     public ExpectedRange() { super(""); }
 
